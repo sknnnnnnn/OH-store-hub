@@ -8,6 +8,9 @@ OH STORE HUB — ขั้นตอนนำขึ้นใช้งาน
    - Deploy > Manage deployments > Edit (รูปดินสอ)
    - Version เลือก New version แล้วกด Deploy
    - URL เดิมยังใช้ได้ ไม่ต้องแก้ในเว็บไซต์
+   - ห้ามกดทดสอบบันทึกสโตร์ก่อน Deploy เวอร์ชันใหม่สำเร็จ
+   - หลัง Deploy เปิด URL เดิมเติม ?mode=store ต้องเห็น apiVersion เป็น OH_STORE_HUB_V3
+     และ sheetName เป็น "สโตร์" จึงค่อยทดสอบบันทึก
 
 2) อัปเดต GitHub Pages
    - นำ index.html, manifest.webmanifest, sw.js, icon-192.png และ icon-512.png
@@ -41,6 +44,8 @@ OH STORE HUB — ขั้นตอนนำขึ้นใช้งาน
    - พนักงานแตะการ์ดแล้วอ่าน PDF ภายใน Hub ได้
 
 หมายเหตุ
+ - เว็บเวอร์ชันนี้จะปฏิเสธการบันทึกทันที หาก Apps Script ไม่ตอบกลับว่าเป็น
+   OH_STORE_HUB_V3 และชีตปลายทางคือ "สโตร์" จึงไม่ลงทับ Stock_Weekly ซ้ำอีก
  - ไฟล์ PDF จำกัดไม่เกิน 8 MB ต่อไฟล์
  - หากองค์กรปิดสิทธิ์ “ทุกคนที่มีลิงก์” การอัปโหลด PDF จะไม่สำเร็จ
    ต้องให้ผู้ดูแล Google Workspace อนุญาตก่อน
