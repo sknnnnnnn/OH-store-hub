@@ -4,11 +4,19 @@
 var STORE_SHEET_NAME = 'สโตร์';
 var STORE_HEADERS = ['รหัสสินค้า', 'ชื่อสินค้าจริง', 'หน่วย', 'ยอดคงเหลือ', 'แก้ไขล่าสุด', 'แก้ไขโดยใคร'];
 var PROMOTION_FOLDER_ID = '1l9fgwddPAkCuaM2HaRwJ5OHOMcSHtGLP';
+var SPREADSHEET_ID = '1OyoRne2_qryU0K9k3fXo8sUufWS_wQmpGBSwPhUjlB0';
+
+function getSpreadsheet_() {
+  return SpreadsheetApp.openById(SPREADSHEET_ID);
+}
 
 function doGet(e) {
   try {
     var mode = String((e && e.parameter && e.parameter.mode) || 'daily');
-    if (mode === 'store') return jsonOutput_({status: 'success', items: readStore_()});
+    if (mode === 'store') {
+      ensureStoreSheet_();
+      return jsonOutput_({status: 'success', spreadsheetId: SPREADSHEET_ID, items: readStore_()});
+    }
     if (mode === 'usageCurrent') return jsonOutput_(readUsageCurrent_());
     if (mode === 'daily' || mode === 'weekly') return jsonOutput_(readCatalog_(mode));
     return jsonOutput_({status: 'error', message: 'Unknown mode: ' + mode});
@@ -35,7 +43,7 @@ function doPost(e) {
 }
 
 function saveCount_(mode, items) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = getSpreadsheet_();
   var sheetName = mode === 'daily' ? 'Stock_Daily' : 'Stock_Weekly';
   var sheet = ss.getSheetByName(sheetName) || ss.insertSheet(sheetName);
   var timestamp = new Date();
@@ -60,7 +68,7 @@ function saveCount_(mode, items) {
 
 function readCatalog_(mode) {
   var sheetName = mode === 'daily' ? 'daily' : 'weekly';
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  var sheet = getSpreadsheet_().getSheetByName(sheetName);
   if (!sheet || sheet.getLastRow() < 2) return [];
   var rows = sheet.getDataRange().getValues();
   var tareIndex = mode === 'daily' ? 4 : -1;
@@ -82,7 +90,7 @@ function readCatalog_(mode) {
 }
 
 function ensureStoreSheet_() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = getSpreadsheet_();
   var sheet = ss.getSheetByName(STORE_SHEET_NAME) || ss.insertSheet(STORE_SHEET_NAME);
   sheet.getRange(1, 1, 1, STORE_HEADERS.length).setValues([STORE_HEADERS]);
   sheet.setFrozenRows(1);
@@ -97,7 +105,7 @@ function ensureStoreSheet_() {
 }
 
 function readStore_() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(STORE_SHEET_NAME);
+  var sheet = getSpreadsheet_().getSheetByName(STORE_SHEET_NAME);
   if (!sheet || sheet.getLastRow() < 2) return [];
   return sheet.getRange(2, 1, sheet.getLastRow() - 1, 6).getValues().reduce(function(items, row) {
     var id = row[0] == null ? '' : String(row[0]);
@@ -134,7 +142,7 @@ function saveStore_(data) {
 }
 
 function readUsageCurrent_() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = getSpreadsheet_();
   var dailySheet = ss.getSheetByName('DAILY');
   var catalog = readCatalog_('daily');
   var catalogById = {};
