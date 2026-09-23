@@ -189,7 +189,8 @@ function uploadPromotion_(data) {
   if (bytes.length > 8 * 1024 * 1024) throw new Error('ไฟล์ PDF ต้องไม่เกิน 8 MB');
   var blob = Utilities.newBlob(bytes, MimeType.PDF, fileName);
   var file = folder.createFile(blob);
-  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  // ใช้สิทธิ์ที่สืบทอดจากโฟลเดอร์ ไม่สั่ง setSharing ซ้ำ เพราะบางบัญชี
+  // อัปโหลดไฟล์ได้ แต่ไม่มีสิทธิ์เปลี่ยนการแชร์ ทำให้เว็บไม่ได้รับผลสำเร็จ
   return {
     status: 'success',
     apiVersion: API_VERSION,

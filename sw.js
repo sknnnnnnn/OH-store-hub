@@ -1,4 +1,4 @@
-const CACHE_NAME = "oh-store-hub-v16";
+const CACHE_NAME = "oh-store-hub-v17";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", event => {
