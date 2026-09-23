@@ -3,6 +3,7 @@
 
 var STORE_SHEET_NAME = 'สโตร์';
 var STORE_HEADERS = ['รหัสสินค้า', 'ชื่อสินค้าจริง', 'หน่วย', 'ยอดคงเหลือ', 'แก้ไขล่าสุด', 'แก้ไขโดยใคร'];
+var API_VERSION = 'OH_STORE_HUB_V3';
 var PROMOTION_FOLDER_ID = '1l9fgwddPAkCuaM2HaRwJ5OHOMcSHtGLP';
 var SPREADSHEET_ID = '1OyoRne2_qryU0K9k3fXo8sUufWS_wQmpGBSwPhUjlB0';
 
@@ -15,7 +16,7 @@ function doGet(e) {
     var mode = String((e && e.parameter && e.parameter.mode) || 'daily');
     if (mode === 'store') {
       ensureStoreSheet_();
-      return jsonOutput_({status: 'success', spreadsheetId: SPREADSHEET_ID, items: readStore_()});
+      return jsonOutput_({status: 'success', apiVersion: API_VERSION, mode: 'store', spreadsheetId: SPREADSHEET_ID, sheetName: STORE_SHEET_NAME, items: readStore_()});
     }
     if (mode === 'usageCurrent') return jsonOutput_(readUsageCurrent_());
     if (mode === 'daily' || mode === 'weekly') return jsonOutput_(readCatalog_(mode));
@@ -138,7 +139,7 @@ function saveStore_(data) {
   }
   if (oldRows > values.length) sheet.getRange(values.length + 2, 1, oldRows - values.length, 6).clearContent();
   SpreadsheetApp.flush();
-  return {status: 'success', count: values.length, timestamp: timestamp.toISOString(), operator: operator};
+  return {status: 'success', apiVersion: API_VERSION, mode: 'storeSave', spreadsheetId: SPREADSHEET_ID, sheetName: STORE_SHEET_NAME, count: values.length, timestamp: timestamp.toISOString(), operator: operator};
 }
 
 function readUsageCurrent_() {
@@ -174,7 +175,7 @@ function readUsageCurrent_() {
     item.total = number_(item.daily) + number_(item.store);
     return item;
   });
-  return {status: 'success', sourceTimestamp: sourceTimestamp, fetchedAt: new Date().toISOString(), items: items};
+  return {status: 'success', apiVersion: API_VERSION, mode: 'usageCurrent', spreadsheetId: SPREADSHEET_ID, sourceTimestamp: sourceTimestamp, fetchedAt: new Date().toISOString(), items: items};
 }
 
 function uploadPromotion_(data) {
@@ -191,6 +192,8 @@ function uploadPromotion_(data) {
   file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
   return {
     status: 'success',
+    apiVersion: API_VERSION,
+    mode: 'promotionUpload',
     fileId: file.getId(),
     fileName: file.getName(),
     previewUrl: 'https://drive.google.com/file/d/' + file.getId() + '/preview',
