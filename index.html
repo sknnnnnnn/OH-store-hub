@@ -822,6 +822,65 @@ function renderOpenMemo(){
 
 function renderQr(){return `${header(true,"QR ด่วน")}<main class="shell"><div class="qr-shell"><div class="page-head"><div class="head-text"><div class="eyebrow">QUICK QR</div><h1 class="page-title">ตัวเลข → QR</h1><p class="page-sub">พิมพ์หรือวางรหัส แล้วสร้าง QR พร้อมสแกนได้ทันที โดยระบบไม่เติมตัวเลขให้อัตโนมัติ</p></div></div><section class="qr-entry"><label class="field"><label>ตัวเลข / รหัสลูกค้า</label><input id="quickQrInput" class="qr-input" inputmode="numeric" autocomplete="off" placeholder="วางหรือพิมพ์ตัวเลข" value="${esc(state.qrValue||"")}" onkeydown="if(event.key==='Enter'){event.preventDefault();generateQuickQr()}"></label><div class="qr-actions"><button class="primary-btn" onclick="generateQuickQr()">สร้าง QR</button><button class="ghost-btn" onclick="clearQuickQr()">ล้าง</button></div><div id="quickQrBox" class="qr-output"><div id="quickQrCanvas" class="qr-canvas"></div><div id="quickQrValue" class="qr-value"></div><div class="qr-note">สร้างแล้วหน้าจอจะพามาที่ QR กลางจอ พร้อมยิงเครื่องสแกนได้ทันที</div></div></section></div></main>`}
 
+function loadQrLibrary(){
+  if(window.QRCode)return Promise.resolve(window.QRCode);
+  if(window.__ohQrLoading)return window.__ohQrLoading;
+  window.__ohQrLoading=new Promise((resolve,reject)=>{
+    const script=document.createElement("script");
+    script.src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+    script.async=true;
+    script.onload=()=>window.QRCode?resolve(window.QRCode):reject(new Error("qr_library"));
+    script.onerror=()=>reject(new Error("qr_library"));
+    document.head.appendChild(script);
+  }).finally(()=>{window.__ohQrLoading=null});
+  return window.__ohQrLoading;
+}
+async function generateQuickQr(){
+  const input=document.getElementById("quickQrInput");
+  const raw=String(input?.value??state.qrValue??"").trim();
+  const value=raw.replace(/[\s-]+/g,"");
+  if(!value){toast("กรุณาใส่ตัวเลขหรือรหัสก่อน");input?.focus();return}
+  state.qrValue=raw;
+  const box=document.getElementById("quickQrBox"),
+        canvas=document.getElementById("quickQrCanvas"),
+        valueEl=document.getElementById("quickQrValue");
+  if(!box||!canvas||!valueEl)return;
+  try{
+    canvas.innerHTML="";
+    valueEl.textContent=value;
+    box.classList.add("show");
+    await loadQrLibrary();
+    canvas.innerHTML="";
+    new QRCode(canvas,{
+      text:value,
+      width:270,
+      height:270,
+      colorDark:"#000000",
+      colorLight:"#ffffff",
+      correctLevel:QRCode.CorrectLevel.M
+    });
+    requestAnimationFrame(()=>{
+      box.scrollIntoView({behavior:"smooth",block:"center"});
+    });
+  }catch(error){
+    console.error("QR generation failed",error);
+    box.classList.remove("show");
+    toast("สร้าง QR ไม่สำเร็จ กรุณาตรวจอินเทอร์เน็ตแล้วลองใหม่");
+  }
+}
+function clearQuickQr(){
+  state.qrValue="";
+  const input=document.getElementById("quickQrInput"),
+        box=document.getElementById("quickQrBox"),
+        canvas=document.getElementById("quickQrCanvas"),
+        valueEl=document.getElementById("quickQrValue");
+  if(input){input.value="";input.focus()}
+  if(canvas)canvas.innerHTML="";
+  if(valueEl)valueEl.textContent="";
+  if(box)box.classList.remove("show");
+}
+
+
 
 async function loadLeaveData(silent=false){if(state.leaveLoading)return;state.leaveLoading=true;if(state.view==="leave"&&!silent)render();try{const r=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_leave_requests.json?ts=${Date.now()}`,{cache:"no-store"}),raw=r.ok?(await r.json()||{}):{};state.leaveRequests=Object.entries(raw).map(([id,x])=>({id,...x})).filter(x=>!x.deleted).sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));state.leaveLoaded=true}catch(e){if(!silent)toast("ดึงรายการลา/แจ้งเรื่องไม่สำเร็จ")}finally{state.leaveLoading=false;if(state.view==="leave"&&!silent)render()}}
 async function createLeaveRequest(event){event.preventDefault();const user=activeEmployee(),f=new FormData(event.currentTarget),day=String(f.get("day")||""),type=String(f.get("type")||""),detail=String(f.get("detail")||"").trim();if(!user||!day||!type){toast("กรอกข้อมูลให้ครบก่อน");return}const id=`req_${Date.now()}`,payload={day,type,detail,createdAt:new Date().toISOString(),createdBy:user.nick,createdById:user.id,acknowledged:false};try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_leave_requests/${id}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});state.leaveRequests.unshift({id,...payload});render();toast("ส่งเรื่องแล้ว")}catch(e){toast("ส่งเรื่องไม่สำเร็จ")}}
