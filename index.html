@@ -287,13 +287,14 @@
     @media(max-width:640px){.excel-mode{grid-template-columns:1fr}.excel-import-top{display:block}}
 
 
-    /* V8.6.9 · safe age-management layout */
-    .age-manage{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:16px}
+    /* V8.6.10 Recovery · age controls on top */
+    .age-manage{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;margin:0 0 16px}
     .age-manage-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
-    .age-manage-head h3{margin:0 0 3px;font-size:18px}.age-manage-head p{margin:0;color:var(--muted);font-size:12px}
+    .age-manage-head h3{margin:0 0 3px;font-size:18px}
+    .age-manage-head p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
     .age-manage-count{padding:6px 10px;border-radius:999px;background:#f3f5f8;color:var(--muted);font-size:11px;font-weight:900;white-space:nowrap}
     .age-existing{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
-    .boot-error{margin:20px;padding:18px;background:#fff3f1;border:1px solid #efb7b0;border-radius:18px;color:#8d251c;font-family:"Noto Sans Thai",sans-serif}
+    .age-loading{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;text-align:center;color:var(--muted)}
 
 </style>
 
@@ -302,6 +303,13 @@
 <body>
 <div id="app" class="app"></div>
 <script>
+window.addEventListener("error",function(e){
+  var app=document.getElementById("app");
+  if(app && (!app.innerText || app.innerText.indexOf("กำลังเปิด OH Store Hub")>=0)){
+    app.innerHTML='<div style="margin:20px;padding:18px;border:1px solid #f0b4ae;border-radius:16px;background:#fff4f2;color:#8d251c;font-family:system-ui,sans-serif"><b>OH Store Hub เปิดไม่สำเร็จ</b><br><small>'+String(e.message||"JavaScript error")+'</small></div>';
+  }
+});
+
 // จุดเชื่อมระบบจริง: ใส่ URL เว็บนับของเดิม และ Google Apps Script Web App ที่นี่
 const CONFIG = {
   countingAppUrl: "https://sknnnnnnn.github.io/OH-stock-016/",
@@ -1171,42 +1179,9 @@ async function ensureExpiryRulesLoaded(){
   if(Object.keys(state.expiryRules||{}).length||state.expiryLoaded)return state.expiryRules;
   try{const r=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules.json`);state.expiryRules=r.ok?(await r.json()||{}):{};return state.expiryRules}catch(e){return state.expiryRules||{}}
 }
-
-function readFormSnapshot(selector,names){
-  const form=document.querySelector(selector);if(!form)return null;
-  const out={};names.forEach(name=>{const el=form.elements?.[name];if(el)out[name]=el.value});return out
-}
-function restoreFormSnapshot(selector,data){
-  if(!data)return;requestAnimationFrame(()=>{
-    const form=document.querySelector(selector);if(!form)return;
-    Object.entries(data).forEach(([name,value])=>{const el=form.elements?.[name];if(el)el.value=value})
-  })
-}
-
 async function loadExpiryData(silent=false){
-  if(state.expiryLoading)return;
-  const draft=readFormSnapshot("#expiryRuleForm",["product","days"]);
-  state.expiryLoading=true;
-  if(state.view==="expiry"&&!silent)render();
-  try{
-    const [rr,lr]=await Promise.all([
-      fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules.json`),
-      fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots.json`)
-    ]);
-    state.expiryRules=rr.ok?(await rr.json()||{}):{};
-    const raw=lr.ok?(await lr.json()||{}):{};
-    state.expiryLots=Object.entries(raw).map(([id,x])=>({id,...x}));
-    state.expiryLoaded=true
-  }catch(e){
-    if(!silent)toast("ดึงข้อมูลวันหมดอายุไม่สำเร็จ")
-  }finally{
-    state.expiryLoading=false;
-    if(state.view==="expiry"&&!silent){
-      const latest=readFormSnapshot("#expiryRuleForm",["product","days"])||draft;
-      render();
-      restoreFormSnapshot("#expiryRuleForm",latest)
-    }
-  }
+  if(state.expiryLoading)return;state.expiryLoading=true;if(state.view==="expiry"&&!silent)render();
+  try{const [rr,lr]=await Promise.all([fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules.json`),fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots.json`)]);state.expiryRules=rr.ok?(await rr.json()||{}):{};const raw=lr.ok?(await lr.json()||{}):{};state.expiryLots=Object.entries(raw).map(([id,x])=>({id,...x}));state.expiryLoaded=true}catch(e){if(!silent)toast("ดึงข้อมูลวันหมดอายุไม่สำเร็จ")}finally{state.expiryLoading=false;if(state.view==="expiry"&&!silent)render()}
 }
 function expiryRuleFor(p){return state.expiryRules?.[firebaseSafeKey(p.id)]||state.expiryRules?.[firebaseSafeKey(p.code)]||null}
 function trackedExpiryProducts(){return products.filter(p=>productCategory(p)==="chill"&&!expiryRuleFor(p))}
@@ -1216,40 +1191,35 @@ function expiryRisk(lot){const d=daysBetween(new Date(),new Date(lot.reviewDate+
 async function acknowledgeExpiry(id){const lot=state.expiryLots.find(x=>x.id===id),user=activeEmployee();if(!lot||!user)return;if(!confirm(`ตรวจ ${lot.easy||lot.code} แล้ว และนำรายการนี้ออกจากหน้าเตือนใช่หรือไม่?`))return;const patch={acknowledged:true,acknowledgedAt:new Date().toISOString(),acknowledgedBy:user.nick,acknowledgedById:user.id};try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots/${id}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(patch)});Object.assign(lot,patch);render();toast(`รับทราบแล้ว · ${user.nick}`)}catch(e){toast("กดรับทราบไม่สำเร็จ")}}
 function expiryCounts(lots){return {overdue:lots.filter(x=>expiryRisk(x).days<0).length,today:lots.filter(x=>expiryRisk(x).days===0).length,three:lots.filter(x=>{const d=expiryRisk(x).days;return d>0&&d<=3}).length,seven:lots.filter(x=>{const d=expiryRisk(x).days;return d>3&&d<=7}).length}}
 function renderExpiry(){
-  if(!state.expiryLoaded&&!state.expiryLoading)setTimeout(()=>loadExpiryData(),0);
+  if(!state.expiryLoaded){
+    if(!state.expiryLoading)setTimeout(()=>loadExpiryData(),0);
+    return `${header(true,"ติดตามอายุสินค้า")}<main class="shell"><div class="page-head"><div class="head-text"><div class="eyebrow">STORE AGE WATCH</div><h1 class="page-title">ติดตามอายุสินค้า</h1></div></div><div class="age-loading">กำลังโหลดข้อมูลอายุสินค้า…</div></main>`;
+  }
   const active=state.expiryLots.filter(x=>state.expiryShowAck?x.acknowledged:!x.acknowledged).sort((a,b)=>{const ra=expiryRisk(a),rb=expiryRisk(b);return ra.rank-rb.rank||String(a.reviewDate||"").localeCompare(String(b.reviewDate||""))}),
         c=expiryCounts(state.expiryLots.filter(x=>!x.acknowledged)),
         chill=trackedExpiryProducts(),
         configured=products.filter(p=>expiryRuleFor(p));
-  const manage=`<section class="age-manage"><div class="age-manage-head"><div><h3>⚙ จัดการสินค้าที่ติดตาม</h3><p>เพิ่มสินค้า หยุดติดตาม และดูค่าที่ตั้งไว้จากตรงนี้</p></div><span class="age-manage-count">${configured.length} รายการ</span></div><form id="expiryRuleForm" class="form-grid" onsubmit="saveExpiryRule(event)"><div class="field"><label>สินค้า</label><select name="product" required><option value="">${chill.length?"เลือกสินค้า Chill":"ตั้งค่าครบแล้ว"}</option>${chill.map(p=>`<option value="${esc(p.id)}">${esc(p.easy)} · ${esc(p.code)}</option>`).join("")}</select>${!chill.length?`<div class="config-empty-note">สินค้าที่ตั้งค่าแล้วจะไม่แสดงซ้ำ หากตั้งผิดให้ลบรายการเดิมก่อน</div>`:""}</div><div class="field"><label>หลังรับเข้า ให้เตือนใน</label><input name="days" type="number" min="1" step="1" inputmode="numeric" placeholder="เช่น 7" required></div><div class="wide inline-actions"><button class="primary-btn" type="submit">บันทึกวันเตือน</button><span class="helper">รับเข้าแต่ละครั้งจะสร้างล็อตให้อัตโนมัติ</span></div></form>${configured.length?`<div class="age-existing"><div class="rule-list">${configured.map(p=>{const r=expiryRuleFor(p);return `<div class="rule-row"><span><b>${esc(p.easy)}</b><small style="display:block">${esc(p.code)} · ${r.days} วันหลังรับเข้าเริ่มตรวจ</small></span><span class="inline-actions"><span class="rule-pill">${r.days} วัน</span><button class="ghost-btn" onclick="removeExpiryRule('${esc(p.id)}')">หยุดติดตาม</button></span></div>`}).join("")}</div></div>`:""}</section>`;
-  return `${header(true,"ติดตามอายุสินค้า")}<main class="shell"><div class="page-head"><div class="head-text"><div class="eyebrow">STORE AGE WATCH</div><h1 class="page-title">ติดตามอายุสินค้า</h1><p class="page-sub">ติดตามล็อตเก่าก่อนตาม FIFO และบอกให้เห็นว่าแต่ละล็อตยังอยู่ในสโตร์หรือถูกนำไปหน้าร้านแล้ว</p></div></div>${manage}<div class="expiry-summary"><button><b>${c.overdue}</b><span>เลยรอบตรวจ</span></button><button><b>${c.today}</b><span>ตรวจวันนี้</span></button><button><b>${c.three}</b><span>ภายใน 3 วัน</span></button><button><b>${c.seven}</b><span>4–7 วัน</span></button></div><div class="inline-actions" style="margin-bottom:12px"><button class="ghost-btn" onclick="state.expiryShowAck=false;render()">ต้องตรวจ</button><button class="ghost-btn" onclick="state.expiryShowAck=true;render()">ประวัติ</button><span class="helper">${active.length} รายการ</span></div><section class="expiry-list">${state.expiryLoading?`<div class="empty panel">กำลังโหลด…</div>`:active.map(l=>{const r=expiryRisk(l),sq=lotStoreQty(l),fq=lotFrontQty(l);return `<article class="expiry-card ${r.cls}"><div><h3>${esc(l.easy||l.code||"สินค้า")}</h3><small>ล็อตรับเข้า ${prettyDateKey(l.receivedDate)} · รับทั้งหมด ${Number(l.qty||0).toLocaleString('th-TH')} ${esc(l.unit||"")} · รอบตรวจ ${prettyDateKey(l.reviewDate)}</small><div class="lot-locations"><span class="lot-location store">สโตร์ ${sq.toLocaleString('th-TH')} ${esc(l.unit||"")}</span><span class="lot-location front">หน้าร้าน ${fq.toLocaleString('th-TH')} ${esc(l.unit||"")}</span></div><div class="risk-badge">${l.acknowledged?`${l.autoClosed?'ใช้หมดจากผลนับ':'รับทราบแล้ว'} · ${esc(l.acknowledgedBy||"")}`:r.label}</div></div>${l.acknowledged?`<small class="lot-done">${l.acknowledgedAt?new Intl.DateTimeFormat('th-TH',{dateStyle:'short',timeStyle:'short'}).format(new Date(l.acknowledgedAt)):''}</small>`:`<button class="ack-btn" onclick="acknowledgeExpiry('${l.id}')">✓ ตรวจแล้ว</button>`}</article>`}).join("")||`<div class="empty panel">${state.expiryShowAck?'ยังไม่มีประวัติ':'ตอนนี้ไม่มีล็อตที่ต้องเช็ก'}</div>`}</section></main>`
+
+  return `${header(true,"ติดตามอายุสินค้า")}<main class="shell">
+    <div class="page-head"><div class="head-text"><div class="eyebrow">STORE AGE WATCH</div><h1 class="page-title">ติดตามอายุสินค้า</h1><p class="page-sub">ติดตามล็อตเก่าก่อนตาม FIFO และบอกให้เห็นว่าแต่ละล็อตยังอยู่ในสโตร์หรือถูกนำไปหน้าร้านแล้ว</p></div></div>
+
+    <section class="age-manage">
+      <div class="age-manage-head"><div><h3>⚙ จัดการสินค้าที่ติดตาม</h3><p>เพิ่มสินค้า หยุดติดตาม และดูค่าที่ตั้งไว้ทั้งหมดจากด้านบนนี้</p></div><span class="age-manage-count">${configured.length} รายการ</span></div>
+      <form class="form-grid" onsubmit="saveExpiryRule(event)">
+        <div class="field"><label>สินค้า</label><select name="product" required><option value="">${chill.length?"เลือกสินค้า Chill":"ตั้งค่าครบแล้ว"}</option>${chill.map(p=>`<option value="${esc(p.id)}">${esc(p.easy)} · ${esc(p.code)}</option>`).join("")}</select>${!chill.length?`<div class="config-empty-note">สินค้าที่ตั้งค่าแล้วจะไม่แสดงซ้ำ หากตั้งผิดให้ลบรายการเดิมก่อน</div>`:""}</div>
+        <div class="field"><label>หลังรับเข้า ให้เตือนใน</label><input name="days" type="number" min="1" step="1" inputmode="numeric" placeholder="เช่น 7" required></div>
+        <div class="wide inline-actions"><button class="primary-btn" type="submit">บันทึกวันเตือน</button><span class="helper">รับเข้าแต่ละครั้งจะสร้างล็อตให้อัตโนมัติ</span></div>
+      </form>
+      ${configured.length?`<div class="age-existing"><div class="rule-list">${configured.map(p=>{const r=expiryRuleFor(p);return `<div class="rule-row"><span><b>${esc(p.easy)}</b><small style="display:block">${esc(p.code)} · ${r.days} วันหลังรับเข้าเริ่มตรวจ</small></span><span class="inline-actions"><span class="rule-pill">${r.days} วัน</span><button class="ghost-btn" onclick="removeExpiryRule('${esc(p.id)}')">หยุดติดตาม</button></span></div>`}).join("")}</div></div>`:""}
+    </section>
+
+    <div class="expiry-summary"><button><b>${c.overdue}</b><span>เลยรอบตรวจ</span></button><button><b>${c.today}</b><span>ตรวจวันนี้</span></button><button><b>${c.three}</b><span>ภายใน 3 วัน</span></button><button><b>${c.seven}</b><span>4–7 วัน</span></button></div>
+    <div class="inline-actions" style="margin-bottom:12px"><button class="ghost-btn" onclick="state.expiryShowAck=false;render()">ต้องตรวจ</button><button class="ghost-btn" onclick="state.expiryShowAck=true;render()">ประวัติ</button><span class="helper">${active.length} รายการ</span></div>
+    <section class="expiry-list">${active.map(l=>{const r=expiryRisk(l),sq=lotStoreQty(l),fq=lotFrontQty(l);return `<article class="expiry-card ${r.cls}"><div><h3>${esc(l.easy||l.code||"สินค้า")}</h3><small>ล็อตรับเข้า ${prettyDateKey(l.receivedDate)} · รับทั้งหมด ${Number(l.qty||0).toLocaleString('th-TH')} ${esc(l.unit||"")} · รอบตรวจ ${prettyDateKey(l.reviewDate)}</small><div class="lot-locations"><span class="lot-location store">สโตร์ ${sq.toLocaleString('th-TH')} ${esc(l.unit||"")}</span><span class="lot-location front">หน้าร้าน ${fq.toLocaleString('th-TH')} ${esc(l.unit||"")}</span></div><div class="risk-badge">${l.acknowledged?`${l.autoClosed?'ใช้หมดจากผลนับ':'รับทราบแล้ว'} · ${esc(l.acknowledgedBy||"")}`:r.label}</div></div>${l.acknowledged?`<small class="lot-done">${l.acknowledgedAt?new Intl.DateTimeFormat('th-TH',{dateStyle:'short',timeStyle:'short'}).format(new Date(l.acknowledgedAt)):''}</small>`:`<button class="ack-btn" onclick="acknowledgeExpiry('${l.id}')">✓ ตรวจแล้ว</button>`}</article>`}).join("")||`<div class="empty panel">${state.expiryShowAck?'ยังไม่มีประวัติ':'ตอนนี้ไม่มีล็อตที่ต้องเช็ก'}</div>`}</section>
+  </main>`
 }
 
-async function loadOpenData(silent=false){
-  if(state.openLoading)return;
-  const draft=readFormSnapshot("#openRuleForm",["product","openAmount","openUnit","transferAmount","transferUnit"]);
-  state.openLoading=true;
-  if(state.view==="openmemo"&&!silent)render();
-  try{
-    const [rr,mr]=await Promise.all([
-      fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules.json`),
-      fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_memos.json`)
-    ]);
-    state.openRules=rr.ok?(await rr.json()||{}):{};
-    const raw=mr.ok?(await mr.json()||{}):{};
-    state.openMemos=Object.entries(raw).map(([id,x])=>({id,...x})).sort((a,b)=>String(a.expiryAt||a.expiryDate||"").localeCompare(String(b.expiryAt||b.expiryDate||"")));
-    state.openLoaded=true
-  }catch(e){
-    if(!silent)toast("ดึงข้อมูลอายุหลังเปิดใช้ไม่สำเร็จ")
-  }finally{
-    state.openLoading=false;
-    if(state.view==="openmemo"&&!silent){
-      const latest=readFormSnapshot("#openRuleForm",["product","openAmount","openUnit","transferAmount","transferUnit"])||draft;
-      render();
-      restoreFormSnapshot("#openRuleForm",latest)
-    }
-  }
-}
+async function loadOpenData(silent=false){if(state.openLoading)return;state.openLoading=true;if(state.view==="openmemo"&&!silent)render();try{const [rr,mr]=await Promise.all([fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules.json`),fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_memos.json`)]);state.openRules=rr.ok?(await rr.json()||{}):{};const raw=mr.ok?(await mr.json()||{}):{};state.openMemos=Object.entries(raw).map(([id,x])=>({id,...x})).sort((a,b)=>String(a.expiryAt||a.expiryDate||"").localeCompare(String(b.expiryAt||b.expiryDate||"")));state.openLoaded=true}catch(e){if(!silent)toast("ดึงข้อมูลอายุหลังเปิดใช้ไม่สำเร็จ")}finally{state.openLoading=false;if(state.view==="openmemo"&&!silent)render()}}
 function openRuleFor(p){const r=state.openRules?.[firebaseSafeKey(p.id)]||{};return {openAmount:Number(r.openAmount??r.bagDays??0)||0,openUnit:r.openUnit||"day",transferAmount:Number(r.transferAmount??r.jarDays??0)||0,transferUnit:r.transferUnit||"day",...r}}
 function ruleText(amount,unit){if(!amount)return "";return unit==="hour"?`${amount} ชม.`:`${amount} วัน`}
 async function saveOpenRule(event){event.preventDefault();const f=new FormData(event.currentTarget),p=productByAnyId(String(f.get("product")||""));if(!p){toast("กรุณาเลือกสินค้า");return}const openAmount=Math.max(0,Number(f.get("openAmount")||0)),transferAmount=Math.max(0,Number(f.get("transferAmount")||0)),openUnit=String(f.get("openUnit")||"day"),transferUnit=String(f.get("transferUnit")||"day");if(!openAmount&&!transferAmount){toast("ใส่อย่างน้อย 1 แบบ");return}const key=firebaseSafeKey(p.id);try{const check=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json?t=${Date.now()}`,{cache:"no-store"}),existing=check.ok?await check.json():null;if(existing){state.openRules[key]=existing;render();toast("สินค้านี้ตั้งค่าอายุไว้แล้ว หากตั้งผิดให้ลบรายการเดิมก่อน");return}const payload={productId:p.id,code:p.code,easy:p.easy,openAmount,openUnit,transferAmount,transferUnit,updatedAt:new Date().toISOString(),updatedBy:activeEmployee()?.nick||""};const saved=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!saved.ok)throw new Error("firebase");state.openRules[key]=payload;render();toast("บันทึกอายุหลังเปิดใช้แล้ว")}catch(e){toast("บันทึกไม่สำเร็จ")}}
@@ -1277,11 +1247,33 @@ function openLifeRuleCard(p){
 }
 function filterOpenLife(){const q=(document.getElementById("openLifeSearch")?.value||"").trim().toLowerCase();document.querySelectorAll("[data-openlife]").forEach(el=>{el.style.display=!q||el.dataset.openlife.includes(q)?"":"none"})}
 function renderOpenMemo(){
-  if(!state.openLoaded&&!state.openLoading)setTimeout(()=>loadOpenData(),0);
+  if(!state.openLoaded){
+    if(!state.openLoading)setTimeout(()=>loadOpenData(),0);
+    return `${header(true,"อายุใช้งานสินค้า")}<main class="shell"><section class="openlife-hero"><div class="eyebrow">OPEN-USE GUIDE</div><h1>อายุใช้งานสินค้า</h1></section><div class="age-loading">กำลังโหลดข้อมูลอายุใช้งาน…</div></main>`;
+  }
+
   const rules=products.filter(p=>{const r=openRuleFor(p);return r.openAmount||r.transferAmount}),
         availableProducts=products.filter(p=>{const r=openRuleFor(p);return !(r.openAmount||r.transferAmount)});
-  const manage=`<section class="age-manage"><div class="age-manage-head"><div><h3>⚙ จัดการอายุสินค้า</h3><p>เพิ่มสินค้า ลบค่าที่ตั้งผิด และดูค่าทั้งหมดจากตรงนี้</p></div><span class="age-manage-count">${rules.length} รายการ</span></div><form id="openRuleForm" class="form-grid" onsubmit="saveOpenRule(event)"><div class="field wide"><label>สินค้า</label><select name="product" required><option value="">${availableProducts.length?"เลือกสินค้า":"ตั้งค่าครบแล้ว"}</option>${availableProducts.map(p=>`<option value="${esc(p.id)}">${esc(p.easy)} · ${esc(p.code)}</option>`).join("")}</select>${!availableProducts.length?`<div class="config-empty-note">สินค้าที่ตั้งค่าแล้วจะไม่แสดงซ้ำ หากตั้งผิดให้ลบรายการเดิมก่อน</div>`:""}</div><div class="field"><label>เปิดบรรจุภัณฑ์</label><input name="openAmount" type="number" min="0" step="1" inputmode="numeric" placeholder="จำนวน"></div><div class="field"><label>หน่วย</label><select name="openUnit"><option value="day">วัน</option><option value="hour">ชั่วโมง</option></select></div><div class="field"><label>ย้ายบรรจุภัณฑ์</label><input name="transferAmount" type="number" min="0" step="1" inputmode="numeric" placeholder="จำนวน"></div><div class="field"><label>หน่วย</label><select name="transferUnit"><option value="day">วัน</option><option value="hour">ชั่วโมง</option></select></div><button class="primary-btn wide" type="submit">บันทึกการตั้งค่า</button></form>${rules.length?`<div class="age-existing"><div class="rule-list">${rules.map(p=>{const r=openRuleFor(p);return `<div class="rule-row"><span><b>${esc(p.easy)}</b><small style="display:block">${r.openAmount?`เปิด ${ruleText(r.openAmount,r.openUnit)}`:""}${r.openAmount&&r.transferAmount?" · ":""}${r.transferAmount?`ย้าย ${ruleText(r.transferAmount,r.transferUnit)}`:""}</small></span><span class="inline-actions"><button class="danger-btn" onclick="removeOpenRule('${esc(p.id)}')">ลบ</button></span></div>`}).join("")}</div></div>`:""}</section>`;
-  return `${header(true,"อายุใช้งานสินค้า")}<main class="shell"><section class="openlife-hero"><div class="eyebrow">OPEN-USE GUIDE</div><h1>อายุใช้งานสินค้า</h1><p>เช็กอายุหลังเปิดหรือย้ายบรรจุภัณฑ์ได้ทันที ระบบคำนวณวัน Throwing จากวันนี้ให้พร้อมใช้</p></section>${manage}<div class="openlife-toolbar"><label class="search"><input id="openLifeSearch" oninput="filterOpenLife()" placeholder="ค้นหาชื่อสินค้า หรือรหัส"></label></div><section class="openlife-list">${rules.map(p=>`<div data-openlife="${esc(`${p.easy} ${p.code} ${p.real||""}`.toLowerCase())}">${openLifeRuleCard(p)}</div>`).join("")||`<div class="openlife-empty"><b>ยังไม่ได้ตั้งอายุสินค้า</b>ใช้ส่วน “จัดการอายุสินค้า” ด้านบนเพื่อเพิ่มรายการแรก</div>`}</section></main>`
+
+  return `${header(true,"อายุใช้งานสินค้า")}<main class="shell">
+    <section class="openlife-hero"><div class="eyebrow">OPEN-USE GUIDE</div><h1>อายุใช้งานสินค้า</h1><p>เช็กอายุหลังเปิดหรือย้ายบรรจุภัณฑ์ได้ทันที ระบบคำนวณวัน Throwing จากวันนี้ให้พร้อมใช้</p></section>
+
+    <section class="age-manage">
+      <div class="age-manage-head"><div><h3>⚙ จัดการอายุสินค้า</h3><p>เพิ่มสินค้า ลบค่าที่ตั้งผิด และดูค่าทั้งหมดจากด้านบนนี้</p></div><span class="age-manage-count">${rules.length} รายการ</span></div>
+      <form class="form-grid" onsubmit="saveOpenRule(event)">
+        <div class="field wide"><label>สินค้า</label><select name="product" required><option value="">${availableProducts.length?"เลือกสินค้า":"ตั้งค่าครบแล้ว"}</option>${availableProducts.map(p=>`<option value="${esc(p.id)}">${esc(p.easy)} · ${esc(p.code)}</option>`).join("")}</select>${!availableProducts.length?`<div class="config-empty-note">สินค้าที่ตั้งค่าแล้วจะไม่แสดงซ้ำ หากตั้งผิดให้ลบรายการเดิมก่อน</div>`:""}</div>
+        <div class="field"><label>เปิดบรรจุภัณฑ์</label><input name="openAmount" type="number" min="0" step="1" inputmode="numeric" placeholder="จำนวน"></div>
+        <div class="field"><label>หน่วย</label><select name="openUnit"><option value="day">วัน</option><option value="hour">ชั่วโมง</option></select></div>
+        <div class="field"><label>ย้ายบรรจุภัณฑ์</label><input name="transferAmount" type="number" min="0" step="1" inputmode="numeric" placeholder="จำนวน"></div>
+        <div class="field"><label>หน่วย</label><select name="transferUnit"><option value="day">วัน</option><option value="hour">ชั่วโมง</option></select></div>
+        <button class="primary-btn wide" type="submit">บันทึกการตั้งค่า</button>
+      </form>
+      ${rules.length?`<div class="age-existing"><div class="rule-list">${rules.map(p=>{const r=openRuleFor(p);return `<div class="rule-row"><span><b>${esc(p.easy)}</b><small style="display:block">${r.openAmount?`เปิด ${ruleText(r.openAmount,r.openUnit)}`:""}${r.openAmount&&r.transferAmount?" · ":""}${r.transferAmount?`ย้าย ${ruleText(r.transferAmount,r.transferUnit)}`:""}</small></span><span class="inline-actions"><button class="danger-btn" onclick="removeOpenRule('${esc(p.id)}')">ลบ</button></span></div>`}).join("")}</div></div>`:""}
+    </section>
+
+    <div class="openlife-toolbar"><label class="search"><input id="openLifeSearch" oninput="filterOpenLife()" placeholder="ค้นหาชื่อสินค้า หรือรหัส"></label></div>
+    <section class="openlife-list">${rules.map(p=>`<div data-openlife="${esc(`${p.easy} ${p.code} ${p.real||""}`.toLowerCase())}">${openLifeRuleCard(p)}</div>`).join("")||`<div class="openlife-empty"><b>ยังไม่ได้ตั้งอายุสินค้า</b>ใช้ส่วน “จัดการอายุสินค้า” ด้านบนเพื่อเพิ่มรายการแรก</div>`}</section>
+  </main>`
 }
 
 function renderQr(){return `${header(true,"QR ด่วน")}<main class="shell"><div class="qr-shell"><div class="page-head"><div class="head-text"><div class="eyebrow">QUICK QR</div><h1 class="page-title">ตัวเลข → QR</h1><p class="page-sub">พิมพ์หรือวางรหัส แล้วสร้าง QR พร้อมสแกนได้ทันที โดยระบบไม่เติมตัวเลขให้อัตโนมัติ</p></div></div><section class="qr-entry"><label class="field"><label>ตัวเลข / รหัสลูกค้า</label><input id="quickQrInput" class="qr-input" inputmode="numeric" autocomplete="off" placeholder="วางหรือพิมพ์ตัวเลข" value="${esc(state.qrValue||"")}" onkeydown="if(event.key==='Enter'){event.preventDefault();generateQuickQr()}"></label><div class="qr-actions"><button class="primary-btn" onclick="generateQuickQr()">สร้าง QR</button><button class="ghost-btn" onclick="clearQuickQr()">ล้าง</button></div><div id="quickQrBox" class="qr-output"><div id="quickQrCanvas" class="qr-canvas"></div><div id="quickQrValue" class="qr-value"></div><div class="qr-note">สร้างแล้วหน้าจอจะพามาที่ QR กลางจอ พร้อมยิงเครื่องสแกนได้ทันที</div></div></section></div></main>`}
@@ -1445,11 +1437,7 @@ function render(){const views={who:renderWho,home:renderHome,schedule:()=>render
 window.addEventListener("popstate",event=>{if(state.modal){closeModal(true);return}if(state.scheduleEditor){closeScheduleEditor(true);return}if(state.rosterModal){closeRosterModal(true);return}if(state.memoModal){closeMemoModal(true);return}if(state.pdfViewer){closePdfViewer(true);return}const target=event.state?.view||location.hash.replace("#","")||"home";state.view=target;render();window.scrollTo(0,0)});
 const initialHash=location.hash.replace("#","");if(initialHash&&["who","home","schedule","day","person","store","history","counting","usage","memo","openmemo","expiry","qr","scanner","leave"].includes(initialHash))state.view=initialHash;window.history.replaceState({view:state.view},"",`#${state.view}`);
 seedScheduleFromSourceImage();
-try{render()}catch(error){
-  console.error("OH Store Hub boot error",error);
-  const app=document.getElementById("app");
-  if(app)app.innerHTML=`<div class="boot-error"><b>เปิด OH Store Hub ไม่สำเร็จ</b><br>กรุณารีเฟรชหน้าอีกครั้ง หากยังขึ้นหน้านี้ให้แจ้งข้อความ: ${esc(error?.message||error)}</div>`;
-}
+render();
 loadRemoteSchedules();
 loadRemoteEmployees();
 loadExpiryData(true);
