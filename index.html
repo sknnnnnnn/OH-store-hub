@@ -317,6 +317,7 @@ const seedProducts = [
 
 let products = JSON.parse(localStorage.getItem("oh_products") || "null") || seedProducts;
 let history = JSON.parse(localStorage.getItem("oh_history") || "null") || [];
+let centralHistoryLoaded=false,centralHistoryLoading=false;
 let scheduleMonths = JSON.parse(localStorage.getItem("oh_schedule_months") || "null") || {};
 const sourceScheduleRows = {
   p01:["13","11","6","OFF","13","13","13","13","11","6","OFF","13","13","13","13","13","13","OFF","13","13","11","6","6","LEAVE","13","LEAVE","OFF","13","11","6"],
@@ -345,7 +346,7 @@ function initials(name){return [...name].slice(0,2).join("")}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
 function saveData(){localStorage.setItem("oh_products",JSON.stringify(products));localStorage.setItem("oh_history",JSON.stringify(history));localStorage.setItem("oh_schedule_months",JSON.stringify(scheduleMonths));localStorage.setItem("oh_employees",JSON.stringify(employees))}
 function seedScheduleFromSourceImage(){if(!localStorage.getItem("oh_last_schedule_cycle"))localStorage.setItem("oh_last_schedule_cycle","2026-09-21");if(localStorage.getItem("oh_source_schedule_v1")==="1")return;const start=new Date(2026,8,21);Object.entries(sourceScheduleRows).forEach(([empId,shifts])=>{shifts.forEach((shift,i)=>{const d=addDays(start,i),mk=monthKey(d),dk=dateKey(d);scheduleMonths[mk]??={};scheduleMonths[mk][empId]??={};scheduleMonths[mk][empId][dk]=shift})});localStorage.setItem("oh_source_schedule_v1","1");saveData()}
-function go(view,extra={},push=true){state={...state,view,...extra};if(push)window.history.pushState({view},"",`#${view}`);render();window.scrollTo({top:0,behavior:"smooth"})}
+function go(view,extra={},push=true){if(view==="history")centralHistoryLoaded=false;state={...state,view,...extra};if(push)window.history.pushState({view},"",`#${view}`);render();window.scrollTo({top:0,behavior:"smooth"})}
 function toast(msg){const old=document.querySelector(".toast");if(old)old.remove();const el=document.createElement("div"),t=String(msg||"");let kind="info";if(/สำเร็จ|เรียบร้อย|บันทึกแล้ว|รับทราบ|อัปโหลดแล้ว|ลบรายการแล้ว|สร้าง PDF/.test(t))kind="success";else if(/ไม่สำเร็จ|ไม่ได้|ผิดพลาด|หยุด|หาไม่พบ|ล้มเหลว/.test(t))kind="error";else if(/เตือน|เกิน|ใกล้|หมดเวลา/.test(t))kind="warn";el.className=`toast ${kind}`;el.textContent=t;document.body.appendChild(el);setTimeout(()=>{el.style.opacity="0";setTimeout(()=>el.remove(),180)},3200)}
 const _ohNativeFetch=window.fetch.bind(window);let _ohPendingFetch=0,_ohLoadTimer=null;
 function _ohLoading(on){let el=document.getElementById("networkLoader");if(!el){el=document.createElement("div");el.id="networkLoader";el.className="network-loader";el.innerHTML="<i></i>";document.body.appendChild(el)}document.body.classList.toggle("network-busy",Boolean(on));if(on){clearTimeout(_ohLoadTimer);_ohLoadTimer=setTimeout(()=>el.classList.add("active"),180)}else{clearTimeout(_ohLoadTimer);el.classList.remove("active")}}
@@ -730,7 +731,81 @@ async function reverseAdjustmentLotChanges(changes){if(!Array.isArray(changes))r
 async function confirmTransaction(){if(state.transactionBusy)return;const user=activeEmployee();if(!user){toast("กรุณาเลือกชื่อผู้ใช้งานก่อนทำรายการ");state.modal=null;state.view="who";consumeOverlay();render();return}const type=state.modal,lines=state.cart.map(x=>({...x}));if(!lines.length)return;state.transactionBusy=true;render();try{for(const line of lines){const p=products.find(x=>x.id===line.id),central=await getCentralStock(p);if(central!==null&&Math.abs(central-Number(line.before??p.stock))>.0001){p.stock=central;saveData();toast(`ยอด ${p.easy} ถูกแก้จากอีกเครื่องแล้ว · อัปเดตเป็น ${central} ${p.unit} กรุณาทำรายการใหม่`);state.transactionBusy=false;state.cart=[];render();return}}const operator=user.nick,operatorId=user.id,now=await centralNowIso(),centralLines=[],undoLines=[];for(const line of lines){const p=products.find(x=>x.id===line.id),before=Number(p.stock)||0,previousLast=p.last||null,target=type==="adjust"?Number(line.target):type==="receive"?before+Number(line.qty):before-Number(line.qty),qty=Math.abs(target-before),reason=type==="adjust"?line.reason||"count_plus":"";p.stock=target;p.last={type,qty,time:now,operator,operatorId,reason,before,after:target};const historyId=`tx-${Date.now()}-${p.id}`;history.unshift({id:historyId,type,reason,productId:p.id,easy:p.easy,code:p.code,qty,unit:p.unit,operator,operatorId,time:now,before,balance:target});undoLines.push({productId:p.id,before,previousLast,historyId});centralLines.push({productId:p.id,easy:p.easy,code:p.code,qty,unit:p.unit,before,balance:target,reason,last:p.last})}state.lastUndo={type,operator,createdAt:Date.now(),expiresAt:Date.now()+30000,lines:undoLines};saveData();setStoreDirty(true);state.flashId=lines[0]?.id||null;await Promise.all(centralLines.map(x=>fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory/${x.productId}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({easy:x.easy,stock:x.balance,unit:x.unit,last:x.last})})));const txRes=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_transactions.json`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type,operator,operatorId,time:now,lines:centralLines})});if(!txRes.ok)throw new Error("transaction");if(type==="receive"){const expiryLotIds=await createExpiryLotsForReceive(centralLines,now,user);if(state.lastUndo)state.lastUndo.expiryLotIds=expiryLotIds}else if(type==="issue"){const expiryMoves=await moveExpiryLotsToFront(centralLines);if(state.lastUndo)state.lastUndo.expiryMoves=expiryMoves}else if(type==="adjust"){const plus=centralLines.filter(x=>x.balance>x.before).map(x=>({...x,qty:x.balance-x.before})),forgot=centralLines.filter(x=>x.balance<x.before&&x.reason==="forgot_issue").map(x=>({...x,qty:x.before-x.balance})),special=centralLines.filter(x=>x.balance<x.before&&x.reason!=="forgot_issue").map(x=>({...x,qty:x.before-x.balance}));const changes=[];if(plus.length)changes.push(...await addToOldestExpiryLot(plus,now,user));if(forgot.length){const expiryMoves=await moveExpiryLotsToFront(forgot);if(state.lastUndo)state.lastUndo.expiryMoves=expiryMoves}if(special.length)changes.push(...await removeExpiryLotsFromStore(special,special[0]?.reason||"adjust",now,user));if(state.lastUndo)state.lastUndo.adjustmentLotChanges=changes}await markStoreChanged(now,operator);queueStoreSheetAutoSync(12000);state.modal=null;state.cart=[];state.selectedProduct=null;consumeOverlay();toast(`${type==="receive"?"รับเข้า":type==="issue"?"เบิกออก":"ปรับยอด"}เรียบร้อย · โดย ${operator}`)}catch(e){toast("รายการยังบันทึกไม่ครบ กรุณาตรวจอินเทอร์เน็ตแล้วลองใหม่");setStoreDirty(true)}finally{state.transactionBusy=false;render();setTimeout(()=>{state.flashId=null;if(state.view==="store")render()},1800);setTimeout(()=>{if(state.lastUndo&&Date.now()>=state.lastUndo.expiresAt){state.lastUndo=null;if(state.view==="store")render()}},30500)}}
 function renderUndoBanner(){const u=state.lastUndo;if(!u||Date.now()>=u.expiresAt)return "";const line=u.lines[0],p=products.find(x=>x.id===line.productId),label=u.type==="receive"?"รับเข้า":u.type==="issue"?"เบิกออก":"ปรับยอด";return `<div class="undo-banner"><span><b>รายการล่าสุด</b><small>${label} ${esc(p?.easy||"สินค้า")} · โดย ${esc(u.operator)}</small></span><button onclick="undoLastTransaction()">↶ ยกเลิก</button></div>`}
 async function undoLastTransaction(){const u=state.lastUndo;if(!u||Date.now()>=u.expiresAt){state.lastUndo=null;render();toast("หมดเวลายกเลิกรายการแล้ว");return}if(state.transactionBusy)return;state.transactionBusy=true;const restored=[];u.lines.forEach(line=>{const p=products.find(x=>x.id===line.productId);if(!p)return;p.stock=line.before;p.last=line.previousLast;history=history.filter(h=>h.id!==line.historyId);restored.push(p)});saveData();setStoreDirty(true);render();try{await Promise.all(restored.map(p=>fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory/${p.id}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({stock:p.stock,last:p.last||null})})));await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_transactions.json`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"undo",operator:activeEmployee()?.nick||"",time:await centralNowIso(),lines:u.lines,originalType:u.type})});if(Array.isArray(u.expiryLotIds)&&u.expiryLotIds.length){await Promise.all(u.expiryLotIds.map(id=>fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots/${id}.json`,{method:"DELETE"})));state.expiryLots=state.expiryLots.filter(l=>!u.expiryLotIds.includes(l.id))}if(Array.isArray(u.expiryMoves)&&u.expiryMoves.length)await reverseExpiryMoves(u.expiryMoves);if(Array.isArray(u.adjustmentLotChanges)&&u.adjustmentLotChanges.length)await reverseAdjustmentLotChanges(u.adjustmentLotChanges);state.lastUndo=null;const undoTime=await centralNowIso();await markStoreChanged(undoTime,activeEmployee()?.nick||u.operator||"");queueStoreSheetAutoSync(12000);toast("ยกเลิกรายการและล็อตที่เกี่ยวข้องแล้ว")}catch(e){toast("ยกเลิกในเครื่องแล้ว แต่ส่งขึ้นระบบกลางไม่สำเร็จ")}finally{state.transactionBusy=false;render()}}
-function renderHistory(){const reasonLabel={forgot_issue:"ลืมเบิก",waste:"ของเสีย",count_mismatch:"นับคลาดเคลื่อน",other:"อื่น ๆ",count_plus:"ปรับเพิ่ม"};const items=history.slice(0,100).map(h=>{const isAdjust=h.type==="adjust",label=h.type==="receive"?"รับเข้า":h.type==="issue"?"เบิกออก":"ปรับยอด",sign=h.type==="receive"?"+":h.type==="issue"?"−":"±",detail=isAdjust?`${h.before??""} → ${h.balance}${h.reason?` · ${reasonLabel[h.reason]||h.reason}`:""}`:`${h.qty} ${esc(h.unit)}`;return `<div class="history-item"><span class="history-icon ${h.type==='receive'?'in':h.type==='issue'?'out':''}">${sign}</span><span class="history-main"><b>${label} ${esc(h.easy)} ${detail}</b><small>${new Intl.DateTimeFormat('th-TH',{dateStyle:'medium',timeStyle:'short'}).format(new Date(h.time))} · โดย ${esc(h.operator)}</small></span><strong>เหลือ ${h.balance}</strong></div>`}).join("");return `${header(true,"ประวัติสโตร์")}<main class="shell"><div class="page-head"><div class="head-text"><div class="eyebrow">ตรวจสอบย้อนหลัง</div><h1 class="page-title">ประวัติรับเข้า · ปรับยอด · เบิกออก</h1><p class="page-sub">แสดง 100 รายการล่าสุด พร้อมเหตุผลการปรับยอด</p></div></div><div class="history-list">${items||`<div class="empty panel">ยังไม่มีประวัติการทำรายการ</div>`}</div></main>`}
+
+async function loadCentralHistory(silent=false){
+  if(centralHistoryLoading)return;
+  centralHistoryLoading=true;
+  if(state.view==="history"&&!silent)render();
+  try{
+    const r=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_transactions.json?t=${Date.now()}`,{cache:"no-store"});
+    if(!r.ok)throw new Error("firebase");
+    const raw=await r.json()||{};
+    const flat=[];
+    Object.entries(raw).forEach(([txId,tx])=>{
+      if(!tx||!tx.time)return;
+      const type=String(tx.type||"");
+      if(type==="undo"){
+        flat.push({
+          id:`${txId}-undo`,
+          type:"undo",
+          easy:(tx.lines&&tx.lines[0]&&products.find(p=>p.id===tx.lines[0].productId)?.easy)||"รายการล่าสุด",
+          qty:0,
+          unit:"",
+          operator:tx.operator||"",
+          time:tx.time,
+          before:null,
+          balance:null,
+          reason:"",
+          txId
+        });
+        return;
+      }
+      (Array.isArray(tx.lines)?tx.lines:[]).forEach((line,i)=>{
+        const p=products.find(x=>String(x.id)===String(line.productId)||String(x.code)===String(line.code));
+        flat.push({
+          id:`${txId}-${i}`,
+          type,
+          reason:line.reason||"",
+          productId:line.productId||p?.id||"",
+          easy:line.easy||p?.easy||line.code||"สินค้า",
+          code:line.code||p?.code||"",
+          qty:Number(line.qty)||0,
+          unit:line.unit||p?.unit||"",
+          operator:tx.operator||line.operator||"",
+          operatorId:tx.operatorId||"",
+          time:tx.time,
+          before:line.before,
+          balance:line.balance
+        });
+      });
+    });
+    flat.sort((a,b)=>new Date(b.time||0)-new Date(a.time||0));
+    history=flat.slice(0,300);
+    localStorage.setItem("oh_history",JSON.stringify(history));
+    centralHistoryLoaded=true;
+  }catch(e){
+    if(!silent)toast("ดึงประวัติกลางไม่สำเร็จ");
+  }finally{
+    centralHistoryLoading=false;
+    if(state.view==="history")render();
+  }
+}
+
+function renderHistory(){
+  if(!centralHistoryLoaded&&!centralHistoryLoading)setTimeout(()=>loadCentralHistory(true),0);
+  const reasonLabel={forgot_issue:"ลืมเบิก",waste:"ของเสีย",count_mismatch:"นับคลาดเคลื่อน",other:"อื่น ๆ",count_plus:"ปรับเพิ่ม"};
+  const items=history.slice(0,100).map(h=>{
+    if(h.type==="undo"){
+      return `<div class="history-item"><span class="history-icon">↶</span><span class="history-main"><b>ยกเลิกรายการ ${esc(h.easy||"")}</b><small>${new Intl.DateTimeFormat('th-TH',{dateStyle:'medium',timeStyle:'short'}).format(new Date(h.time))} · โดย ${esc(h.operator||"")}</small></span><strong>ย้อนกลับ</strong></div>`;
+    }
+    const isAdjust=h.type==="adjust",
+          label=h.type==="receive"?"รับเข้า":h.type==="issue"?"เบิกออก":"ปรับยอด",
+          sign=h.type==="receive"?"+":h.type==="issue"?"−":"±",
+          detail=isAdjust?`${h.before??""} → ${h.balance??""}${h.reason?` · ${reasonLabel[h.reason]||h.reason}`:""}`:`${h.qty} ${esc(h.unit||"")}`;
+    return `<div class="history-item"><span class="history-icon ${h.type==='receive'?'in':h.type==='issue'?'out':''}">${sign}</span><span class="history-main"><b>${label} ${esc(h.easy||"สินค้า")} ${detail}</b><small>${new Intl.DateTimeFormat('th-TH',{dateStyle:'medium',timeStyle:'short'}).format(new Date(h.time))} · โดย ${esc(h.operator||"")}</small></span><strong>${h.balance===null||h.balance===undefined?"":`เหลือ ${h.balance}`}</strong></div>`
+  }).join("");
+  return `${header(true,"ประวัติสโตร์")}<main class="shell"><div class="page-head"><div class="head-text"><div class="eyebrow">ตรวจสอบย้อนหลัง · ข้อมูลกลางทุกเครื่อง</div><h1 class="page-title">ประวัติรับเข้า · ปรับยอด · เบิกออก</h1><p class="page-sub">${centralHistoryLoading?"กำลังดึงประวัติจาก Firebase…":"แสดง 100 รายการล่าสุดจาก Firebase พร้อมเหตุผลการปรับยอด"}</p></div><button class="ghost-btn" ${centralHistoryLoading?"disabled":""} onclick="loadCentralHistory()">↻ รีเฟรช</button></div><div class="history-list">${items||`<div class="empty panel">${centralHistoryLoading?"กำลังโหลดประวัติ…":"ยังไม่มีประวัติการทำรายการ"}</div>`}</div></main>`
+}
 
 function firebaseValues(data){return data&&typeof data==="object"?Object.values(data):[]}
 function finiteNumber(value){const n=Number(value);return Number.isFinite(n)?n:0}
