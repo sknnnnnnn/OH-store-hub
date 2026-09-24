@@ -235,7 +235,66 @@
     .store-backup-tools .inline-actions{padding:0 0 12px}
     .config-empty-note{padding:12px 14px;border-radius:14px;background:#f8fafc;color:var(--muted);font-size:13px;border:1px solid var(--line);margin-top:8px}
 
-  </style>
+  
+    /* V8.6.5 · clearer usage + in-app document camera */
+    .usage-explain{margin:12px 0 18px;background:#eef8f3;border:1px solid #cce9dc;border-radius:18px;padding:14px 16px}
+    .usage-explain b{display:block;font-size:16px;margin-bottom:5px;color:#126448}
+    .usage-explain p{margin:0;color:#49645b;font-size:13px;line-height:1.55}
+    .usage-formula{margin-top:8px;display:inline-flex;flex-wrap:wrap;gap:5px;align-items:center;font-weight:900;color:#163c31}
+    .usage-product-cell small{display:block;color:var(--muted);margin-top:5px;line-height:1.4}
+    .usage-real{font-size:19px;color:var(--green)}
+    .usage-latest{font-size:17px}
+    .usage-mobile-list{display:none}
+    .usage-mobile-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px}
+    .usage-mobile-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:12px}
+    .usage-mobile-head b{font-size:16px}.usage-mobile-head small{display:block;color:var(--muted);margin-top:3px}
+    .usage-mobile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .usage-mobile-metric{background:#f8fafc;border-radius:13px;padding:10px}
+    .usage-mobile-metric span{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}
+    .usage-mobile-metric b{font-size:16px}
+    .usage-mobile-metric.used{background:#eef8f3}.usage-mobile-metric.used b{color:var(--green);font-size:20px}
+    .usage-current-breakdown{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);color:var(--muted);font-size:11px;line-height:1.45}
+    .scan-camera-backdrop{position:fixed;inset:0;z-index:1000;background:#090b0d;display:flex;flex-direction:column}
+    .scan-camera-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(12px + env(safe-area-inset-top)) 14px 12px;color:#fff;background:#0d1115}
+    .scan-camera-head b{font-size:17px}.scan-camera-close{width:44px;height:44px;border:0;border-radius:50%;background:#23282e;color:#fff;font-size:24px}
+    .scan-camera-stage{position:relative;flex:1;min-height:0;display:grid;place-items:center;overflow:hidden;background:#000}
+    .scan-camera-stage video{width:100%;height:100%;object-fit:cover}
+    .scan-camera-guide{position:absolute;inset:8% 6%;border:2px solid rgba(255,255,255,.75);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.16);pointer-events:none}
+    .scan-camera-guide:after{content:"วางเอกสารให้อยู่ในกรอบ";position:absolute;left:50%;bottom:12px;transform:translateX(-50%);white-space:nowrap;background:rgba(0,0,0,.55);color:#fff;border-radius:999px;padding:6px 11px;font-size:12px}
+    .scan-camera-actions{padding:14px 18px calc(14px + env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;background:#0d1115}
+    .scan-shutter{width:72px;height:72px;border-radius:50%;border:5px solid #fff;background:#e9edf0;box-shadow:inset 0 0 0 4px #0d1115}
+    @media(max-width:760px){
+      .usage-round-table-wrap{display:none!important}
+      .usage-mobile-list{display:grid;gap:10px}
+    }
+
+
+    /* V8.6.6 · Excel schedule import */
+    .excel-import-card{background:#f0f7ff;border:1px solid #bfd9fb;border-radius:18px;padding:14px;margin-bottom:14px}
+    .excel-import-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .excel-import-top b{font-size:16px}.excel-import-top small{display:block;color:#55708f;margin-top:3px}
+    .excel-badges{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+    .excel-badge{display:inline-flex;padding:6px 9px;border-radius:999px;background:#fff;border:1px solid #cee0f5;font-size:11px;font-weight:900;color:#315d8d}
+    .excel-badge.warn{background:#fff6e8;border-color:#f4cf94;color:#9a5a00}
+    .excel-badge.ok{background:#edf8f2;border-color:#cbe8d8;color:#176c4d}
+    .excel-mode{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+    .excel-mode button{border:1px solid #cbd5e1;background:#fff;border-radius:13px;padding:11px;font-weight:900;color:#475569;text-align:left}
+    .excel-mode button.active{border-color:#2563eb;background:#eff6ff;color:#1d4ed8;box-shadow:0 0 0 2px rgba(37,99,235,.08)}
+    .excel-mode button small{display:block;font-weight:600;color:#64748b;margin-top:3px;line-height:1.35}
+    .excel-errors{margin-top:10px;padding:10px 12px;background:#fff7ed;border:1px solid #fed7aa;border-radius:13px;color:#9a4b0d;font-size:12px;line-height:1.5}
+    .excel-change{position:relative}
+    .excel-change.changed:after{content:"";position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:#2563eb}
+    @media(max-width:640px){.excel-mode{grid-template-columns:1fr}.excel-import-top{display:block}}
+
+
+    /* V8.6.8 · age settings on top + stable drafts */
+    .age-manage{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;margin:0 0 16px}
+    .age-manage-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .age-manage-head h3{margin:0 0 3px;font-size:18px}.age-manage-head p{margin:0;color:var(--muted);font-size:12px}
+    .age-manage-count{padding:6px 10px;border-radius:999px;background:#f3f5f8;color:var(--muted);font-size:11px;font-weight:900;white-space:nowrap}
+    .age-existing{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+
+</style>
 
 <style>body.network-busy .sync-btn:not(:disabled),body.network-busy .primary-btn[data-network]{cursor:progress}.network-busy .network-loader.active{opacity:1}</style>
 </head>
@@ -331,7 +390,7 @@ const sourceScheduleRows = {
   p09:["OFF","OFF","OFF","OFF","13","13","13","13","OFF","OFF","OFF","13","13","13","13","OFF","OFF","OFF","13","13","13","13","OFF","OFF","OFF","13","13","13","13","OFF"],
   p10:["LEAVE","13","13","13","13","13","OFF","11","13","11","11","11","13","OFF","11","11","13","13","13","LEAVE","OFF","11","11","11","11","11","11","OFF","13","11"]
 };
-let state = {view:localStorage.getItem("oh_current_user")?"home":"who",currentUser:localStorage.getItem("oh_current_user")||null,selectedDate:startOfDay(new Date()),selectedEmployee:null,personMode:"week",storeQuery:localStorage.getItem("oh_store_query")||"",storeCategory:"all",scheduleMonthOpen:false,modal:null,cart:[],selectedProduct:null,productQuery:"",modalQty:1,flashId:null,lastUndo:null,scheduleEditor:null,rosterModal:false,catalogLoading:false,catalogLoaded:false,storeSyncing:false,storeDirty:localStorage.getItem("oh_store_dirty")==="1",storeLastSync:localStorage.getItem("oh_store_last_sync")||"",usage:null,usageLoading:false,memos:[],memoLoaded:false,memoFilter:"active",memoModal:false,pdfViewer:null,memoLoading:false,expiryRules:{},expiryLots:[],expiryLoaded:false,expiryLoading:false,expiryShowAck:false,openRules:{},openMemos:[],openLoaded:false,openLoading:false,openProduct:"",openType:"bag",qrValue:"",scanPages:[],scanMode:"document",scanBuilding:false,leaveRequests:[],leaveLoaded:false,leaveLoading:false,leaveShowAck:false,transactionBusy:false,adjustReason:"forgot_issue",usageRounds:[],usageShowHistory:false};
+let state = {view:localStorage.getItem("oh_current_user")?"home":"who",currentUser:localStorage.getItem("oh_current_user")||null,selectedDate:startOfDay(new Date()),selectedEmployee:null,personMode:"week",storeQuery:localStorage.getItem("oh_store_query")||"",storeCategory:"all",scheduleMonthOpen:false,modal:null,cart:[],selectedProduct:null,productQuery:"",modalQty:1,flashId:null,lastUndo:null,scheduleEditor:null,rosterModal:false,catalogLoading:false,catalogLoaded:false,storeSyncing:false,storeDirty:localStorage.getItem("oh_store_dirty")==="1",storeLastSync:localStorage.getItem("oh_store_last_sync")||"",usage:null,usageLoading:false,memos:[],memoLoaded:false,memoFilter:"active",memoModal:false,pdfViewer:null,memoLoading:false,expiryRules:{},expiryLots:[],expiryLoaded:false,expiryLoading:false,expiryShowAck:false,openRules:{},openMemos:[],openLoaded:false,openLoading:false,openProduct:"",openType:"bag",qrValue:"",scanPages:[],scanMode:"document",scanBuilding:false,leaveRequests:[],leaveLoaded:false,leaveLoading:false,leaveShowAck:false,transactionBusy:false,adjustReason:"forgot_issue",usageRounds:[],usageShowHistory:false,expiryRuleDraft:{product:"",days:""},openRuleDraft:{product:"",openAmount:"",openUnit:"day",transferAmount:"",transferUnit:"day"}};
 
 function startOfDay(d){const x=new Date(d);x.setHours(0,0,0,0);return x}
 function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
@@ -346,7 +405,7 @@ function initials(name){return [...name].slice(0,2).join("")}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
 function saveData(){localStorage.setItem("oh_products",JSON.stringify(products));localStorage.setItem("oh_history",JSON.stringify(history));localStorage.setItem("oh_schedule_months",JSON.stringify(scheduleMonths));localStorage.setItem("oh_employees",JSON.stringify(employees))}
 function seedScheduleFromSourceImage(){if(!localStorage.getItem("oh_last_schedule_cycle"))localStorage.setItem("oh_last_schedule_cycle","2026-09-21");if(localStorage.getItem("oh_source_schedule_v1")==="1")return;const start=new Date(2026,8,21);Object.entries(sourceScheduleRows).forEach(([empId,shifts])=>{shifts.forEach((shift,i)=>{const d=addDays(start,i),mk=monthKey(d),dk=dateKey(d);scheduleMonths[mk]??={};scheduleMonths[mk][empId]??={};scheduleMonths[mk][empId][dk]=shift})});localStorage.setItem("oh_source_schedule_v1","1");saveData()}
-function go(view,extra={},push=true){if(view==="history")centralHistoryLoaded=false;state={...state,view,...extra};if(push)window.history.pushState({view},"",`#${view}`);render();window.scrollTo({top:0,behavior:"smooth"})}
+function go(view,extra={},push=true){if(state.view==="scanner"&&view!=="scanner")closeScanCamera();if(view==="history")centralHistoryLoaded=false;state={...state,view,...extra};if(push)window.history.pushState({view},"",`#${view}`);render();window.scrollTo({top:0,behavior:"smooth"})}
 function toast(msg){const old=document.querySelector(".toast");if(old)old.remove();const el=document.createElement("div"),t=String(msg||"");let kind="info";if(/สำเร็จ|เรียบร้อย|บันทึกแล้ว|รับทราบ|อัปโหลดแล้ว|ลบรายการแล้ว|สร้าง PDF/.test(t))kind="success";else if(/ไม่สำเร็จ|ไม่ได้|ผิดพลาด|หยุด|หาไม่พบ|ล้มเหลว/.test(t))kind="error";else if(/เตือน|เกิน|ใกล้|หมดเวลา/.test(t))kind="warn";el.className=`toast ${kind}`;el.textContent=t;document.body.appendChild(el);setTimeout(()=>{el.style.opacity="0";setTimeout(()=>el.remove(),180)},3200)}
 const _ohNativeFetch=window.fetch.bind(window);let _ohPendingFetch=0,_ohLoadTimer=null;
 function _ohLoading(on){let el=document.getElementById("networkLoader");if(!el){el=document.createElement("div");el.id="networkLoader";el.className="network-loader";el.innerHTML="<i></i>";document.body.appendChild(el)}document.body.classList.toggle("network-busy",Boolean(on));if(on){clearTimeout(_ohLoadTimer);_ohLoadTimer=setTimeout(()=>el.classList.add("active"),180)}else{clearTimeout(_ohLoadTimer);el.classList.remove("active")}}
@@ -392,7 +451,24 @@ function getNextScheduleCycleStart(){let latest=null;Object.values(scheduleMonth
 function openNextMonthEditor(){const start=getNextScheduleCycleStart(),cycle=buildBlankScheduleCycle(start);state.scheduleEditor={start,end:cycle.end,dates:cycle.dates,data:cycle.data,source:"manual"};pushOverlay("schedule");render()}
 function closeScheduleEditor(fromHistory=false){if(!fromHistory&&window.history.state?.overlay==="schedule"){window.history.back();return}state.scheduleEditor=null;render()}
 function cycleEditorShift(empId,dayKey){const order=["NONE","6","7","11","13","OFF","LEAVE"],current=state.scheduleEditor.data[empId][dayKey]||"NONE",next=order[(order.indexOf(current)+1)%order.length];state.scheduleEditor.data[empId][dayKey]=next;render()}
-function renderScheduleEditor(){const ed=state.scheduleEditor,dates=ed.dates,head=dates.map(d=>`<th><span>${thaiDays[d.getDay()]}</span><br><b>${d.getDate()}</b></th>`).join(""),rows=employees.map(emp=>{ed.data[emp.id]??={};return `<tr><td class="name-col"><span class="matrix-person">${avatarArt(emp)}<b>${esc(emp.nick)}</b></span></td>${dates.map(d=>{const key=dateKey(d),code=ed.data[emp.id][key]||"NONE",s=shiftInfo[code]||shiftInfo.NONE;return `<td><button class="shift-cell shift-${code}" onclick="cycleEditorShift('${emp.id}','${key}')">${s.short}</button></td>`}).join("")}</tr>`}).join(""),period=`${fmtDate(ed.start,false)} – ${fmtDate(ed.end,false)}`,importCard=ed.imageUrl?`<div class="import-card"><img src="${ed.imageUrl}" alt="รูปตารางที่อัปโหลด"><div class="import-copy"><b>${esc(ed.imageName||"รูปตารางงาน")}</b><span id="importStatus">${esc(ed.importStatus||"เตรียมอ่านรูป…")}</span><div class="import-progress"><i id="importProgress" style="width:${ed.importProgress||0}%"></i></div></div></div>`:"";return `<div class="modal-backdrop" onclick="if(event.target===this)closeScheduleEditor()"><section class="modal schedule-modal"><div class="editor-head"><div class="head-text"><h2>${ed.source==="image"?"รูปนี้จะลงรอบถัดไป":"เพิ่มตารางรอบถัดไป"}</h2><p><strong>${period}</strong> · เป็นฉบับร่างและจะไม่ทับรอบเก่า</p></div><button class="icon-btn" onclick="closeScheduleEditor()">×</button></div>${importCard}<div class="matrix-wrap"><table class="schedule-matrix"><thead><tr><th class="name-col">พนักงาน</th>${head}</tr></thead><tbody>${rows}</tbody></table></div><p class="matrix-hint">ตรวจทุกช่องก่อนบันทึก · ช่อง — คือยังไม่มีข้อมูลและระบบจะไม่เดากะให้</p><div class="editor-legend"><span>— ไม่มีข้อมูล</span><span>06–15 กะเช้า</span><span>07–16 กะเช้า</span><span>11–20 กะกลาง</span><span>13–22 กะบ่าย</span><span>หยุด</span><span>ลา</span></div><div class="editor-actions"><button class="ghost-btn" onclick="closeScheduleEditor()">ยกเลิก</button><button class="save-schedule" onclick="saveScheduleEditor()">บันทึกเฉพาะรอบ ${period}</button></div></section></div>`}
+function renderScheduleEditor(){
+  const ed=state.scheduleEditor,dates=ed.dates,
+        head=dates.map(d=>`<th><span>${thaiDays[d.getDay()]}</span><br><b>${d.getDate()}</b></th>`).join(""),
+        rows=employees.map(emp=>{
+          ed.data[emp.id]??={};
+          return `<tr><td class="name-col"><span class="matrix-person">${avatarArt(emp)}<b>${esc(emp.nick)}</b></span></td>${dates.map(d=>{
+            const key=dateKey(d),code=ed.data[emp.id][key]||"NONE",s=shiftInfo[code]||shiftInfo.NONE,
+                  old=scheduleExistingAt(emp.id,d),changed=ed.source==="excel"&&old!==code;
+            return `<td><button class="shift-cell shift-${code} excel-change ${changed?'changed':''}" onclick="cycleEditorShift('${emp.id}','${key}')" title="${changed?`เดิม ${shiftInfo[old]?.short||"—"} → ใหม่ ${s.short}`:""}">${s.short}</button></td>`
+          }).join("")}</tr>`
+        }).join(""),
+        period=`${fmtDate(ed.start,false)} – ${fmtDate(ed.end,false)}`,
+        importCard=ed.imageUrl?`<div class="import-card"><img src="${ed.imageUrl}" alt="รูปตารางที่อัปโหลด"><div class="import-copy"><b>${esc(ed.imageName||"รูปตารางงาน")}</b><span id="importStatus">${esc(ed.importStatus||"เตรียมอ่านรูป…")}</span><div class="import-progress"><i id="importProgress" style="width:${ed.importProgress||0}%"></i></div></div></div>`:"",
+        excelCard=ed.source==="excel"?`<section class="excel-import-card"><div class="excel-import-top"><span><b>▦ ${esc(ed.excelName||"Excel")}</b><small>ชีต ${esc(ed.excelSheet||"")} · ตรวจพบช่วง <strong>${esc(ed.excelPeriod||period)}</strong></small></span></div><div class="excel-badges"><span class="excel-badge ok">จับคู่พนักงาน ${ed.excelMatched||0} คน</span><span class="excel-badge">${dates.length} วัน</span><span class="excel-badge ${ed.existingCells?'warn':''}">${ed.existingCells?`มีข้อมูลเดิม ${ed.existingCells} ช่อง`:"ช่วงนี้ยังไม่มีข้อมูลเดิม"}</span><span class="excel-badge">${ed.changedCells||0} ช่องจะเปลี่ยน</span></div>${(ed.excelUnmatched?.length||ed.excelUnknown?.length)?`<div class="excel-errors">${ed.excelUnmatched?.length?`<b>ชื่อที่จับคู่ไม่ได้:</b> ${ed.excelUnmatched.map(esc).join(", ")}<br>`:""}${ed.excelUnknown?.length?`<b>กะที่อ่านไม่ได้:</b> ${ed.excelUnknown.map(esc).join(", ")}`:""}</div>`:""}<div class="excel-mode"><button class="${ed.importMode!=="replace"?'active':''}" onclick="setExcelImportMode('update')">อัปเดตเฉพาะวันที่ในไฟล์<small>เหมาะกับไฟล์แก้ตารางเดิม ข้อมูลวันอื่นจะไม่ถูกแตะ</small></button><button class="${ed.importMode==="replace"?'active':''}" onclick="setExcelImportMode('replace')">แทนที่ช่วงวันที่นี้ทั้งหมด<small>ล้างตารางเดิมเฉพาะช่วง ${period} แล้วใช้ Excel ชุดนี้แทน</small></button></div></section>`:"",
+        title=ed.source==="excel"?"ตรวจตารางจาก Excel":ed.source==="image"?"รูปนี้จะลงรอบถัดไป":"เพิ่มตารางรอบถัดไป",
+        subtitle=ed.source==="excel"?`${ed.excelPeriod||period} · ตรวจ Preview และเลือกวิธีอัปเดตก่อนยืนยัน`:`${period} · เป็นฉบับร่างและจะไม่ทับรอบเก่า`;
+  return `<div class="modal-backdrop" onclick="if(event.target===this)closeScheduleEditor()"><section class="modal schedule-modal"><div class="editor-head"><div class="head-text"><h2>${title}</h2><p><strong>${subtitle}</strong></p></div><button class="icon-btn" onclick="closeScheduleEditor()">×</button></div>${excelCard}${importCard}<div class="matrix-wrap"><table class="schedule-matrix"><thead><tr><th class="name-col">พนักงาน</th>${head}</tr></thead><tbody>${rows}</tbody></table></div><p class="matrix-hint">${ed.source==="excel"?"จุดสีน้ำเงิน = ช่องที่ต่างจากตารางเดิม · แตะช่องเพื่อแก้กะก่อนยืนยัน":"ตรวจทุกช่องก่อนบันทึก · ช่อง — คือยังไม่มีข้อมูลและระบบจะไม่เดากะให้"}</p><div class="editor-legend"><span>— ไม่มีข้อมูล</span><span>06–15 กะเช้า</span><span>07–16 กะเช้า</span><span>11–20 กะกลาง</span><span>13–22 กะบ่าย</span><span>หยุด</span><span>ลา</span></div><div class="editor-actions"><button class="ghost-btn" onclick="closeScheduleEditor()">ยกเลิก</button><button class="save-schedule" onclick="saveScheduleEditor()">${ed.source==="excel"?(ed.importMode==="replace"?"ยืนยันแทนที่ช่วงนี้":"ยืนยันอัปเดตตาราง"):`บันทึกเฉพาะรอบ ${period}`}</button></div></section></div>`
+}
 function updateImportStatus(textValue,progress){if(!state.scheduleEditor)return;state.scheduleEditor.importStatus=textValue;state.scheduleEditor.importProgress=Math.round(progress||0);const label=document.getElementById("importStatus"),bar=document.getElementById("importProgress");if(label)label.textContent=textValue;if(bar)bar.style.width=`${state.scheduleEditor.importProgress}%`}
 function fileToDataUrl(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)})}
 function loadImageFile(file){return new Promise((resolve,reject)=>{const img=new Image();const url=URL.createObjectURL(file);img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("image"))};img.src=url})}
@@ -400,8 +476,211 @@ function loadTesseract(){if(window.Tesseract)return Promise.resolve(window.Tesse
 function cellColorCode(ctx,x0,y0,x1,y1){let red=0,yellow=0,total=0;const data=ctx.getImageData(Math.max(0,Math.floor(x0)),Math.max(0,Math.floor(y0)),Math.max(1,Math.floor(x1-x0)),Math.max(1,Math.floor(y1-y0))).data;for(let i=0;i<data.length;i+=16){const r=data[i],g=data[i+1],b=data[i+2];total++;if(r>150&&r>g*1.38&&r>b*1.35)red++;if(r>155&&g>115&&b<115&&r>g*1.02)yellow++}if(red/total>.16)return "OFF";if(yellow/total>.13)return "LEAVE";return null}
 function normalizeOcrShift(textValue){const s=String(textValue||"").toUpperCase().replace(/[^A-Z0-9]/g,"");if(/^F+$/.test(s)||s.includes("OFF"))return "OFF";if(s.includes("13"))return "13";if(s.includes("11")||s==="II")return "11";if(s==="7")return "7";if(s==="6")return "6";return null}
 async function parseScheduleImage(file,img){const ed=state.scheduleEditor,canvas=document.createElement("canvas"),maxWidth=1800,scale=Math.min(1,maxWidth/img.naturalWidth);canvas.width=Math.round(img.naturalWidth*scale);canvas.height=Math.round(img.naturalHeight*scale);const ctx=canvas.getContext("2d",{willReadFrequently:true});ctx.drawImage(img,0,0,canvas.width,canvas.height);const roster=employees.filter(e=>e.id!=="p00"),rowCount=roster.length,colCount=ed.dates.length,xStart=canvas.width*.232,xEnd=canvas.width*.997,yStart=canvas.height*.102,yEnd=canvas.height*.995,rowH=(yEnd-yStart)/Math.max(1,rowCount),colW=(xEnd-xStart)/colCount;let words=[];try{const T=await loadTesseract();const result=await T.recognize(canvas,"eng",{logger:m=>{if(m.status==="recognizing text")updateImportStatus(`กำลังอ่านตัวเลขจากรูป ${Math.round((m.progress||0)*100)}%`,15+(m.progress||0)*65)}});words=result?.data?.words||[]}catch(error){updateImportStatus("อ่านสีในตารางได้ แต่ระบบอ่านข้อความจากรูปไม่สำเร็จ",78)}let found=0;roster.forEach((emp,row)=>{ed.data[emp.id]??={};ed.dates.forEach((date,col)=>{const x0=xStart+col*colW,x1=x0+colW,y0=yStart+row*rowH,y1=y0+rowH;let code=cellColorCode(ctx,x0+1,y0+1,x1-1,y1-1);if(!code){const matches=words.filter(w=>{const box=w.bbox||{},cx=((box.x0||0)+(box.x1||0))/2,cy=((box.y0||0)+(box.y1||0))/2;return cx>=x0&&cx<x1&&cy>=y0&&cy<y0+rowH*.62}).map(w=>normalizeOcrShift(w.text)).filter(Boolean);code=matches[0]||null}if(code){ed.data[emp.id][dateKey(date)]=code;found++}})});const total=roster.length*ed.dates.length,unresolved=total-found;updateImportStatus(`อ่านได้ ${found} ช่อง · เหลือ ${unresolved} ช่องให้แตะตรวจ`,100);render();toast("อ่านรูปเป็นตารางร่างแล้ว กรุณาตรวจช่อง — ก่อนบันทึก")}
+async 
+function loadSheetJs(){
+  if(window.XLSX)return Promise.resolve(window.XLSX);
+  if(window.__ohSheetJsLoading)return window.__ohSheetJsLoading;
+  window.__ohSheetJsLoading=new Promise((resolve,reject)=>{
+    const script=document.createElement("script");
+    script.src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";
+    script.onload=()=>window.XLSX?resolve(window.XLSX):reject(new Error("xlsx"));
+    script.onerror=()=>reject(new Error("xlsx"));
+    document.head.appendChild(script);
+  }).finally(()=>window.__ohSheetJsLoading=null);
+  return window.__ohSheetJsLoading;
+}
+function scheduleNameKey(value){
+  return String(value||"").toLowerCase().replace(/\s+/g,"").replace(/[().,_\-–—]/g,"");
+}
+function excelDateFromValue(value,XLSX){
+  if(value instanceof Date&&!Number.isNaN(value.getTime()))return startOfDay(value);
+  if(typeof value==="number"&&value>20000){
+    const p=XLSX?.SSF?.parse_date_code?.(value);
+    if(p)return new Date(p.y,p.m-1,p.d);
+  }
+  const s=String(value??"").trim();
+  if(!s)return null;
+  let m=s.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?$/);
+  if(m){
+    let y=m[3]?Number(m[3]):NaN;
+    if(Number.isFinite(y)){if(y<100)y+=2000;if(y>2400)y-=543}
+    if(!Number.isFinite(y))return {day:Number(m[1]),month:Number(m[2]),year:null,partial:true};
+    const d=new Date(y,Number(m[2])-1,Number(m[1]));
+    return Number.isNaN(d.getTime())?null:d;
+  }
+  const parsed=new Date(s);
+  return Number.isNaN(parsed.getTime())?null:startOfDay(parsed);
+}
+function inferExcelMonthYear(matrix,fileName){
+  const text=(matrix.flat().map(v=>String(v??"")).join(" ")+" "+String(fileName||"")).toLowerCase();
+  const months=[
+    ["มกราคม","ม.ค","january","jan"],["กุมภาพันธ์","ก.พ","february","feb"],["มีนาคม","มี.ค","march","mar"],
+    ["เมษายน","เม.ย","april","apr"],["พฤษภาคม","พ.ค","may"],["มิถุนายน","มิ.ย","june","jun"],
+    ["กรกฎาคม","ก.ค","july","jul"],["สิงหาคม","ส.ค","august","aug"],["กันยายน","ก.ย","september","sep"],
+    ["ตุลาคม","ต.ค","october","oct"],["พฤศจิกายน","พ.ย","november","nov"],["ธันวาคม","ธ.ค","december","dec"]
+  ];
+  let month=null;
+  months.forEach((names,i)=>{if(month===null&&names.some(n=>text.includes(n)))month=i});
+  const years=[...text.matchAll(/(?:^|\D)(25\d{2}|20\d{2})(?:\D|$)/g)].map(x=>Number(x[1]));
+  let year=years.length?years[0]:null;if(year&&year>2400)year-=543;
+  return {month,year};
+}
+function normalizeExcelShift(value){
+  if(value===null||value===undefined||value==="")return "NONE";
+  if(typeof value==="number"){
+    if(value===6)return "6";if(value===7)return "7";if(value===11)return "11";if(value===13)return "13";
+    // Excel time fractions such as 06:00
+    if(value>0&&value<1){const h=Math.round(value*24);if([6,7,11,13].includes(h))return String(h)}
+  }
+  let s=String(value).trim().toUpperCase().replace(/\s+/g,"");
+  if(!s||s==="-"||s==="—"||s==="NONE"||s==="N/A")return "NONE";
+  if(s.includes("ลา")||s.includes("LEAVE"))return "LEAVE";
+  if(s.includes("หยุด")||s==="OFF"||s==="O"||s==="X")return "OFF";
+  const hm=s.match(/(^|[^0-9])(6|06|7|07|11|13)(?::?\d{2})?/);
+  if(hm){const h=String(Number(hm[2]));if(["6","7","11","13"].includes(h))return h}
+  if(["6","7","11","13"].includes(s))return s;
+  return null;
+}
+function excelPeriodText(dates){
+  if(!dates?.length)return "ไม่พบช่วงวันที่";
+  const first=dates[0],last=dates[dates.length-1];
+  const oneMonth=first.getMonth()===last.getMonth()&&first.getFullYear()===last.getFullYear();
+  return oneMonth
+    ? new Intl.DateTimeFormat("th-TH",{month:"long",year:"numeric"}).format(first)
+    : `${fmtDate(first,false)} ${first.getFullYear()+543} – ${fmtDate(last,false)} ${last.getFullYear()+543}`;
+}
+function scheduleExistingAt(empId,d){return scheduleMonths[monthKey(d)]?.[empId]?.[dateKey(d)]||"NONE"}
+function excelChangeCount(data,dates){
+  let n=0;
+  employees.forEach(emp=>dates.forEach(d=>{const dk=dateKey(d),next=data?.[emp.id]?.[dk]??"NONE",old=scheduleExistingAt(emp.id,d);if(next!==old)n++}));
+  return n;
+}
+function setExcelImportMode(mode){if(!state.scheduleEditor||state.scheduleEditor.source!=="excel")return;state.scheduleEditor.importMode=mode==="replace"?"replace":"update";render()}
+async function importScheduleExcel(input){
+  const file=input.files?.[0];input.value="";
+  if(!file)return;
+  try{
+    const XLSX=await loadSheetJs(),buffer=await file.arrayBuffer(),
+          book=XLSX.read(buffer,{type:"array",cellDates:true}),
+          sheet=book.Sheets[book.SheetNames[0]],
+          matrix=XLSX.utils.sheet_to_json(sheet,{header:1,raw:true,defval:""});
+    if(!matrix.length)throw new Error("empty");
+
+    // Header row = row containing the most date-like cells.
+    let headerRow=-1,dateCells=[],best=0;
+    matrix.slice(0,20).forEach((row,ri)=>{
+      const found=[];
+      row.forEach((v,ci)=>{const d=excelDateFromValue(v,XLSX);if(d)found.push({ci,d})});
+      if(found.length>best){best=found.length;headerRow=ri;dateCells=found}
+    });
+    if(headerRow<0||dateCells.length<2)throw new Error("dates");
+
+    const inferred=inferExcelMonthYear(matrix,file.name);
+    // Resolve partial day/month dates using inferred year/month and handle 21->20 cross-month rounds.
+    let prevResolved=null;
+    const resolved=dateCells.map((c,index)=>{
+      let d=c.d;
+      if(d?.partial){
+        let month=(Number(d.month)||inferred.month+1)-1,year=d.year||inferred.year||new Date().getFullYear();
+        d=new Date(year,month,Number(d.day));
+      }
+      if(!(d instanceof Date)||Number.isNaN(d.getTime())){
+        // Plain day number header: infer from title/file and roll month if date decreases.
+        const num=Number(matrix[headerRow][c.ci]);
+        if(Number.isFinite(num)&&num>=1&&num<=31&&inferred.month!==null){
+          let month=inferred.month,year=inferred.year||new Date().getFullYear();
+          if(prevResolved&&num<prevResolved.getDate()){month=prevResolved.getMonth()+1;year=prevResolved.getFullYear();if(month>11){month=0;year++}}
+          d=new Date(year,month,num);
+        }
+      }
+      if(d instanceof Date&&!Number.isNaN(d.getTime()))prevResolved=d;
+      return {...c,d};
+    }).filter(x=>x.d instanceof Date&&!Number.isNaN(x.d.getTime()));
+
+    if(resolved.length<2)throw new Error("dates");
+    resolved.sort((a,b)=>a.d-b.d);
+    const dates=resolved.map(x=>startOfDay(x.d)),data={},unmatched=[],unknownShifts=[];
+    employees.forEach(e=>data[e.id]={});
+
+    // Prefer a name column left of the first date column.
+    const firstDateCol=Math.min(...resolved.map(x=>x.ci));
+    let nameCol=Math.max(0,firstDateCol-1);
+    // Find the left-side column with the most employee-name matches.
+    let bestMatches=-1;
+    for(let ci=0;ci<firstDateCol;ci++){
+      let matches=0;
+      for(let ri=headerRow+1;ri<matrix.length;ri++){
+        const key=scheduleNameKey(matrix[ri]?.[ci]);
+        if(key&&employees.some(e=>key===scheduleNameKey(e.nick)||key.includes(scheduleNameKey(e.nick))))matches++;
+      }
+      if(matches>bestMatches){bestMatches=matches;nameCol=ci}
+    }
+
+    const seen=new Set();
+    for(let ri=headerRow+1;ri<matrix.length;ri++){
+      const rawName=String(matrix[ri]?.[nameCol]??"").trim();
+      if(!rawName)continue;
+      const key=scheduleNameKey(rawName);
+      const emp=employees.find(e=>{
+        const nk=scheduleNameKey(e.nick),fk=scheduleNameKey(e.full);
+        return key===nk||(fk&&key===fk)||key.includes(nk)||nk.includes(key);
+      });
+      if(!emp){if(rawName.length<=60)unmatched.push(rawName);continue}
+      seen.add(emp.id);
+      resolved.forEach(({ci,d})=>{
+        const raw=matrix[ri]?.[ci],code=normalizeExcelShift(raw);
+        if(code===null){unknownShifts.push(`${emp.nick} ${dateKey(d)} = ${String(raw)}`);data[emp.id][dateKey(d)]="NONE"}
+        else data[emp.id][dateKey(d)]=code;
+      });
+    }
+    if(!seen.size)throw new Error("employees");
+
+    const start=dates[0],end=dates[dates.length-1],existingCells=employees.reduce((n,e)=>n+dates.filter(d=>scheduleExistingAt(e.id,d)!=="NONE").length,0),
+          changed=excelChangeCount(data,dates);
+    state.scheduleEditor={
+      start,end,dates,data,source:"excel",excelName:file.name,excelSheet:book.SheetNames[0],
+      excelPeriod:excelPeriodText(dates),excelUnmatched:[...new Set(unmatched)].slice(0,12),
+      excelUnknown:[...new Set(unknownShifts)].slice(0,12),excelMatched:seen.size,
+      existingCells,changedCells:changed,importMode:"update",protectedNextCycle:false
+    };
+    pushOverlay("schedule");render();
+  }catch(error){
+    console.error(error);
+    const msg=error.message==="dates"?"หาแถววันที่ใน Excel ไม่เจอ":error.message==="employees"?"อ่านชื่อพนักงานใน Excel ไม่ตรงกับรายชื่อในระบบ":error.message==="empty"?"Excel ไม่มีข้อมูล":"อ่าน Excel ไม่สำเร็จ";
+    toast(`${msg} · ตรวจว่าแถวบนเป็นวันที่ และคอลัมน์ซ้ายเป็นชื่อพนักงาน`);
+  }
+}
+
 async function importScheduleImage(input){const file=input.files?.[0];input.value="";if(!file)return;if(!file.type.startsWith("image/")){toast("กรุณาเลือกรูปภาพตารางงาน");return}const start=getNextScheduleCycleStart(),cycle=buildBlankScheduleCycle(start);try{const [imageUrl,img]=await Promise.all([fileToDataUrl(file),loadImageFile(file)]);state.scheduleEditor={start,end:cycle.end,dates:cycle.dates,data:cycle.data,imageUrl,imageName:file.name,importStatus:"กำลังเตรียมอ่านรูป…",importProgress:5,source:"image",protectedNextCycle:true};pushOverlay("schedule");render();await parseScheduleImage(file,img)}catch(error){toast("เปิดรูปนี้ไม่สำเร็จ ลองใช้ไฟล์ JPG หรือ PNG")}}
-async function saveScheduleEditor(){const ed=state.scheduleEditor;if(ed.protectedNextCycle&&dateKey(ed.start)!==dateKey(getNextScheduleCycleStart())){toast("มีตารางรอบใหม่ถูกบันทึกแล้ว กรุณาปิดและอัปโหลดรูปอีกครั้ง");return}const touched=new Set();Object.entries(ed.data).forEach(([empId,days])=>Object.entries(days).forEach(([dk,shift])=>{const d=new Date(dk+"T00:00:00"),mk=monthKey(d);scheduleMonths[mk]??={};scheduleMonths[mk][empId]??={};scheduleMonths[mk][empId][dk]=shift;touched.add(mk)}));localStorage.setItem("oh_last_schedule_cycle",dateKey(ed.start));saveData();state.selectedDate=new Date(ed.start);state.scheduleEditor=null;consumeOverlay();render();toast(`บันทึกตารางรอบ ${fmtDate(ed.start,false)} – ${fmtDate(ed.end,false)} แล้ว`);try{await Promise.all([...touched].map(mk=>fetch(`${CONFIG.firebaseDatabaseUrl}/work_schedules/${mk}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(scheduleMonths[mk])})))}catch(e){toast("บันทึกในเครื่องแล้ว แต่ยังส่งขึ้นระบบกลางไม่สำเร็จ")}}
+async function saveScheduleEditor(){
+  const ed=state.scheduleEditor;if(!ed)return;
+  if(ed.protectedNextCycle&&dateKey(ed.start)!==dateKey(getNextScheduleCycleStart())){toast("มีตารางรอบใหม่ถูกบันทึกแล้ว กรุณาปิดและอัปโหลดอีกครั้ง");return}
+  const touched=new Set();
+
+  if(ed.source==="excel"&&ed.importMode==="replace"){
+    // Clear only the detected Excel date range, not unrelated months/dates.
+    employees.forEach(emp=>ed.dates.forEach(d=>{
+      const mk=monthKey(d),dk=dateKey(d);
+      scheduleMonths[mk]??={};scheduleMonths[mk][emp.id]??={};
+      scheduleMonths[mk][emp.id][dk]="NONE";touched.add(mk);
+    }));
+  }
+
+  Object.entries(ed.data).forEach(([empId,days])=>Object.entries(days).forEach(([dk,shift])=>{
+    const d=new Date(dk+"T00:00:00"),mk=monthKey(d);
+    scheduleMonths[mk]??={};scheduleMonths[mk][empId]??={};
+    // update mode touches only cells actually represented in the Excel/editor data
+    scheduleMonths[mk][empId][dk]=shift;touched.add(mk);
+  }));
+
+  if(ed.source!=="excel")localStorage.setItem("oh_last_schedule_cycle",dateKey(ed.start));
+  saveData();state.selectedDate=new Date(ed.start);state.scheduleEditor=null;consumeOverlay();render();
+  const action=ed.source==="excel"?(ed.importMode==="replace"?"แทนที่ช่วง":"อัปเดต"):"บันทึก";
+  toast(`${action}ตาราง ${fmtDate(ed.start,false)} – ${fmtDate(ed.end,false)} แล้ว`);
+  try{
+    await Promise.all([...touched].map(mk=>fetch(`${CONFIG.firebaseDatabaseUrl}/work_schedules/${mk}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(scheduleMonths[mk])})))
+  }catch(e){toast("บันทึกในเครื่องแล้ว แต่ยังส่งตารางขึ้นระบบกลางไม่สำเร็จ")}
+}
 async function loadRemoteSchedules(){try{const r=await fetch(`${CONFIG.firebaseDatabaseUrl}/work_schedules.json`);if(!r.ok)return;const remote=await r.json();if(remote&&typeof remote==="object"){scheduleMonths={...scheduleMonths,...remote};saveData();if(state.view==="schedule"||state.view==="day"||state.view==="person")render()}}catch(e){}}
 function openRosterModal(){state.rosterModal=true;pushOverlay("roster");render()}
 function closeRosterModal(fromHistory=false){if(!fromHistory&&window.history.state?.overlay==="roster"){window.history.back();return}state.rosterModal=false;render()}
@@ -417,7 +696,7 @@ async function removeEmployee(id){const emp=employees.find(e=>e.id===id);if(!emp
 function renderRosterModal(){const rows=employees.map(emp=>`<div class="roster-row">${avatarArt(emp)}<span><b>${esc(emp.nick)}</b><small>${esc(emp.role)} · ${emp.gender==="F"?"หญิง":"ชาย"}${emp.id==="p00"?" · ผู้จัดการหลัก":""}</small></span><div class="roster-row-actions"><button class="tiny-btn" onclick="randomizeEmployeeAvatar('${emp.id}')">🎲 สุ่ม Pixel</button>${emp.id==="p00"?"":`<button class="tiny-btn delete" onclick="removeEmployee('${emp.id}')">ลบ</button>`}</div></div>`).join("");return `<div class="modal-backdrop" onclick="if(event.target===this)closeRosterModal()"><section class="modal roster-modal"><div class="editor-head"><div class="head-text"><h2>จัดการพนักงาน</h2><p>ผู้จัดการสุ่ม Pixel ได้ ส่วนรูปจริงต้องให้เจ้าตัวอัปโหลดจากชื่อของตนเอง</p></div><button class="icon-btn" onclick="closeRosterModal()">×</button></div><div class="roster-list">${rows}</div><form class="add-person" onsubmit="addEmployee(event)"><h3>＋ เพิ่มพนักงาน</h3><div class="person-form"><div class="field"><label>ชื่อเล่น</label><input name="nick" maxlength="30" placeholder="เช่น น้องเอ" required></div><div class="field"><label>ตำแหน่ง</label><input name="role" maxlength="40" placeholder="พนักงานบาร์"></div><div class="field"><label>รูปแบบตัวละคร</label><select name="gender"><option value="F">ผู้หญิง</option><option value="M">ผู้ชาย</option></select></div><button class="primary-btn wide" type="submit">สุ่มตัวละครและเพิ่มคนนี้</button></div><p class="roster-note">ระบบจะสุ่มสีเสื้อ สีผม ทรงผม และเครื่องประดับให้ คนใหม่จะมีตารางว่างรอใส่กะ</p></form></section></div>`}
 function moveScheduleMonth(delta){const d=new Date(state.selectedDate);d.setDate(1);d.setMonth(d.getMonth()+delta);state.selectedDate=startOfDay(d);render()}
 function renderScheduleMonthPicker(date){const first=new Date(date.getFullYear(),date.getMonth(),1),title=new Intl.DateTimeFormat('th-TH',{month:'long',year:'numeric'}).format(first),gridStart=startOfWeek(first);let cells=["จ","อ","พ","พฤ","ศ","ส","อา"].map(x=>`<div class="month-weekday">${x}</div>`).join("");for(let i=0;i<42;i++){const d=addDays(gridStart,i),muted=d.getMonth()!==first.getMonth(),today=dateKey(d)===dateKey(new Date()),selected=dateKey(d)===dateKey(state.selectedDate),sum=daySummary(d);cells+=`<button class="month-day schedule-month-day ${muted?'muted':''} ${today?'today':''} ${selected?'selected':''}" onclick="state.selectedDate=startOfDay(new Date('${dateKey(d)}T00:00:00'));state.scheduleMonthOpen=false;state.view='schedule';render()"><b>${d.getDate()}</b><span>${sum.working?`${sum.working} คน`:'—'}</span></button>`}return `<section class="schedule-month-panel"><div class="schedule-month-head"><button class="ghost-btn" onclick="moveScheduleMonth(-1)">‹</button><div><small>เลือกวันที่</small><b>${title}</b></div><button class="ghost-btn" onclick="moveScheduleMonth(1)">›</button></div><div class="month-grid">${cells}</div></section>`}
-function renderSchedule(isDay=false){const d=state.selectedDate,sum=daySummary(d),groups=groupEmployees(d);return `${header(true,"ตารางงาน")}<main class="shell"><section class="schedule-hero"><div><div class="eyebrow">WORK SCHEDULE</div><h1>${fmtDate(d)}</h1><p>เปิดมาเห็นตารางของวันที่เลือกทันที หากต้องการวันอื่นค่อยเปิดปฏิทินรายเดือน</p></div><div class="schedule-actions"><button class="ghost-btn" onclick="state.scheduleMonthOpen=!state.scheduleMonthOpen;render()">${state.scheduleMonthOpen?'ปิดปฏิทิน':'เลือกวันจากเดือน'}</button><button class="ghost-btn hero-today" onclick="state.selectedDate=startOfDay(new Date());state.scheduleMonthOpen=false;state.view='schedule';render()">วันนี้</button></div></section>${state.scheduleMonthOpen?renderScheduleMonthPicker(d):''}<details class="schedule-manager"><summary>⚙ จัดการตารางและพนักงาน</summary><div class="schedule-manager-actions"><button class="upload-btn" onclick="document.getElementById('scheduleImageInput').click()">▧ อัปโหลดรูปรอบถัดไป</button><button class="roster-btn" onclick="openRosterModal()">☺ จัดการพนักงาน</button><button class="manager-btn" onclick="openNextMonthEditor()">＋ กรอกตารางรอบถัดไป</button></div></details><input id="scheduleImageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden onchange="importScheduleImage(this)"><div class="summary-row"><div class="summary green"><b>${sum.working}</b><span>เข้างาน</span></div><div class="summary"><b>${groups["กะเช้า"].length}</b><span>กะเช้า</span></div><div class="summary orange"><b>${groups["กะบ่าย"].length}</b><span>กะบ่าย</span></div><div class="summary red"><b>${sum.off}</b><span>หยุด / ลา</span></div><div class="summary gray"><b>${sum.unassigned}</b><span>ไม่มีข้อมูล</span></div></div><div class="panel schedule-people-panel"><div class="panel-head"><h3>พนักงานทั้งหมด</h3><span class="count">${employees.length} คน</span></div>${dayContent(d)}</div></main>${state.scheduleEditor?renderScheduleEditor():""}${state.rosterModal?renderRosterModal():""}`}
+function renderSchedule(isDay=false){const d=state.selectedDate,sum=daySummary(d),groups=groupEmployees(d);return `${header(true,"ตารางงาน")}<main class="shell"><section class="schedule-hero"><div><div class="eyebrow">WORK SCHEDULE</div><h1>${fmtDate(d)}</h1><p>เปิดมาเห็นตารางของวันที่เลือกทันที หากต้องการวันอื่นค่อยเปิดปฏิทินรายเดือน</p></div><div class="schedule-actions"><button class="ghost-btn" onclick="state.scheduleMonthOpen=!state.scheduleMonthOpen;render()">${state.scheduleMonthOpen?'ปิดปฏิทิน':'เลือกวันจากเดือน'}</button><button class="ghost-btn hero-today" onclick="state.selectedDate=startOfDay(new Date());state.scheduleMonthOpen=false;state.view='schedule';render()">วันนี้</button></div></section>${state.scheduleMonthOpen?renderScheduleMonthPicker(d):''}<details class="schedule-manager"><summary>⚙ จัดการตารางและพนักงาน</summary><div class="schedule-manager-actions"><button class="upload-btn" onclick="document.getElementById('scheduleExcelInput').click()">▦ อัปโหลดตาราง Excel</button><button class="ghost-btn" onclick="document.getElementById('scheduleImageInput').click()">▧ อัปโหลดรูป (สำรอง)</button><button class="roster-btn" onclick="openRosterModal()">☺ จัดการพนักงาน</button><button class="manager-btn" onclick="openNextMonthEditor()">＋ กรอกตารางเอง</button></div></details><input id="scheduleExcelInput" type="file" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" hidden onchange="importScheduleExcel(this)"><input id="scheduleImageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden onchange="importScheduleImage(this)"><div class="summary-row"><div class="summary green"><b>${sum.working}</b><span>เข้างาน</span></div><div class="summary"><b>${groups["กะเช้า"].length}</b><span>กะเช้า</span></div><div class="summary orange"><b>${groups["กะบ่าย"].length}</b><span>กะบ่าย</span></div><div class="summary red"><b>${sum.off}</b><span>หยุด / ลา</span></div><div class="summary gray"><b>${sum.unassigned}</b><span>ไม่มีข้อมูล</span></div></div><div class="panel schedule-people-panel"><div class="panel-head"><h3>พนักงานทั้งหมด</h3><span class="count">${employees.length} คน</span></div>${dayContent(d)}</div></main>${state.scheduleEditor?renderScheduleEditor():""}${state.rosterModal?renderRosterModal():""}`}
 function openPerson(id){state.selectedEmployee=id;state.personMode="week";go("person")}
 function movePersonPeriod(n){state.selectedDate=state.personMode==="week"?addDays(state.selectedDate,n*7):new Date(state.selectedDate.getFullYear(),state.selectedDate.getMonth()+n,1);render()}
 function personPeriodStats(emp){const days=state.personMode==='month'?new Date(state.selectedDate.getFullYear(),state.selectedDate.getMonth()+1,0).getDate():7,start=state.personMode==='month'?new Date(state.selectedDate.getFullYear(),state.selectedDate.getMonth(),1):startOfWeek(state.selectedDate);let work=0,off=0,leave=0;for(let i=0;i<days;i++){const code=getShift(emp,addDays(start,i));if(code==='OFF')off++;else if(code==='LEAVE')leave++;else if(code!=='NONE')work++}return {work,off,leave}}
@@ -430,6 +709,17 @@ function productCategory(p){const code=String(p.code||"").trim().toUpperCase();r
 function categoryInfo(p){return {dry:{label:"ของแห้ง",icon:"☀"},chill:{label:"ชิล",icon:"❄"},freeze:{label:"แช่แข็ง",icon:"🧊"},other:{label:"อื่น ๆ",icon:"•"}}[productCategory(p)]}
 function isLowStock(p){return Number(p.stock)<=2}
 function filteredProducts(q=state.storeQuery){q=q.trim().toLowerCase();const found=products.filter(p=>(!q||[p.easy,p.code,p.real].some(v=>String(v).toLowerCase().includes(q)))&&(state.storeCategory==="all"||state.storeCategory==="low"&&isLowStock(p)||productCategory(p)===state.storeCategory));if(state.storeCategory==="low")return found.sort((a,b)=>Number(a.stock)-Number(b.stock)||String(a.easy).localeCompare(String(b.easy),"th"));return found}
+
+function renderStoreRows(){
+  const found=filteredProducts(),
+        rows=found.map(productTableRow).join(""),
+        cards=found.map(productCard).join(""),
+        rowBox=document.getElementById("storeRows"),
+        cardBox=document.getElementById("storeCards");
+  if(rowBox)rowBox.innerHTML=rows||`<tr><td colspan="7" class="empty">${state.catalogLoading?'กำลังโหลดรายการ…':'ไม่พบสินค้าที่ค้นหา'}</td></tr>`;
+  if(cardBox)cardBox.innerHTML=cards||`<div class="empty panel">${state.catalogLoading?'กำลังโหลดรายการ…':'ไม่พบสินค้าที่ค้นหา'}</div>`;
+}
+
 function storeCategoryTabs(){const tabs=[["all","ทั้งหมด"],["dry","ของแห้ง"],["chill","ชิล"],["freeze","แช่แข็ง"],["low","ใกล้หมด"]];return `<div class="category-tabs">${tabs.map(([key,label])=>`<button class="${state.storeCategory===key?'active':''}" onclick="state.storeCategory='${key}';render()">${label}</button>`).join("")}</div>`}
 function storeSummary(){return {items:products.length,total:products.reduce((s,p)=>s+p.stock,0),low:products.filter(isLowStock).length,today:history.filter(h=>dateKey(new Date(h.time))===dateKey(new Date())).length}}
 function activeEmployee(){return employees.find(e=>e.id===state.currentUser)||null}
@@ -820,7 +1110,38 @@ async function cleanupOldUsageRounds(rounds){const cutoff=Date.now()-3*24*60*60*
 async function loadUsage(){if(state.usageLoading)return;state.usageLoading=true;render();try{const [currentRes,roundRes,transactionRes]=await Promise.all([fetch(`${CONFIG.sheetsWebAppUrl}?mode=usageCurrent&t=${Date.now()}`),fetch(`${CONFIG.firebaseDatabaseUrl}/usage_rounds.json?t=${Date.now()}`),fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_transactions.json?t=${Date.now()}`)]);if(!currentRes.ok)throw new Error("sheet");const current=await currentRes.json();if(current.status&&current.status!=="success")throw new Error(current.message||"sheet");let rounds=normalizeUsageRounds(roundRes.ok?(await roundRes.json()||{}):{}),transactions=transactionRes.ok?(await transactionRes.json()||{}):{},sourceTimestamp=current.countSubmittedAt||current.sourceTimestamp||current.fetchedAt||new Date().toISOString(),currentItems=Array.isArray(current.items)?current.items:[],existing=rounds.find(r=>String(usageRoundTime(r))===String(sourceTimestamp));const items={};currentItems.forEach(item=>{const id=String(item.id||item.code||"");if(!id)return;items[id]={name:item.name||id,unit:usageUnit({...item,id}),daily:item.dailyMissing?null:finiteNumber(item.daily),dailyMissing:Boolean(item.dailyMissing),store:finiteNumber(item.store),total:item.dailyMissing?null:finiteNumber(item.total)}});const user=activeEmployee(),payload={createdAt:existing?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString(),createdBy:existing?.createdBy||user?.nick||"",createdById:existing?.createdById||user?.id||"",sourceTimestamp,countSubmittedAt:current.countSubmittedAt||sourceTimestamp,items},key=existing?.key||usageRoundKey(sourceTimestamp);await fetch(`${CONFIG.firebaseDatabaseUrl}/usage_rounds/${encodeURIComponent(key)}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});rounds=normalizeUsageRounds({...Object.fromEntries(rounds.map(r=>[r.key,r])),[key]:payload});await cleanupOldUsageRounds(rounds);rounds=rounds.filter(r=>{const t=new Date(usageRoundTime(r)||0).getTime();return !Number.isFinite(t)||t>=Date.now()-3*24*60*60*1000});const currentRound=rounds.find(r=>r.key===key)||{key,...payload},previous=rounds.filter(r=>r.key!==key&&new Date(usageRoundTime(r)||0)<new Date(sourceTimestamp)).sort((a,b)=>new Date(usageRoundTime(b)||0)-new Date(usageRoundTime(a)||0))[0]||null,rows=buildUsageRows(currentItems,previous,transactions,sourceTimestamp);state.usageRounds=rounds;state.usage={loadedAt:new Date().toISOString(),sourceTimestamp,rows,previous,currentRound,currentRaw:current};if(previous&&!existing){await consumeExpiryFrontFromUsage(rows,user);await fetch(`${CONFIG.firebaseDatabaseUrl}/usage_rounds/${encodeURIComponent(key)}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({expiryReconciled:true,expiryReconciledAt:new Date().toISOString()})}).catch(()=>null)}toast(previous?(existing?"ดึงรอบเดิมแล้ว · ไม่สร้างข้อมูลซ้ำ":"ดึงรอบใหม่แล้ว · คำนวณส่วนต่างให้แล้ว"):"บันทึกรอบแรกแล้ว · รอบถัดไปจะเริ่มคำนวณส่วนต่าง")}catch(error){toast("ดึงรอบการนับไม่สำเร็จ กรุณาตรวจ Apps Script และอินเทอร์เน็ต")}finally{state.usageLoading=false;if(state.view==="usage")render()}}
 async function saveUsageSnapshot(){return loadUsage()}
 function usageNumber(value,unit){if(value===null||value===undefined)return "—";const rounded=Math.round(Number(value)*100)/100;return `${rounded.toLocaleString("th-TH",{maximumFractionDigits:2})} ${esc(unit)}`}
-function renderUsage(){const data=state.usage,rows=data?.rows||[],previous=data?.previous,current=data?.currentRound,rounds=state.usageRounds||[];return `${header(true,"การใช้วันนี้")}<main class="shell"><section class="usage-hero"><div class="eyebrow">COUNT ROUND · DAILY! + สโตร์</div><h1>การใช้ระหว่างรอบนับ</h1><p>ไม่ยึดวันปฏิทิน · เทียบ “รอบเก่า → รอบใหม่” จากเวลาที่ส่งนับของจริง และจำย้อนหลังประมาณ 3 วัน</p></section><div class="sync-panel"><div class="sync-status"><b>${state.usageLoading?'กำลังดึงรอบล่าสุด…':current?`รอบล่าสุด ${usageRoundLabel(current)}`:'ยังไม่ได้ดึงรอบ'}</b><small>กดดึงแล้วระบบจะบันทึกรอบนั้นอัตโนมัติ ถ้าเป็นรอบเดิมจะอัปเดต ไม่สร้างซ้ำ</small></div><button class="sync-btn save" ${state.usageLoading?'disabled':''} onclick="loadUsage()">↓ ดึงรอบล่าสุด</button>${rounds.length?`<button class="sync-btn" onclick="state.usageShowHistory=!state.usageShowHistory;render()">${state.usageShowHistory?'ซ่อนย้อนหลัง':'ดูย้อนหลัง 3 วัน'}</button>`:""}</div>${!data?`<section class="baseline"><h3>กด “ดึงรอบล่าสุด” เพื่อเริ่ม</h3><p>รอบแรกจะแสดงยอดทันทีและถูกเก็บไว้เป็นฐานโดยอัตโนมัติ</p></section>`:`<div class="usage-round-head"><div><div class="eyebrow">${previous?`รอบเก่า ${usageRoundLabel(previous)} → รอบใหม่ ${usageRoundLabel(current)}`:`รอบแรก ${usageRoundLabel(current)}`}</div><h2 class="page-title">${rows.length} รายการ</h2></div></div><div class="table-wrap"><table class="usage-round-table"><thead><tr><th>รหัส</th><th>ชื่อสินค้า</th><th>${previous?usageRoundLabel(previous):"รอบเก่า"}</th><th>${usageRoundLabel(current)}</th><th>รับเข้า</th><th>ใช้ไป</th></tr></thead><tbody>${rows.map(row=>`<tr><td class="code">${esc(row.id)}</td><td><b>${esc(row.name)}</b><br><small>DAILY ${usageNumber(row.daily,row.unit)} + สโตร์ ${usageNumber(row.store,row.unit)}</small></td><td><strong>${usageNumber(row.previous,row.unit)}</strong></td><td>${row.dailyMissing?`<span class="usage-incomplete">ยังไม่ได้นับ</span>`:`<strong>${usageNumber(row.total,row.unit)}</strong>`}</td><td>${usageNumber(row.received,row.unit)}</td><td><strong class="${row.used===null?'':row.used>=0?'usage-used-positive':'usage-used-negative'}">${usageNumber(row.used,row.unit)}</strong>${row.excludedOut?`<br><small>หักของเสีย/คลาดเคลื่อน ${usageNumber(row.excludedOut,row.unit)}</small>`:""}</td></tr>`).join("")||`<tr><td colspan="6" class="empty">ไม่พบข้อมูล</td></tr>`}</tbody></table></div>${state.usageShowHistory?`<section class="tool-panel" style="margin-top:18px"><h3>รอบย้อนหลังที่เก็บไว้</h3><div class="usage-history-list">${rounds.map((r,i)=>`<div class="usage-history-item"><span><b>${i===0?'ล่าสุด · ':''}${usageRoundLabel(r)}</b><small>${Object.keys(r.items||{}).length} รายการ · ${esc(r.createdBy||"ระบบ")}</small></span><span class="badge">${i===0?'รอบใหม่':`ย้อนหลัง ${i}`}</span></div>`).join("")}</div></section>`:""}`}</main>`}
+function renderUsage(){
+  const data=state.usage,rows=data?.rows||[],previous=data?.previous,current=data?.currentRound,rounds=state.usageRounds||[];
+  const oldLabel=previous?usageRoundLabel(previous):"ยังไม่มีรอบก่อน";
+  const newLabel=current?usageRoundLabel(current):"—";
+  const desktopRows=rows.map(row=>`<tr>
+    <td class="code">${esc(row.id)}</td>
+    <td class="usage-product-cell"><b>${esc(row.name)}</b><small>คงเหลือรอบล่าสุด = หน้าร้าน ${usageNumber(row.daily,row.unit)} + สโตร์ ${usageNumber(row.store,row.unit)}</small></td>
+    <td><strong>${usageNumber(row.previous,row.unit)}</strong></td>
+    <td><strong>${usageNumber(row.received,row.unit)}</strong></td>
+    <td>${row.dailyMissing?`<span class="usage-incomplete">ยังไม่ได้นับ</span>`:`<strong class="usage-latest">${usageNumber(row.total,row.unit)}</strong>`}</td>
+    <td><strong class="usage-real ${row.used===null?'':row.used>=0?'usage-used-positive':'usage-used-negative'}">${usageNumber(row.used,row.unit)}</strong>${row.excludedOut?`<br><small>ไม่นับของเสีย/คลาดเคลื่อน ${usageNumber(row.excludedOut,row.unit)}</small>`:""}</td>
+  </tr>`).join("");
+  const mobileRows=rows.map(row=>`<article class="usage-mobile-card">
+    <div class="usage-mobile-head"><span><b>${esc(row.name)}</b><small>${esc(row.id)}</small></span>${row.dailyMissing?`<span class="usage-incomplete">ยังไม่ได้นับ</span>`:""}</div>
+    <div class="usage-mobile-grid">
+      <div class="usage-mobile-metric"><span>คงเหลือรอบก่อน</span><b>${usageNumber(row.previous,row.unit)}</b></div>
+      <div class="usage-mobile-metric"><span>ของเข้าร้านใหม่</span><b>${usageNumber(row.received,row.unit)}</b></div>
+      <div class="usage-mobile-metric"><span>คงเหลือรอบล่าสุด</span><b>${usageNumber(row.total,row.unit)}</b></div>
+      <div class="usage-mobile-metric used"><span>ใช้จริง</span><b>${usageNumber(row.used,row.unit)}</b></div>
+    </div>
+    <div class="usage-current-breakdown">รอบล่าสุด: หน้าร้าน ${usageNumber(row.daily,row.unit)} + สโตร์ ${usageNumber(row.store,row.unit)} = รวม ${usageNumber(row.total,row.unit)}<br>การเบิกจากสโตร์ไปหน้าร้านเป็นการย้ายของภายในร้าน จึงไม่บวกซ้ำเป็น “ใช้จริง”</div>
+  </article>`).join("");
+  return `${header(true,"การใช้วันนี้")}<main class="shell">
+    <section class="usage-hero"><div class="eyebrow">COUNT ROUND · DAILY! + สโตร์</div><h1>การใช้ระหว่างรอบนับ</h1><p>เปรียบเทียบยอดรวมทั้งร้านจากรอบนับเก่าไปยังรอบนับใหม่</p></section>
+    <section class="usage-explain"><b>“ใช้จริง” คือของที่หายไปจากยอดรวมทั้งร้าน</b><p>ไม่ใช่ยอดคงเหลือ และไม่ใช่ยอดเบิกจากสโตร์ไปหน้าร้าน</p><div class="usage-formula">คงเหลือรอบก่อน + ของเข้าร้านใหม่ − คงเหลือรอบล่าสุด = ใช้จริง</div></section>
+    <div class="sync-panel"><div class="sync-status"><b>${state.usageLoading?'กำลังดึงรอบล่าสุด…':current?`รอบล่าสุด ${newLabel}`:'ยังไม่ได้ดึงรอบ'}</b><small>${previous?`เทียบ ${oldLabel} → ${newLabel}`:'รอบแรกจะแสดงเป็นยอดตั้งต้น ยังไม่มี “ใช้จริง” ให้คำนวณ'}</small></div><button class="sync-btn save" ${state.usageLoading?'disabled':''} onclick="loadUsage()">↓ ดึงรอบล่าสุด</button>${rounds.length?`<button class="sync-btn" onclick="state.usageShowHistory=!state.usageShowHistory;render()">${state.usageShowHistory?'ซ่อนย้อนหลัง':'ดูย้อนหลัง 3 วัน'}</button>`:""}</div>
+    ${!data?`<section class="baseline"><h3>กด “ดึงรอบล่าสุด” เพื่อเริ่ม</h3><p>ระบบจะจำรอบนับและใช้สองรอบล่าสุดคำนวณการใช้จริง</p></section>`:
+    `<div class="usage-round-head"><div><div class="eyebrow">${previous?`รอบเก่า ${oldLabel} → รอบใหม่ ${newLabel}`:`รอบแรก ${newLabel}`}</div><h2 class="page-title">${rows.length} รายการ</h2></div></div>
+    <div class="table-wrap usage-round-table-wrap"><table class="usage-round-table"><thead><tr><th>รหัส</th><th>สินค้า</th><th>คงเหลือรอบก่อน</th><th>ของเข้าร้านใหม่</th><th>คงเหลือรอบล่าสุด</th><th>ใช้จริง</th></tr></thead><tbody>${desktopRows||`<tr><td colspan="6" class="empty">ไม่พบข้อมูล</td></tr>`}</tbody></table></div>
+    <section class="usage-mobile-list">${mobileRows||`<div class="empty panel">ไม่พบข้อมูล</div>`}</section>
+    ${state.usageShowHistory?`<section class="tool-panel" style="margin-top:18px"><h3>รอบย้อนหลังที่เก็บไว้</h3><div class="usage-history-list">${rounds.map((r,i)=>`<div class="usage-history-item"><span><b>${i===0?'ล่าสุด · ':''}${usageRoundLabel(r)}</b><small>${Object.keys(r.items||{}).length} รายการ · ${esc(r.createdBy||"ระบบ")}</small></span><span class="badge">${i===0?'รอบใหม่':`ย้อนหลัง ${i}`}</span></div>`).join("")}</div></section>`:""}`}</main>`
+}
 
 function memoStatus(memo){const now=startOfDay(new Date()),start=memo.startDate?startOfDay(new Date(memo.startDate+"T00:00:00")):null,end=memo.expiryDate?startOfDay(new Date(memo.expiryDate+"T00:00:00")):null;if(end&&end<now)return {key:"expired",label:"หมดอายุ"};if(start&&start>now)return {key:"upcoming",label:"เร็ว ๆ นี้"};if(end&&Math.ceil((end-now)/86400000)<=7)return {key:"soon",label:"ใกล้หมดอายุ"};return {key:"active",label:"กำลังใช้"}}
 async function loadMemos(){if(state.memoLoading)return;state.memoLoading=true;if(state.view==="memo")render();try{const r=await fetch(`${CONFIG.firebaseDatabaseUrl}/memo_promotions.json`);if(!r.ok)throw new Error("firebase");const data=await r.json()||{};state.memos=Object.entries(data).map(([id,m])=>({id,...m})).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));state.memoLoaded=true}catch(error){toast("ดึง Memo & Promotion ไม่สำเร็จ")}finally{state.memoLoading=false;if(state.view==="memo")render()}}
@@ -855,17 +1176,101 @@ async function loadExpiryData(silent=false){
 }
 function expiryRuleFor(p){return state.expiryRules?.[firebaseSafeKey(p.id)]||state.expiryRules?.[firebaseSafeKey(p.code)]||null}
 function trackedExpiryProducts(){return products.filter(p=>productCategory(p)==="chill"&&!expiryRuleFor(p))}
-async function saveExpiryRule(event){event.preventDefault();const f=new FormData(event.currentTarget),id=String(f.get("product")||""),days=Math.floor(Number(f.get("days")||0)),p=productByAnyId(id);if(!p){toast("กรุณาเลือกสินค้า");return}const key=firebaseSafeKey(p.id);if(!Number.isFinite(days)||days<1){toast("จำนวนวันต้องอย่างน้อย 1 วัน");return}try{const check=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json?t=${Date.now()}`,{cache:"no-store"}),existing=check.ok?await check.json():null;if(existing){state.expiryRules[key]=existing;render();toast("สินค้านี้ตั้งค่าติดตามอายุไว้แล้ว หากต้องการแก้ให้ลบรายการเดิมก่อน");return}const payload={productId:p.id,code:p.code,easy:p.easy,days,updatedAt:new Date().toISOString(),updatedBy:activeEmployee()?.nick||""};const saved=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!saved.ok)throw new Error("firebase");state.expiryRules[key]=payload;render();toast(`ตั้งเตือน ${p.easy} หลังรับเข้า ${days} วันแล้ว`)}catch(e){toast("บันทึกการตั้งค่าไม่สำเร็จ")}}
+async function saveExpiryRule(event){
+  event.preventDefault();
+  const f=new FormData(event.currentTarget),
+        id=String(f.get("product")||state.expiryRuleDraft.product||""),
+        days=Math.floor(Number(f.get("days")||state.expiryRuleDraft.days||0)),
+        p=productByAnyId(id);
+  if(!p){toast("กรุณาเลือกสินค้า");return}
+  const key=firebaseSafeKey(p.id);
+  if(!Number.isFinite(days)||days<1){toast("จำนวนวันต้องอย่างน้อย 1 วัน");return}
+  try{
+    const check=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json?t=${Date.now()}`,{cache:"no-store"}),
+          existing=check.ok?await check.json():null;
+    if(existing){
+      state.expiryRules[key]=existing;
+      state.expiryRuleDraft={product:"",days:""};
+      render();
+      toast("สินค้านี้ตั้งค่าติดตามอายุไว้แล้ว หากต้องการแก้ให้ลบรายการเดิมก่อน");
+      return
+    }
+    const payload={productId:p.id,code:p.code,easy:p.easy,days,updatedAt:new Date().toISOString(),updatedBy:activeEmployee()?.nick||""};
+    const saved=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    if(!saved.ok)throw new Error("firebase");
+    state.expiryRules[key]=payload;
+    state.expiryRuleDraft={product:"",days:""};
+    render();
+    toast(`ตั้งเตือน ${p.easy} หลังรับเข้า ${days} วันแล้ว`)
+  }catch(e){toast("บันทึกการตั้งค่าไม่สำเร็จ")}
+}
 async function removeExpiryRule(id){const p=productByAnyId(id);if(!p)return;if(!confirm(`หยุดติดตามวันหมดอายุของ ${p.easy} หรือไม่?\nล็อตเดิมที่สร้างไว้จะยังคงอยู่จนกดรับทราบ`))return;const key=firebaseSafeKey(p.id);try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json`,{method:"DELETE"});delete state.expiryRules[key];render();toast("หยุดติดตามสินค้านี้แล้ว")}catch(e){toast("แก้การตั้งค่าไม่สำเร็จ")}}
 function expiryRisk(lot){const d=daysBetween(new Date(),new Date(lot.reviewDate+"T00:00:00"));if(d<0)return {cls:"risk-overdue",label:`เลยรอบตรวจ ${Math.abs(d)} วัน`,rank:0,days:d};if(d===0)return {cls:"risk-high",label:"ถึงรอบตรวจวันนี้",rank:1,days:d};if(d<=3)return {cls:"risk-high",label:`เหลือ ${d} วัน`,rank:2,days:d};if(d<=7)return {cls:"risk-watch",label:`เหลือ ${d} วัน`,rank:3,days:d};return {cls:"risk-ok",label:`อีก ${d} วัน`,rank:4,days:d}}
 async function acknowledgeExpiry(id){const lot=state.expiryLots.find(x=>x.id===id),user=activeEmployee();if(!lot||!user)return;if(!confirm(`ตรวจ ${lot.easy||lot.code} แล้ว และนำรายการนี้ออกจากหน้าเตือนใช่หรือไม่?`))return;const patch={acknowledged:true,acknowledgedAt:new Date().toISOString(),acknowledgedBy:user.nick,acknowledgedById:user.id};try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots/${id}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(patch)});Object.assign(lot,patch);render();toast(`รับทราบแล้ว · ${user.nick}`)}catch(e){toast("กดรับทราบไม่สำเร็จ")}}
 function expiryCounts(lots){return {overdue:lots.filter(x=>expiryRisk(x).days<0).length,today:lots.filter(x=>expiryRisk(x).days===0).length,three:lots.filter(x=>{const d=expiryRisk(x).days;return d>0&&d<=3}).length,seven:lots.filter(x=>{const d=expiryRisk(x).days;return d>3&&d<=7}).length}}
-function renderExpiry(){if(!state.expiryLoaded&&!state.expiryLoading)setTimeout(()=>loadExpiryData(),0);const active=state.expiryLots.filter(x=>state.expiryShowAck?x.acknowledged:!x.acknowledged).sort((a,b)=>{const ra=expiryRisk(a),rb=expiryRisk(b);return ra.rank-rb.rank||String(a.reviewDate||"").localeCompare(String(b.reviewDate||""))}),c=expiryCounts(state.expiryLots.filter(x=>!x.acknowledged)),chill=trackedExpiryProducts(),configured=products.filter(p=>expiryRuleFor(p));return `${header(true,"ติดตามอายุสินค้า")}<main class="shell"><div class="page-head"><div class="head-text"><div class="eyebrow">STORE AGE WATCH</div><h1 class="page-title">ติดตามอายุสินค้า</h1><p class="page-sub">ติดตามล็อตเก่าก่อนตาม FIFO และบอกให้เห็นว่าแต่ละล็อตยังอยู่ในสโตร์หรือถูกนำไปหน้าร้านแล้ว</p></div></div><div class="expiry-summary"><button><b>${c.overdue}</b><span>เลยรอบตรวจ</span></button><button><b>${c.today}</b><span>ตรวจวันนี้</span></button><button><b>${c.three}</b><span>ภายใน 3 วัน</span></button><button><b>${c.seven}</b><span>4–7 วัน</span></button></div><div class="inline-actions" style="margin-bottom:12px"><button class="ghost-btn" onclick="state.expiryShowAck=false;render()">ต้องตรวจ</button><button class="ghost-btn" onclick="state.expiryShowAck=true;render()">ประวัติ</button><span class="helper">${active.length} รายการ</span></div><section class="expiry-list">${state.expiryLoading?`<div class="empty panel">กำลังโหลด…</div>`:active.map(l=>{const r=expiryRisk(l),sq=lotStoreQty(l),fq=lotFrontQty(l);return `<article class="expiry-card ${r.cls}"><div><h3>${esc(l.easy||l.code||"สินค้า")}</h3><small>ล็อตรับเข้า ${prettyDateKey(l.receivedDate)} · รับทั้งหมด ${Number(l.qty||0).toLocaleString('th-TH')} ${esc(l.unit||"")} · รอบตรวจ ${prettyDateKey(l.reviewDate)}</small><div class="lot-locations"><span class="lot-location store">สโตร์ ${sq.toLocaleString('th-TH')} ${esc(l.unit||"")}</span><span class="lot-location front">หน้าร้าน ${fq.toLocaleString('th-TH')} ${esc(l.unit||"")}</span></div><div class="risk-badge">${l.acknowledged?`${l.autoClosed?'ใช้หมดจากผลนับ':'รับทราบแล้ว'} · ${esc(l.acknowledgedBy||"")}`:r.label}</div></div>${l.acknowledged?`<small class="lot-done">${l.acknowledgedAt?new Intl.DateTimeFormat('th-TH',{dateStyle:'short',timeStyle:'short'}).format(new Date(l.acknowledgedAt)):''}</small>`:`<button class="ack-btn" onclick="acknowledgeExpiry('${l.id}')">✓ ตรวจแล้ว</button>`}</article>`}).join("")||`<div class="empty panel">${state.expiryShowAck?'ยังไม่มีประวัติ':'ตอนนี้ไม่มีล็อตที่ต้องเช็ก'}</div>`}</section><details class="expiry-settings"><summary>ตั้งค่าการติดตามสินค้า (${configured.length})</summary><section class="tool-panel"><p>ติดตามเฉพาะสินค้าที่กำหนดจำนวนวันไว้ โดยเน้น C · Chill</p><form class="form-grid" onsubmit="saveExpiryRule(event)"><div class="field"><label>สินค้า</label><select name="product" required><option value="">${chill.length?"เลือกสินค้า Chill":"ตั้งค่าครบแล้ว"}</option>${chill.map(p=>`<option value="${esc(p.id)}">${esc(p.easy)} · ${esc(p.code)}</option>`).join("")}</select>${!chill.length?`<div class="config-empty-note">สินค้าที่ตั้งค่าแล้วจะไม่แสดงซ้ำ หากตั้งผิดให้ลบรายการเดิมก่อน</div>`:""}</div><div class="field"><label>หลังรับเข้า ให้เตือนใน</label><input name="days" type="number" min="1" step="1" inputmode="numeric" placeholder="เช่น 7" required></div><div class="wide inline-actions"><button class="primary-btn" type="submit">บันทึกวันเตือน</button><span class="helper">รับเข้าแต่ละครั้งจะสร้างล็อตให้อัตโนมัติ</span></div></form>${configured.length?`<div class="rule-list" style="margin-top:14px">${configured.map(p=>{const r=expiryRuleFor(p);return `<div class="rule-row"><span><b>${esc(p.easy)}</b><small style="display:block">${esc(p.code)} · ${r.days} วันหลังรับเข้าเริ่มตรวจ</small></span><span class="inline-actions"><span class="rule-pill">${r.days} วัน</span><button class="ghost-btn" onclick="removeExpiryRule('${esc(p.id)}')">หยุดติดตาม</button></span></div>`}).join("")}</div>`:""}</section></details></main>`}
+function renderExpiry(){
+  if(!state.expiryLoaded&&!state.expiryLoading)setTimeout(()=>loadExpiryData(),0);
+  const active=state.expiryLots.filter(x=>state.expiryShowAck?x.acknowledged:!x.acknowledged).sort((a,b)=>{const ra=expiryRisk(a),rb=expiryRisk(b);return ra.rank-rb.rank||String(a.reviewDate||"").localeCompare(String(b.reviewDate||""))}),
+        c=expiryCounts(state.expiryLots.filter(x=>!x.acknowledged)),
+        chill=trackedExpiryProducts(),
+        configured=products.filter(p=>expiryRuleFor(p)),
+        draft=state.expiryRuleDraft||{product:"",days:""};
+  return `${header(true,"ติดตามอายุสินค้า")}<main class="shell">
+    <div class="page-head"><div class="head-text"><div class="eyebrow">STORE AGE WATCH</div><h1 class="page-title">ติดตามอายุสินค้า</h1><p class="page-sub">ติดตามล็อตเก่าก่อนตาม FIFO และบอกให้เห็นว่าแต่ละล็อตยังอยู่ในสโตร์หรือถูกนำไปหน้าร้านแล้ว</p></div></div>
+
+    <section class="age-manage">
+      <div class="age-manage-head"><div><h3>⚙ จัดการสินค้าที่ต้องติดตาม</h3><p>ตั้งจำนวนวันหลังรับเข้า แล้วระบบจะสร้างล็อตและแจ้งเตือนให้อัตโนมัติ</p></div><span class="age-manage-count">${configured.length} รายการ</span></div>
+      <form class="form-grid" onsubmit="saveExpiryRule(event)">
+        <div class="field"><label>สินค้า</label><select name="product" required onchange="state.expiryRuleDraft.product=this.value">
+          <option value="">${chill.length?"เลือกสินค้า Chill":"ตั้งค่าครบแล้ว"}</option>
+          ${chill.map(p=>`<option value="${esc(p.id)}" ${String(draft.product)===String(p.id)?'selected':''}>${esc(p.easy)} · ${esc(p.code)}</option>`).join("")}
+        </select>${!chill.length?`<div class="config-empty-note">สินค้าที่ตั้งค่าแล้วจะไม่แสดงซ้ำ หากตั้งผิดให้ลบรายการเดิมก่อน</div>`:""}</div>
+        <div class="field"><label>หลังรับเข้า ให้เตือนใน</label><input name="days" type="number" min="1" step="1" inputmode="numeric" placeholder="เช่น 7" required value="${esc(draft.days||"")}" oninput="state.expiryRuleDraft.days=this.value"></div>
+        <div class="wide inline-actions"><button class="primary-btn" type="submit">บันทึกวันเตือน</button><span class="helper">ค่าที่กำลังกรอกจะไม่หาย แม้ระบบรีเฟรชข้อมูล</span></div>
+      </form>
+      ${configured.length?`<div class="age-existing"><div class="rule-list">${configured.map(p=>{const r=expiryRuleFor(p);return `<div class="rule-row"><span><b>${esc(p.easy)}</b><small style="display:block">${esc(p.code)} · ${r.days} วันหลังรับเข้าเริ่มตรวจ</small></span><span class="inline-actions"><span class="rule-pill">${r.days} วัน</span><button class="ghost-btn" onclick="removeExpiryRule('${esc(p.id)}')">หยุดติดตาม</button></span></div>`}).join("")}</div></div>`:""}
+    </section>
+
+    <div class="expiry-summary"><button><b>${c.overdue}</b><span>เลยรอบตรวจ</span></button><button><b>${c.today}</b><span>ตรวจวันนี้</span></button><button><b>${c.three}</b><span>ภายใน 3 วัน</span></button><button><b>${c.seven}</b><span>4–7 วัน</span></button></div>
+    <div class="inline-actions" style="margin-bottom:12px"><button class="ghost-btn" onclick="state.expiryShowAck=false;render()">ต้องตรวจ</button><button class="ghost-btn" onclick="state.expiryShowAck=true;render()">ประวัติ</button><span class="helper">${active.length} รายการ</span></div>
+    <section class="expiry-list">${state.expiryLoading?`<div class="empty panel">กำลังโหลด…</div>`:active.map(l=>{const r=expiryRisk(l),sq=lotStoreQty(l),fq=lotFrontQty(l);return `<article class="expiry-card ${r.cls}"><div><h3>${esc(l.easy||l.code||"สินค้า")}</h3><small>ล็อตรับเข้า ${prettyDateKey(l.receivedDate)} · รับทั้งหมด ${Number(l.qty||0).toLocaleString('th-TH')} ${esc(l.unit||"")} · รอบตรวจ ${prettyDateKey(l.reviewDate)}</small><div class="lot-locations"><span class="lot-location store">สโตร์ ${sq.toLocaleString('th-TH')} ${esc(l.unit||"")}</span><span class="lot-location front">หน้าร้าน ${fq.toLocaleString('th-TH')} ${esc(l.unit||"")}</span></div><div class="risk-badge">${l.acknowledged?`${l.autoClosed?'ใช้หมดจากผลนับ':'รับทราบแล้ว'} · ${esc(l.acknowledgedBy||"")}`:r.label}</div></div>${l.acknowledged?`<small class="lot-done">${l.acknowledgedAt?new Intl.DateTimeFormat('th-TH',{dateStyle:'short',timeStyle:'short'}).format(new Date(l.acknowledgedAt)):''}</small>`:`<button class="ack-btn" onclick="acknowledgeExpiry('${l.id}')">✓ ตรวจแล้ว</button>`}</article>`}).join("")||`<div class="empty panel">${state.expiryShowAck?'ยังไม่มีประวัติ':'ตอนนี้ไม่มีล็อตที่ต้องเช็ก'}</div>`}</section>
+  </main>`
+}
 
 async function loadOpenData(silent=false){if(state.openLoading)return;state.openLoading=true;if(state.view==="openmemo"&&!silent)render();try{const [rr,mr]=await Promise.all([fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules.json`),fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_memos.json`)]);state.openRules=rr.ok?(await rr.json()||{}):{};const raw=mr.ok?(await mr.json()||{}):{};state.openMemos=Object.entries(raw).map(([id,x])=>({id,...x})).sort((a,b)=>String(a.expiryAt||a.expiryDate||"").localeCompare(String(b.expiryAt||b.expiryDate||"")));state.openLoaded=true}catch(e){if(!silent)toast("ดึงข้อมูลอายุหลังเปิดใช้ไม่สำเร็จ")}finally{state.openLoading=false;if(state.view==="openmemo"&&!silent)render()}}
 function openRuleFor(p){const r=state.openRules?.[firebaseSafeKey(p.id)]||{};return {openAmount:Number(r.openAmount??r.bagDays??0)||0,openUnit:r.openUnit||"day",transferAmount:Number(r.transferAmount??r.jarDays??0)||0,transferUnit:r.transferUnit||"day",...r}}
 function ruleText(amount,unit){if(!amount)return "";return unit==="hour"?`${amount} ชม.`:`${amount} วัน`}
-async function saveOpenRule(event){event.preventDefault();const f=new FormData(event.currentTarget),p=productByAnyId(String(f.get("product")||""));if(!p){toast("กรุณาเลือกสินค้า");return}const openAmount=Math.max(0,Number(f.get("openAmount")||0)),transferAmount=Math.max(0,Number(f.get("transferAmount")||0)),openUnit=String(f.get("openUnit")||"day"),transferUnit=String(f.get("transferUnit")||"day");if(!openAmount&&!transferAmount){toast("ใส่อย่างน้อย 1 แบบ");return}const key=firebaseSafeKey(p.id);try{const check=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json?t=${Date.now()}`,{cache:"no-store"}),existing=check.ok?await check.json():null;if(existing){state.openRules[key]=existing;render();toast("สินค้านี้ตั้งค่าอายุไว้แล้ว หากตั้งผิดให้ลบรายการเดิมก่อน");return}const payload={productId:p.id,code:p.code,easy:p.easy,openAmount,openUnit,transferAmount,transferUnit,updatedAt:new Date().toISOString(),updatedBy:activeEmployee()?.nick||""};const saved=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!saved.ok)throw new Error("firebase");state.openRules[key]=payload;render();toast("บันทึกอายุหลังเปิดใช้แล้ว")}catch(e){toast("บันทึกไม่สำเร็จ")}}
+async function saveOpenRule(event){
+  event.preventDefault();
+  const f=new FormData(event.currentTarget),
+        draft=state.openRuleDraft||{},
+        p=productByAnyId(String(f.get("product")||draft.product||""));
+  if(!p){toast("กรุณาเลือกสินค้า");return}
+  const openAmount=Math.max(0,Number(f.get("openAmount")||draft.openAmount||0)),
+        transferAmount=Math.max(0,Number(f.get("transferAmount")||draft.transferAmount||0)),
+        openUnit=String(f.get("openUnit")||draft.openUnit||"day"),
+        transferUnit=String(f.get("transferUnit")||draft.transferUnit||"day");
+  if(!openAmount&&!transferAmount){toast("ใส่อย่างน้อย 1 แบบ");return}
+  const key=firebaseSafeKey(p.id);
+  try{
+    const check=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json?t=${Date.now()}`,{cache:"no-store"}),
+          existing=check.ok?await check.json():null;
+    if(existing){
+      state.openRules[key]=existing;
+      state.openRuleDraft={product:"",openAmount:"",openUnit:"day",transferAmount:"",transferUnit:"day"};
+      render();
+      toast("สินค้านี้ตั้งค่าอายุไว้แล้ว หากตั้งผิดให้ลบรายการเดิมก่อน");
+      return
+    }
+    const payload={productId:p.id,code:p.code,easy:p.easy,openAmount,openUnit,transferAmount,transferUnit,updatedAt:new Date().toISOString(),updatedBy:activeEmployee()?.nick||""};
+    const saved=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    if(!saved.ok)throw new Error("firebase");
+    state.openRules[key]=payload;
+    state.openRuleDraft={product:"",openAmount:"",openUnit:"day",transferAmount:"",transferUnit:"day"};
+    render();
+    toast("บันทึกอายุหลังเปิดใช้แล้ว")
+  }catch(e){toast("บันทึกไม่สำเร็จ")}
+}
 async function removeOpenRule(id){const p=productByAnyId(id);if(!p)return;if(!confirm(`ลบการตั้งค่าอายุของ ${p.easy} หรือไม่?`))return;const key=firebaseSafeKey(p.id);try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json`,{method:"DELETE"});delete state.openRules[key];render();toast("ลบการตั้งค่าแล้ว")}catch(e){toast("ลบไม่สำเร็จ")}}
 function openMemoRule(p,type){const r=openRuleFor(p);return type==="transfer"?{amount:r.transferAmount,unit:r.transferUnit}:{amount:r.openAmount,unit:r.openUnit}}
 function openExpiryAt(amount,unit,start=new Date()){const n=Number(amount)||0;if(unit==="hour")return new Date(start.getTime()+n*3600000);const d=new Date(start);d.setDate(d.getDate()+Math.max(0,Math.floor(n)-1));d.setHours(21,0,0,0);return d}
@@ -891,8 +1296,31 @@ function openLifeRuleCard(p){
 function filterOpenLife(){const q=(document.getElementById("openLifeSearch")?.value||"").trim().toLowerCase();document.querySelectorAll("[data-openlife]").forEach(el=>{el.style.display=!q||el.dataset.openlife.includes(q)?"":"none"})}
 function renderOpenMemo(){
   if(!state.openLoaded&&!state.openLoading)setTimeout(()=>loadOpenData(),0);
-  const rules=products.filter(p=>{const r=openRuleFor(p);return r.openAmount||r.transferAmount}),availableProducts=products.filter(p=>{const r=openRuleFor(p);return !(r.openAmount||r.transferAmount)});
-  return `${header(true,"อายุใช้งานสินค้า")}<main class="shell"><section class="openlife-hero"><div class="eyebrow">OPEN-USE GUIDE</div><h1>อายุใช้งานสินค้า</h1><p>เช็กอายุหลังเปิดหรือย้ายบรรจุภัณฑ์ได้ทันที ระบบคำนวณวัน Throwing จากวันนี้ให้พร้อมใช้</p></section><div class="openlife-toolbar"><label class="search"><input id="openLifeSearch" oninput="filterOpenLife()" placeholder="ค้นหาชื่อสินค้า หรือรหัส"></label></div><section class="openlife-list">${rules.map(p=>`<div data-openlife="${esc(`${p.easy} ${p.code} ${p.real||""}`.toLowerCase())}">${openLifeRuleCard(p)}</div>`).join("")||`<div class="openlife-empty"><b>ยังไม่ได้ตั้งอายุสินค้า</b>เปิด “ตั้งค่าอายุสินค้า” ด้านล่างเพื่อเพิ่มรายการแรก</div>`}</section><details class="settings-drawer"><summary>⚙ ตั้งค่าอายุสินค้า (${rules.length})</summary><section class="tool-panel"><p>ตั้งครั้งเดียว แล้วหน้าด้านบนจะคำนวณ Throwing จาก “วันนี้” ให้ทุกครั้งที่เปิด</p><form class="form-grid" onsubmit="saveOpenRule(event)"><div class="field wide"><label>สินค้า</label><select name="product" required><option value="">${availableProducts.length?"เลือกสินค้า":"ตั้งค่าครบแล้ว"}</option>${availableProducts.map(p=>`<option value="${esc(p.id)}">${esc(p.easy)} · ${esc(p.code)}</option>`).join("")}</select>${!availableProducts.length?`<div class="config-empty-note">สินค้าที่ตั้งค่าแล้วจะไม่แสดงซ้ำ หากตั้งผิดให้ลบรายการเดิมก่อน</div>`:""}</div><div class="field"><label>เปิดบรรจุภัณฑ์</label><input name="openAmount" type="number" min="0" step="1" inputmode="numeric" placeholder="จำนวน"></div><div class="field"><label>หน่วย</label><select name="openUnit"><option value="day">วัน</option><option value="hour">ชั่วโมง</option></select></div><div class="field"><label>ย้ายบรรจุภัณฑ์</label><input name="transferAmount" type="number" min="0" step="1" inputmode="numeric" placeholder="จำนวน"></div><div class="field"><label>หน่วย</label><select name="transferUnit"><option value="day">วัน</option><option value="hour">ชั่วโมง</option></select></div><button class="primary-btn wide" type="submit">บันทึกการตั้งค่า</button></form>${rules.length?`<div class="rule-list" style="margin-top:14px">${rules.map(p=>{const r=openRuleFor(p);return `<div class="rule-row"><span><b>${esc(p.easy)}</b><small style="display:block">${r.openAmount?`เปิด ${ruleText(r.openAmount,r.openUnit)}`:""}${r.openAmount&&r.transferAmount?" · ":""}${r.transferAmount?`ย้าย ${ruleText(r.transferAmount,r.transferUnit)}`:""}</small></span><span class="inline-actions"><button class="danger-btn" onclick="removeOpenRule('${esc(p.id)}')">ลบ</button></span></div>`}).join("")}</div>`:""}</section></details></main>`
+  const rules=products.filter(p=>{const r=openRuleFor(p);return r.openAmount||r.transferAmount}),
+        availableProducts=products.filter(p=>{const r=openRuleFor(p);return !(r.openAmount||r.transferAmount)}),
+        draft=state.openRuleDraft||{product:"",openAmount:"",openUnit:"day",transferAmount:"",transferUnit:"day"};
+  return `${header(true,"อายุใช้งานสินค้า")}<main class="shell">
+    <section class="openlife-hero"><div class="eyebrow">OPEN-USE GUIDE</div><h1>อายุใช้งานสินค้า</h1><p>เช็กอายุหลังเปิดหรือย้ายบรรจุภัณฑ์ได้ทันที ระบบคำนวณวัน Throwing จากวันนี้ให้พร้อมใช้</p></section>
+
+    <section class="age-manage">
+      <div class="age-manage-head"><div><h3>⚙ จัดการอายุสินค้า</h3><p>เพิ่ม แก้โดยลบแล้วตั้งใหม่ หรือดูรายการที่ตั้งค่าไว้ทั้งหมดจากตรงนี้</p></div><span class="age-manage-count">${rules.length} รายการ</span></div>
+      <form class="form-grid" onsubmit="saveOpenRule(event)">
+        <div class="field wide"><label>สินค้า</label><select name="product" required onchange="state.openRuleDraft.product=this.value">
+          <option value="">${availableProducts.length?"เลือกสินค้า":"ตั้งค่าครบแล้ว"}</option>
+          ${availableProducts.map(p=>`<option value="${esc(p.id)}" ${String(draft.product)===String(p.id)?'selected':''}>${esc(p.easy)} · ${esc(p.code)}</option>`).join("")}
+        </select>${!availableProducts.length?`<div class="config-empty-note">สินค้าที่ตั้งค่าแล้วจะไม่แสดงซ้ำ หากตั้งผิดให้ลบรายการเดิมก่อน</div>`:""}</div>
+        <div class="field"><label>เปิดบรรจุภัณฑ์</label><input name="openAmount" type="number" min="0" step="1" inputmode="numeric" placeholder="จำนวน" value="${esc(draft.openAmount||"")}" oninput="state.openRuleDraft.openAmount=this.value"></div>
+        <div class="field"><label>หน่วย</label><select name="openUnit" onchange="state.openRuleDraft.openUnit=this.value"><option value="day" ${draft.openUnit!=="hour"?'selected':''}>วัน</option><option value="hour" ${draft.openUnit==="hour"?'selected':''}>ชั่วโมง</option></select></div>
+        <div class="field"><label>ย้ายบรรจุภัณฑ์</label><input name="transferAmount" type="number" min="0" step="1" inputmode="numeric" placeholder="จำนวน" value="${esc(draft.transferAmount||"")}" oninput="state.openRuleDraft.transferAmount=this.value"></div>
+        <div class="field"><label>หน่วย</label><select name="transferUnit" onchange="state.openRuleDraft.transferUnit=this.value"><option value="day" ${draft.transferUnit!=="hour"?'selected':''}>วัน</option><option value="hour" ${draft.transferUnit==="hour"?'selected':''}>ชั่วโมง</option></select></div>
+        <button class="primary-btn wide" type="submit">บันทึกการตั้งค่า</button>
+      </form>
+      ${rules.length?`<div class="age-existing"><div class="rule-list">${rules.map(p=>{const r=openRuleFor(p);return `<div class="rule-row"><span><b>${esc(p.easy)}</b><small style="display:block">${r.openAmount?`เปิด ${ruleText(r.openAmount,r.openUnit)}`:""}${r.openAmount&&r.transferAmount?" · ":""}${r.transferAmount?`ย้าย ${ruleText(r.transferAmount,r.transferUnit)}`:""}</small></span><span class="inline-actions"><button class="danger-btn" onclick="removeOpenRule('${esc(p.id)}')">ลบ</button></span></div>`}).join("")}</div></div>`:""}
+    </section>
+
+    <div class="openlife-toolbar"><label class="search"><input id="openLifeSearch" oninput="filterOpenLife()" placeholder="ค้นหาชื่อสินค้า หรือรหัส"></label></div>
+    <section class="openlife-list">${rules.map(p=>`<div data-openlife="${esc(`${p.easy} ${p.code} ${p.real||""}`.toLowerCase())}">${openLifeRuleCard(p)}</div>`).join("")||`<div class="openlife-empty"><b>ยังไม่ได้ตั้งอายุสินค้า</b>ใช้ส่วน “จัดการอายุสินค้า” ด้านบนเพื่อเพิ่มรายการแรก</div>`}</section>
+  </main>`
 }
 
 function renderQr(){return `${header(true,"QR ด่วน")}<main class="shell"><div class="qr-shell"><div class="page-head"><div class="head-text"><div class="eyebrow">QUICK QR</div><h1 class="page-title">ตัวเลข → QR</h1><p class="page-sub">พิมพ์หรือวางรหัส แล้วสร้าง QR พร้อมสแกนได้ทันที โดยระบบไม่เติมตัวเลขให้อัตโนมัติ</p></div></div><section class="qr-entry"><label class="field"><label>ตัวเลข / รหัสลูกค้า</label><input id="quickQrInput" class="qr-input" inputmode="numeric" autocomplete="off" placeholder="วางหรือพิมพ์ตัวเลข" value="${esc(state.qrValue||"")}" onkeydown="if(event.key==='Enter'){event.preventDefault();generateQuickQr()}"></label><div class="qr-actions"><button class="primary-btn" onclick="generateQuickQr()">สร้าง QR</button><button class="ghost-btn" onclick="clearQuickQr()">ล้าง</button></div><div id="quickQrBox" class="qr-output"><div id="quickQrCanvas" class="qr-canvas"></div><div id="quickQrValue" class="qr-value"></div><div class="qr-note">สร้างแล้วหน้าจอจะพามาที่ QR กลางจอ พร้อมยิงเครื่องสแกนได้ทันที</div></div></section></div></main>`}
@@ -977,7 +1405,64 @@ function loadJsPdf(){if(window.jspdf?.jsPDF)return Promise.resolve();return new 
 function scanSafeName(v){const t=String(v||"").trim().replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g," ");return (t||`scan_${dateKey(new Date())}`).slice(0,80)}
 async function buildScanPdf(){if(!state.scanPages.length){toast("ถ่ายหรือเพิ่มภาพก่อน");return null}if(state.scanBuilding)return null;state.scanBuilding=true;try{await loadJsPdf();const {jsPDF}=window.jspdf;let pdf=null;for(let i=0;i<state.scanPages.length;i++){const c=await scanProcessedPage(state.scanPages[i]),land=c.width>c.height,orientation=land?"landscape":"portrait";if(!pdf)pdf=new jsPDF({orientation,unit:"mm",format:"a4",compress:true});else pdf.addPage("a4",orientation);const pw=land?297:210,ph=land?210:297,margin=7,maxW=pw-margin*2,maxH=ph-margin*2,scale=Math.min(maxW/c.width,maxH/c.height),w=c.width*scale,h=c.height*scale,x=(pw-w)/2,y=(ph-h)/2;pdf.addImage(c.toDataURL("image/jpeg",.88),"JPEG",x,y,w,h,undefined,"FAST")}return pdf.output("blob")}catch(e){console.error(e);toast("สร้าง PDF ไม่สำเร็จ");return null}finally{state.scanBuilding=false}}
 async function shareScanPdf(){const blob=await buildScanPdf();if(!blob)return;const name=scanSafeName(document.getElementById("scanFileName")?.value)+".pdf",file=new File([blob],name,{type:"application/pdf"});try{if(navigator.canShare&&navigator.share&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name,text:"เอกสารสแกนจาก OH Store Hub"});toast("เปิดเมนูแชร์แล้ว");return}}catch(e){if(e?.name==="AbortError")return}const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast("เครื่องนี้แชร์ไฟล์ตรงไม่ได้ จึงดาวน์โหลด PDF ให้แทน")}
-function renderScanner(){const pages=state.scanPages;return `${header(true,"สแกนเป็น PDF")}<main class="shell"><div class="scanner-shell"><section class="scan-hero"><div class="eyebrow" style="color:#a9cfbf">DOCUMENT SCANNER</div><h1>ถ่ายเอกสาร → PDF</h1><p>ถ่ายเอกสารหลายหน้า จัดลำดับให้เรียบร้อย แล้วสร้าง PDF พร้อมแชร์ผ่านมือถือได้ทันที</p></section><div class="scan-toolbar"><label class="scan-pick primary">📷 ถ่ายเอกสาร<input type="file" accept="image/*" capture="environment" onchange="scanAddFiles(this)"></label><label class="scan-pick secondary">＋ เพิ่มจากรูป<input type="file" accept="image/*" multiple onchange="scanAddFiles(this)"></label></div><div class="scan-options"><b>${pages.length} หน้า</b><div class="scan-mode"><button class="${state.scanMode==='document'?'active':''}" onclick="scanSetMode('document')">เอกสารชัด</button><button class="${state.scanMode==='color'?'active':''}" onclick="scanSetMode('color')">สีเดิม</button></div>${pages.length?`<button class="scan-mini danger" onclick="scanClearAll()">ล้างทั้งหมด</button>`:""}</div><section class="scan-list">${pages.map((p,i)=>`<article class="scan-page"><div class="scan-thumb"><img src="${p.data}" style="transform:rotate(${Number(p.rotation||0)}deg);filter:${state.scanMode==='document'?'grayscale(1) contrast(1.15)':'none'}"></div><div class="scan-info"><b>หน้า ${i+1}</b><small>${esc(p.name||'ภาพเอกสาร')}</small><div class="scan-actions"><button class="scan-mini" onclick="scanRotate('${p.id}')">↻ หมุน</button><button class="scan-mini" onclick="scanMove('${p.id}',-1)" ${i===0?'disabled':''}>↑ ขึ้น</button><button class="scan-mini" onclick="scanMove('${p.id}',1)" ${i===pages.length-1?'disabled':''}>↓ ลง</button><button class="scan-mini danger" onclick="scanDelete('${p.id}')">ลบ</button></div></div></article>`).join("")||`<div class="scan-empty"><b>ยังไม่มีหน้าเอกสาร</b>กด “ถ่ายเอกสาร” แล้วถ่ายทีละหน้าได้เลย</div>`}</section><div class="scan-bottom"><div class="scan-create"><input id="scanFileName" value="เอกสาร_${dateKey(new Date())}" placeholder="ชื่อไฟล์ PDF"><button class="primary-btn" onclick="shareScanPdf()" ${pages.length?'':'disabled'}>สร้าง PDF และแชร์</button></div><div class="scan-note">บนมือถือ เมื่อกดแชร์ให้เลือก LINE จากเมนูแชร์ได้เลย · ถ้าเบราว์เซอร์ไม่รองรับแชร์ไฟล์ ระบบจะดาวน์โหลด PDF ให้แทน</div></div></div></main>`}
+
+let scanCameraStream=null;
+
+async function openScanCamera(){
+  if(!navigator.mediaDevices?.getUserMedia){
+    toast("เบราว์เซอร์นี้เปิดกล้องตรงไม่ได้ กำลังเปิดกล้อง/รูปของเครื่องแทน");
+    document.getElementById("scanCameraFallback")?.click();
+    return;
+  }
+  closeScanCamera();
+  const wrap=document.createElement("div");
+  wrap.id="scanCameraOverlay";
+  wrap.className="scan-camera-backdrop";
+  wrap.innerHTML=`<div class="scan-camera-head"><b>ถ่ายเอกสาร</b><button class="scan-camera-close" onclick="closeScanCamera()" aria-label="ปิด">×</button></div><div class="scan-camera-stage"><video id="scanCameraVideo" autoplay playsinline muted></video><div class="scan-camera-guide"></div></div><div class="scan-camera-actions"><button class="scan-shutter" onclick="captureScanCamera()" aria-label="ถ่ายภาพ"></button></div>`;
+  document.body.appendChild(wrap);
+  document.body.style.overflow="hidden";
+  try{
+    scanCameraStream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},
+      audio:false
+    });
+    const video=document.getElementById("scanCameraVideo");
+    video.srcObject=scanCameraStream;
+    await video.play().catch(()=>{});
+  }catch(error){
+    closeScanCamera();
+    toast("เปิดกล้องไม่ได้ กรุณาอนุญาตสิทธิ์กล้อง หรือใช้ “เพิ่มจากรูป”");
+  }
+}
+function closeScanCamera(){
+  if(scanCameraStream){
+    scanCameraStream.getTracks().forEach(t=>t.stop());
+    scanCameraStream=null;
+  }
+  document.getElementById("scanCameraOverlay")?.remove();
+  document.body.style.overflow="";
+}
+async function captureScanCamera(){
+  const video=document.getElementById("scanCameraVideo");
+  if(!video||!video.videoWidth){toast("กล้องยังไม่พร้อม");return}
+  const max=1900,scale=Math.min(1,max/Math.max(video.videoWidth,video.videoHeight)),
+        w=Math.max(1,Math.round(video.videoWidth*scale)),h=Math.max(1,Math.round(video.videoHeight*scale)),
+        c=document.createElement("canvas");
+  c.width=w;c.height=h;
+  const x=c.getContext("2d",{alpha:false});
+  x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(video,0,0,w,h);
+  state.scanPages.push({
+    id:`scan_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,
+    data:c.toDataURL("image/jpeg",.88),
+    rotation:0,
+    name:`ถ่ายเอกสาร_${state.scanPages.length+1}`
+  });
+  closeScanCamera();
+  render();
+  toast(`เพิ่มหน้า ${state.scanPages.length} แล้ว`);
+}
+
+function renderScanner(){const pages=state.scanPages;return `${header(true,"สแกนเป็น PDF")}<main class="shell"><div class="scanner-shell"><section class="scan-hero"><div class="eyebrow" style="color:#a9cfbf">DOCUMENT SCANNER</div><h1>ถ่ายเอกสาร → PDF</h1><p>ถ่ายเอกสารหลายหน้า จัดลำดับให้เรียบร้อย แล้วสร้าง PDF พร้อมแชร์ผ่านมือถือได้ทันที</p></section><div class="scan-toolbar"><button type="button" class="scan-pick primary" onclick="openScanCamera()">📷 เปิดกล้องถ่ายเอกสาร</button><label class="scan-pick secondary">＋ เพิ่มจากรูป<input type="file" accept="image/*" multiple onchange="scanAddFiles(this)"></label><input id="scanCameraFallback" type="file" accept="image/*" capture="environment" hidden onchange="scanAddFiles(this)"></div><div class="scan-options"><b>${pages.length} หน้า</b><div class="scan-mode"><button class="${state.scanMode==='document'?'active':''}" onclick="scanSetMode('document')">เอกสารชัด</button><button class="${state.scanMode==='color'?'active':''}" onclick="scanSetMode('color')">สีเดิม</button></div>${pages.length?`<button class="scan-mini danger" onclick="scanClearAll()">ล้างทั้งหมด</button>`:""}</div><section class="scan-list">${pages.map((p,i)=>`<article class="scan-page"><div class="scan-thumb"><img src="${p.data}" style="transform:rotate(${Number(p.rotation||0)}deg);filter:${state.scanMode==='document'?'grayscale(1) contrast(1.15)':'none'}"></div><div class="scan-info"><b>หน้า ${i+1}</b><small>${esc(p.name||'ภาพเอกสาร')}</small><div class="scan-actions"><button class="scan-mini" onclick="scanRotate('${p.id}')">↻ หมุน</button><button class="scan-mini" onclick="scanMove('${p.id}',-1)" ${i===0?'disabled':''}>↑ ขึ้น</button><button class="scan-mini" onclick="scanMove('${p.id}',1)" ${i===pages.length-1?'disabled':''}>↓ ลง</button><button class="scan-mini danger" onclick="scanDelete('${p.id}')">ลบ</button></div></div></article>`).join("")||`<div class="scan-empty"><b>ยังไม่มีหน้าเอกสาร</b>กด “ถ่ายเอกสาร” แล้วถ่ายทีละหน้าได้เลย</div>`}</section><div class="scan-bottom"><div class="scan-create"><input id="scanFileName" value="เอกสาร_${dateKey(new Date())}" placeholder="ชื่อไฟล์ PDF"><button class="primary-btn" onclick="shareScanPdf()" ${pages.length?'':'disabled'}>สร้าง PDF และแชร์</button></div><div class="scan-note">บนมือถือ เมื่อกดแชร์ให้เลือก LINE จากเมนูแชร์ได้เลย · ถ้าเบราว์เซอร์ไม่รองรับแชร์ไฟล์ ระบบจะดาวน์โหลด PDF ให้แทน</div></div></div></main>`}
 
 function lotStoreQty(l){return Number(l.storeQty!=null?l.storeQty:l.qty)||0}
 function lotFrontQty(l){return Number(l.frontQty||0)||0}
