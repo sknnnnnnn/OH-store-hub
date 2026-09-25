@@ -10,7 +10,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon-192.png">
   <title>OH Store Hub</title>
-  <script id="oh-update-manifest" type="application/json">{"version": "8.6.21", "label": "V8.6.21", "level": "recommended", "requiredFeatures": [], "changes": ["เพิ่มศูนย์อัปเดตแบบแจ้งเตือนเล็ก", "ตรวจสินค้าใหม่/ชื่อ/หน่วยจากชีตสโตร์", "บังคับซิงก์เฉพาะฟีเจอร์ที่ต้องใช้ Catalog ล่าสุด"]}</script>
+  <script id="oh-update-manifest" type="application/json">{"version": "8.6.23", "label": "V8.6.23", "level": "recommended", "requiredFeatures": [], "changes": ["เพิ่มระบบของเข้าวันนี้จาก OKJ Inventory", "รวม Goods Request ที่อนุมัติและกำหนดส่งวันนี้อัตโนมัติ", "รับเข้าหลายใบครั้งเดียวพร้อมกันรับซ้ำ"]}</script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Itim&family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap');
     :root{--ink:#162033;--muted:#667085;--line:#e7eaf0;--paper:#fff;--bg:#f4f6f9;--navy:#101828;--green:#16875b;--green-soft:#eaf8f1;--orange:#d76d18;--orange-soft:#fff3e8;--blue:#2774d8;--blue-soft:#eaf2ff;--red:#d92d20;--shadow:0 14px 38px rgba(16,24,40,.09);--radius:22px}
@@ -328,6 +328,9 @@
     .update-inline-status{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:11px;color:#667085}.update-inline-status i{width:8px;height:8px;border-radius:50%;background:#12b76a}
     @media(max-width:760px){.update-chip{top:72px;right:9px}.update-chip small{display:none}}
 
+
+    .module-card.incoming{background:#eef5ff;border-color:#d5e3f6}.module-card.incoming .module-icon{background:#dce9fb;color:#2f5f9f}.incoming-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}.incoming-stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px}.incoming-stat b{display:block;font-size:22px}.incoming-stat span{font-size:11px;color:var(--muted)}.incoming-doc{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;margin:10px 0}.incoming-doc.received{opacity:.68;background:#f5f8f6}.incoming-doc-head{display:flex;gap:12px;align-items:flex-start}.incoming-doc-head input{width:22px;height:22px;margin-top:3px}.incoming-doc-title{flex:1;min-width:0}.incoming-doc-title b{display:block;font-size:15px}.incoming-doc-title small{color:var(--muted)}.incoming-items{margin-top:12px;border-top:1px solid var(--line)}.incoming-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}.incoming-item:last-child{border-bottom:0}.incoming-item b{font-size:13px}.incoming-item small{display:block;color:var(--muted);margin-top:2px}.incoming-qty{font-weight:950;white-space:nowrap}.incoming-actions{position:sticky;bottom:78px;z-index:8;background:rgba(245,247,248,.94);backdrop-filter:blur(10px);padding:10px 0;display:flex;gap:8px}.incoming-actions .primary-btn{flex:1}.incoming-warning{padding:12px 14px;border-radius:14px;background:#fff7e8;border:1px solid #efd59f;color:#80530a;font-size:12px;margin:12px 0}.incoming-empty{padding:28px;text-align:center;background:#fff;border:1px dashed var(--line);border-radius:18px;color:var(--muted)}
+    @media(max-width:760px){.incoming-summary{grid-template-columns:repeat(3,1fr);gap:6px}.incoming-stat{padding:10px}.incoming-stat b{font-size:18px}.incoming-stat span{font-size:9px}.incoming-doc{padding:12px}.incoming-actions{bottom:72px}}
 </style>
 
 <style>body.network-busy .sync-btn:not(:disabled),body.network-busy .primary-btn[data-network]{cursor:progress}.network-busy .network-loader.active{opacity:1}</style>
@@ -432,7 +435,7 @@ const sourceScheduleRows = {
   p09:["OFF","OFF","OFF","OFF","13","13","13","13","OFF","OFF","OFF","13","13","13","13","OFF","OFF","OFF","13","13","13","13","OFF","OFF","OFF","13","13","13","13","OFF"],
   p10:["LEAVE","13","13","13","13","13","OFF","11","13","11","11","11","13","OFF","11","11","13","13","13","LEAVE","OFF","11","11","11","11","11","11","OFF","13","11"]
 };
-let state = {view:localStorage.getItem("oh_current_user")?"home":"who",currentUser:localStorage.getItem("oh_current_user")||null,selectedDate:startOfDay(new Date()),selectedEmployee:null,personMode:"week",storeQuery:localStorage.getItem("oh_store_query")||"",storeCategory:"all",scheduleMonthOpen:false,modal:null,cart:[],selectedProduct:null,productQuery:"",modalQty:1,flashId:null,lastUndo:null,scheduleEditor:null,rosterModal:false,catalogLoading:false,catalogLoaded:false,storeSyncing:false,storeDirty:localStorage.getItem("oh_store_dirty")==="1",storeLastSync:localStorage.getItem("oh_store_last_sync")||"",usage:null,usageLoading:false,memos:[],memoLoaded:false,memoFilter:"active",memoModal:false,pdfViewer:null,memoLoading:false,expiryRules:{},expiryLots:[],expiryLoaded:false,expiryLoading:false,expiryShowAck:false,openRules:{},openMemos:[],openLoaded:false,openLoading:false,openProduct:"",openType:"bag",qrValue:"",scanPages:[],scanMode:"document",scanBuilding:false,leaveRequests:[],leaveLoaded:false,leaveLoading:false,leaveShowAck:false,transactionBusy:false,adjustReason:"forgot_issue",usageRounds:[],usageShowHistory:false};
+let state = {view:localStorage.getItem("oh_current_user")?"home":"who",currentUser:localStorage.getItem("oh_current_user")||null,selectedDate:startOfDay(new Date()),selectedEmployee:null,personMode:"week",storeQuery:localStorage.getItem("oh_store_query")||"",storeCategory:"all",scheduleMonthOpen:false,modal:null,cart:[],selectedProduct:null,productQuery:"",modalQty:1,flashId:null,lastUndo:null,scheduleEditor:null,rosterModal:false,catalogLoading:false,catalogLoaded:false,storeSyncing:false,storeDirty:localStorage.getItem("oh_store_dirty")==="1",storeLastSync:localStorage.getItem("oh_store_last_sync")||"",usage:null,usageLoading:false,memos:[],memoLoaded:false,memoFilter:"active",memoModal:false,pdfViewer:null,memoLoading:false,expiryRules:{},expiryLots:[],expiryLoaded:false,expiryLoading:false,expiryShowAck:false,openRules:{},openMemos:[],openLoaded:false,openLoading:false,openProduct:"",openType:"bag",qrValue:"",scanPages:[],scanMode:"document",scanBuilding:false,leaveRequests:[],leaveLoaded:false,leaveLoading:false,leaveShowAck:false,transactionBusy:false,adjustReason:"forgot_issue",usageRounds:[],usageShowHistory:false,incoming:null,incomingLoading:false,incomingSelected:{},incomingReceiving:false};
 
 function startOfDay(d){const x=new Date(d);x.setHours(0,0,0,0);return x}
 function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
@@ -449,7 +452,7 @@ function saveData(){localStorage.setItem("oh_products",JSON.stringify(products))
 function seedScheduleFromSourceImage(){if(!localStorage.getItem("oh_last_schedule_cycle"))localStorage.setItem("oh_last_schedule_cycle","2026-09-21");if(localStorage.getItem("oh_source_schedule_v1")==="1")return;const start=new Date(2026,8,21);Object.entries(sourceScheduleRows).forEach(([empId,shifts])=>{shifts.forEach((shift,i)=>{const d=addDays(start,i),mk=monthKey(d),dk=dateKey(d);scheduleMonths[mk]??={};scheduleMonths[mk][empId]??={};scheduleMonths[mk][empId][dk]=shift})});localStorage.setItem("oh_source_schedule_v1","1");saveData()}
 
 const CURRENT_UPDATE_MANIFEST=(()=>{
-  try{return JSON.parse(document.getElementById("oh-update-manifest")?.textContent||"{}")}catch(e){return {version:"8.6.21",label:"V8.6.21",level:"recommended",requiredFeatures:[],changes:[]}}
+  try{return JSON.parse(document.getElementById("oh-update-manifest")?.textContent||"{}")}catch(e){return {version:"8.6.22",label:"V8.6.22",level:"recommended",requiredFeatures:[],changes:[]}}
 })();
 const updateCenter={
   checking:false,
@@ -677,6 +680,8 @@ function renderUpdateCenter(){
 
 function go(view,extra={},push=true){
   if(viewNeedsUpdate(view)){openUpdateCenter(view);return}
+  if(view==="openmemo"){state.openLoaded=false;ageLastSync.openmemo=0}
+  if(view==="expiry"){state.expiryLoaded=false;ageLastSync.expiry=0}
   if(state.view==="scanner"&&view!=="scanner")closeScanCamera();
   if(view==="history")centralHistoryLoaded=false;
   state={...state,view,...extra};
@@ -708,10 +713,16 @@ function renderHome(){
     <button class="feature-button" onclick="state.selectedEmployee='${user.id}';state.personMode='week';go('person')"><span class="feature-top"><span class="feature-tag">MY SCHEDULE</span><span class="feature-arrow">›</span></span><h2>ตารางของฉัน</h2><p>${esc(user.nick)} · ${myShift.label}</p><span class="feature-bottom"><span class="feature-count"><b>7</b><span>วันข้างหน้า</span></span><span class="home-avatars home-user-art">${avatarArt(user)}</span></span></button>
     <div class="quick-modules"><button class="quick-module schedule" onclick="go('schedule',{selectedDate:startOfDay(new Date())})"><span class="quick-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M8 3v4M16 3v4M3 10h18"></path></svg></span><span class="corner-arrow">›</span><h3>ตารางวันนี้</h3><p>${today.working} คนเข้างาน</p></button><button class="quick-module count" onclick="openCounting()"><span class="quick-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span><span class="corner-arrow">↗</span><h3>นับของ</h3><p>เปิดระบบที่ใช้งานอยู่</p></button>
     <button class="quick-module store" onclick="go('store')"><span class="quick-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"></path><path d="M8 21v-8h8v8M3 9h18"></path></svg></span><span class="corner-arrow">›</span><h3>สโตร์</h3><p>${storeSummary().low} รายการใกล้หมด</p></button></div>
-    <div class="module-grid"><button class="module-card usage" onclick="go('usage')"><span class="module-icon">↘</span><h3>การใช้วันนี้</h3><p>DAILY! + สโตร์</p></button><button class="module-card memo" onclick="go('memo')"><span class="module-icon">PDF</span><h3>Memo & Promotion</h3><p>ประกาศและโปรโมชั่น</p></button></div>
+    <div class="module-grid"><button class="module-card incoming" onclick="go('incoming')"><span class="module-icon">🚚</span><h3>ของเข้าวันนี้</h3><p>ดึงจาก OKJ Inventory อัตโนมัติ</p></button><button class="module-card usage" onclick="go('usage')"><span class="module-icon">↘</span><h3>การใช้วันนี้</h3><p>DAILY! + สโตร์</p></button><button class="module-card memo" onclick="go('memo')"><span class="module-icon">PDF</span><h3>Memo & Promotion</h3><p>ประกาศและโปรโมชั่น</p></button></div>
     <div class="home-tool-grid"><button class="utility-card tool-expiry ${alerts.expiryClass}" onclick="go('expiry')"><span class="u-icon">◷</span><span class="u-chev">›</span><b>ติดตามอายุสินค้า</b><small>${alerts.expiryCount?`มี ${alerts.expiryCount} รายการต้องเช็ก`:'ล็อตในสโตร์'}</small>${alerts.expiryCount?`<span class="tool-badge ${alerts.expiryClass==='alert-watch'?'orange':''}">${alerts.expiryCount}</span>`:''}</button><button class="utility-card tool-openlife" onclick="go('openmemo')"><span class="u-icon">⏱</span><span class="u-chev">›</span><b>อายุใช้งานสินค้า</b><small>ดู Throwing จากวันนี้</small></button><button class="utility-card tool-leave ${alerts.leaveClass}" onclick="go('leave')"><span class="u-icon">✎</span><span class="u-chev">›</span><b>ลา / แจ้งเรื่อง</b><small>${alerts.leaveCount?`มีเรื่องใหม่ ${alerts.leaveCount}`:'บันทึกเรื่องตามวัน'}</small>${alerts.leaveCount?`<span class="tool-badge orange">${alerts.leaveCount}</span>`:''}</button><button class="utility-card tool-qr" onclick="go('qr')"><span class="u-icon">QR</span><span class="u-chev">›</span><b>QR ด่วน</b><small>เลข → QR</small></button><button class="utility-card wide tool-scan" onclick="go('scanner')"><span class="u-icon">▣</span><span class="u-chev">›</span><b>สแกนเป็น PDF</b><small>ถ่ายหลายหน้า → PDF → แชร์ LINE</small></button></div><div class="home-footnote">OH STORE · INTERNAL WORKSPACE</div>
   </section></div></div></main>`
 }
+function inventoryDocKey(id){return String(id||"").replace(/[^a-zA-Z0-9_-]/g,"_")}
+async function loadIncomingToday(silent=false){if(state.incomingLoading)return;state.incomingLoading=true;if(!silent&&state.view==="incoming")render();try{const r=await fetch(`${CONFIG.sheetsWebAppUrl}?mode=inventoryToday&t=${Date.now()}`,{cache:"no-store"});const data=await r.json();if(!r.ok||data.status!=="success")throw new Error(data.message||"inventory");let receipts={};try{const rr=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory_receipts.json?t=${Date.now()}`,{cache:"no-store"});receipts=rr.ok?(await rr.json()||{}):{}}catch(_e){}data.documents=(data.documents||[]).map(d=>({...d,received:Boolean(receipts[inventoryDocKey(d.id)]),receipt:receipts[inventoryDocKey(d.id)]||null}));state.incoming=data;state.incomingSelected={};data.documents.filter(d=>!d.received).forEach(d=>state.incomingSelected[d.id]=true)}catch(e){state.incoming={error:String(e.message||e),documents:[]};if(!silent)toast("ดึงของเข้าวันนี้ไม่สำเร็จ · ตรวจ Apps Script / Inventory") }finally{state.incomingLoading=false;if(state.view==="incoming")render()}}
+function toggleIncomingDoc(id,checked){state.incomingSelected[id]=Boolean(checked);render()}
+function incomingTotals(){const docs=state.incoming?.documents||[],active=docs.filter(d=>!d.received),items=active.reduce((n,d)=>n+(d.items||[]).length,0),qty=active.reduce((n,d)=>n+(d.items||[]).reduce((a,x)=>a+Number(x.request_qty||0),0),0);return {docs:active.length,items,qty}}
+function renderIncoming(){const data=state.incoming,tot=incomingTotals(),docs=data?.documents||[];if(!data&&!state.incomingLoading)setTimeout(()=>loadIncomingToday(),0);return `${header(true,"ของเข้าวันนี้")}<main class="shell"><div class="page-head"><div class="head-text"><div class="eyebrow">OKJ INVENTORY · AUTO SYNC</div><h1 class="page-title">ของเข้าวันนี้</h1><p class="page-sub">ดึง Goods Request ที่อนุมัติและ Delivery Date เป็นวันนี้ แล้วรับเข้า Store ได้ครั้งเดียว</p></div><button class="ghost-btn" ${state.incomingLoading?'disabled':''} onclick="loadIncomingToday()">↻ ${state.incomingLoading?'กำลังดึง…':'รีเฟรช'}</button></div>${data?.error?`<div class="incoming-warning">เชื่อม Inventory ไม่สำเร็จ: ${esc(data.error)}<br>ตรวจว่าตั้ง INVENTORY_USERNAME / INVENTORY_PASSWORD ใน Apps Script แล้ว และ Deploy เวอร์ชันใหม่แล้ว</div>`:""}<div class="incoming-summary"><div class="incoming-stat"><b>${tot.docs}</b><span>ใบที่รอรับ</span></div><div class="incoming-stat"><b>${tot.items}</b><span>รายการ</span></div><div class="incoming-stat"><b>${tot.qty.toLocaleString('th-TH')}</b><span>จำนวนรวม</span></div></div>${state.incomingLoading&&!data?`<div class="incoming-empty">กำลังเชื่อม OKJ Inventory…</div>`:docs.length?docs.map(d=>`<article class="incoming-doc ${d.received?'received':''}"><div class="incoming-doc-head">${d.received?'✓':`<input type="checkbox" ${state.incomingSelected[d.id]?'checked':''} onchange="toggleIncomingDoc('${d.id}',this.checked)">`}<div class="incoming-doc-title"><b>${esc(d.document_no||String(d.id))}</b><small>${esc(d.warehouse_name||'')} · ส่ง ${esc(d.delivery_date||'')} ${d.received?`· รับแล้วโดย ${esc(d.receipt?.operator||'')}`:''}</small></div><span class="badge ${d.received?'in':''}">${d.received?'รับแล้ว':'รอรับ'}</span></div><div class="incoming-items">${(d.items||[]).map(x=>{const p=productByAnyId(x.rm_master_code),stock=p?Number(p.stock||0):null;return `<div class="incoming-item"><span><b>${esc(x.rm_master_name||x.rm_master_code)}</b><small>${esc(x.rm_master_code)}${stock!==null?` · Store ${stock.toLocaleString('th-TH')} ${esc(p.unit||x.unit||'')}`:' · ⚠ ไม่พบใน Store'}</small></span><span class="incoming-qty">+${Number(x.request_qty||0).toLocaleString('th-TH')} ${esc(x.unit||'')}</span></div>`}).join('')}</div></article>`).join(''):`<div class="incoming-empty">วันนี้ยังไม่มี Goods Request ที่กำหนดส่ง หรือรับเข้าครบแล้ว</div>`}${docs.some(d=>!d.received)?`<div class="incoming-actions"><button class="ghost-btn" onclick="state.incomingSelected={};render()">ล้างที่เลือก</button><button class="primary-btn" ${state.incomingReceiving?'disabled':''} onclick="receiveSelectedIncoming()">${state.incomingReceiving?'กำลังรับเข้า…':'✓ รับเข้าใบที่เลือกทั้งหมด'}</button></div>`:''}</main>`}
+async function receiveSelectedIncoming(){if(state.incomingReceiving)return;const user=activeEmployee();if(!user){toast("กรุณาเลือกผู้ใช้งานก่อน");return}const docs=(state.incoming?.documents||[]).filter(d=>!d.received&&state.incomingSelected[d.id]);if(!docs.length){toast("เลือกใบที่จะรับเข้าก่อน");return}const grouped={};for(const d of docs)for(const x of (d.items||[])){const p=productByAnyId(x.rm_master_code);if(!p)continue;const q=Number(x.request_qty||0);if(q<=0)continue;if(!grouped[p.id])grouped[p.id]={id:p.id,qty:0,before:Number(p.stock)||0};grouped[p.id].qty+=q}const lines=Object.values(grouped);const missing=[...new Set(docs.flatMap(d=>(d.items||[]).filter(x=>!productByAnyId(x.rm_master_code)).map(x=>x.rm_master_code)))];if(missing.length&&!confirm(`มี ${missing.length} รหัสที่ยังไม่พบใน Store และจะไม่ถูกรับเข้า\n${missing.slice(0,8).join(', ')}${missing.length>8?'…':''}\n\nรับรายการที่จับคู่ได้ต่อหรือไม่?`))return;if(!lines.length){toast("ไม่มีสินค้าที่จับคู่กับ Store ได้");return}if(!confirm(`รับเข้า ${docs.length} ใบ · ${lines.length} สินค้า\nระบบจะเพิ่มยอด Store และสร้างล็อตอายุสินค้าที่ตั้งค่าไว้\n\nยืนยันหรือไม่?`))return;state.incomingReceiving=true;render();try{for(const line of lines){const p=products.find(x=>x.id===line.id),central=await getCentralStock(p);if(central!==null){p.stock=central;line.before=central}}state.modal="receive";state.cart=lines.map(x=>({id:x.id,qty:x.qty,before:x.before}));await confirmTransaction();const now=new Date().toISOString();await Promise.all(docs.map(d=>fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory_receipts/${inventoryDocKey(d.id)}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({goodsRequestId:d.id,documentNo:d.document_no,deliveryDate:d.delivery_date,operator:user.nick,operatorId:user.id,receivedAt:now})})));toast(`รับเข้า ${docs.length} ใบเรียบร้อย · ${user.nick}`);await loadIncomingToday(true)}catch(e){toast("รับเข้าจาก Inventory ไม่สำเร็จครบ กรุณาตรวจประวัติ Store ก่อนลองใหม่")}finally{state.incomingReceiving=false;if(state.view==="incoming")render()}}
 function openCounting(){go("counting")}
 function renderCounting(){const user=activeEmployee(),params=new URLSearchParams({hub:"1",user:user?.id||"",name:user?.nick||""});return `${header(true,"นับของ")}<main class="count-shell"><iframe class="count-frame" src="${CONFIG.countingAppUrl}?${params}" title="ระบบนับของ" allow="clipboard-write; fullscreen"></iframe></main>`}
 function bottomNav(){const item=(view,label,icon,extra="")=>`<button class="nav-item ${extra} ${state.view===view?'active':''}" onclick="go('${view}')">${icon}<span>${label}</span></button>`;return `<nav class="bottom-nav" aria-label="เมนูหลัก">${item("home","หน้าหลัก",`<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>`)}${item("schedule","ตาราง",`<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>`)}${item("counting","นับของ",`<svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,"counting")}${item("store","สโตร์",`<svg viewBox="0 0 24 24"><path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M8 21v-8h8v8M3 9h18"/></svg>`)}</nav>`}
@@ -1840,15 +1851,57 @@ function daysBetween(a,b){const x=startOfDay(a),y=startOfDay(b);return Math.ceil
 function prettyDateKey(key){if(!key)return "—";return new Intl.DateTimeFormat("th-TH",{day:"numeric",month:"short",year:"numeric"}).format(new Date(key+"T00:00:00"))}
 
 let ageCatalogLoading={expiry:false,openmemo:false};
+let ageLastSync={expiry:0,openmemo:0,catalog:0};
 
-async function ensureAgePageData(kind){
+async function syncAgeCatalog(force=false){
+  if(!force&&products.length&&Date.now()-ageLastSync.catalog<60000){
+    state.catalogLoaded=true;
+    return products
+  }
+  try{
+    const [items,invRes]=await Promise.all([
+      fetchStoreSheetCatalog(),
+      fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory.json?t=${Date.now()}`,{cache:"no-store"})
+    ]);
+    const central=invRes.ok?(await invRes.json()||{}):{},
+          old=new Map(products.map(p=>[String(p.code||p.id),p])),
+          next=[];
+    (items||[]).forEach(row=>{
+      const id=String(row.id||row.code||"").trim();
+      if(!id)return;
+      const prev=old.get(id)||{},saved=central[id]||{};
+      next.push({
+        id,code:id,
+        easy:saved.easy||prev.easy||easyCatalogName(row.name||row.real||id),
+        real:String(row.name||row.real||prev.real||""),
+        category:row.category||prev.category||"ทั่วไป",
+        stock:Number(saved.stock??prev.stock??row.stock??row.balance??0)||0,
+        unit:String(row.unit||prev.unit||saved.unit||"หน่วย"),
+        min:Number(saved.min??prev.min??0)||0,
+        last:saved.last||prev.last||null
+      })
+    });
+    if(!next.length)throw new Error("empty_catalog");
+    products=next;
+    state.catalogLoaded=true;
+    ageLastSync.catalog=Date.now();
+    saveData();
+    return products
+  }catch(e){
+    if(!products.length)await syncStoreCatalog();
+    state.catalogLoaded=products.length>0;
+    if(products.length)ageLastSync.catalog=Date.now();
+    return products
+  }
+}
+
+async function ensureAgePageData(kind,force=false){
   if(ageCatalogLoading[kind])return;
   ageCatalogLoading[kind]=true;
   try{
-    // Age tools must use the exact same catalog/source as Store.
-    if(!state.catalogLoaded||!products.length)await syncStoreCatalog();
-    if(kind==="expiry"&&!state.expiryLoaded)await loadExpiryData(true);
-    if(kind==="openmemo"&&!state.openLoaded)await loadOpenData(true);
+    await syncAgeCatalog(force||!state.catalogLoaded||!products.length);
+    if(kind==="expiry"&&(force||!state.expiryLoaded||Date.now()-ageLastSync.expiry>15000))await loadExpiryData(true);
+    if(kind==="openmemo"&&(force||!state.openLoaded||Date.now()-ageLastSync.openmemo>15000))await loadOpenData(true);
   }finally{
     ageCatalogLoading[kind]=false;
     if(state.view===kind)render();
@@ -1862,13 +1915,30 @@ async function ensureExpiryRulesLoaded(){
   try{const r=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules.json`);state.expiryRules=r.ok?(await r.json()||{}):{};return state.expiryRules}catch(e){return state.expiryRules||{}}
 }
 async function loadExpiryData(silent=false){
-  if(state.expiryLoading)return;state.expiryLoading=true;if(state.view==="expiry"&&!silent)render();
-  try{const [rr,lr]=await Promise.all([fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules.json`),fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots.json`)]);state.expiryRules=rr.ok?(await rr.json()||{}):{};const raw=lr.ok?(await lr.json()||{}):{};state.expiryLots=Object.entries(raw).map(([id,x])=>({id,...x}));state.expiryLoaded=true}catch(e){if(!silent)toast("ดึงข้อมูลวันหมดอายุไม่สำเร็จ")}finally{state.expiryLoading=false;if(state.view==="expiry"&&!silent)render()}
+  if(state.expiryLoading)return;
+  state.expiryLoading=true;
+  if(state.view==="expiry"&&!silent)render();
+  try{
+    const [rr,lr]=await Promise.all([
+      fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules.json?t=${Date.now()}`,{cache:"no-store"}),
+      fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots.json?t=${Date.now()}`,{cache:"no-store"})
+    ]);
+    state.expiryRules=rr.ok?(await rr.json()||{}):{};
+    const raw=lr.ok?(await lr.json()||{}):{};
+    state.expiryLots=Object.entries(raw).map(([id,x])=>({id,...x}));
+    state.expiryLoaded=true;
+    ageLastSync.expiry=Date.now()
+  }catch(e){
+    if(!silent)toast("ดึงข้อมูลวันหมดอายุไม่สำเร็จ")
+  }finally{
+    state.expiryLoading=false;
+    if(state.view==="expiry")render()
+  }
 }
 function expiryRuleFor(p){return state.expiryRules?.[firebaseSafeKey(p.id)]||state.expiryRules?.[firebaseSafeKey(p.code)]||Object.values(state.expiryRules||{}).find(x=>String(x?.productId)===String(p.id)||String(x?.code)===String(p.code))||null}
 function trackedExpiryProducts(){return products.filter(p=>productCategory(p)==="chill"&&!expiryRuleFor(p))}
-async function saveExpiryRule(event){event.preventDefault();const f=new FormData(event.currentTarget),id=String(f.get("product")||""),days=Math.floor(Number(f.get("days")||0)),p=productByAnyId(id);if(!p){toast("กรุณาเลือกสินค้า");return}const key=firebaseSafeKey(p.id);if(!Number.isFinite(days)||days<1){toast("จำนวนวันต้องอย่างน้อย 1 วัน");return}try{const check=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json?t=${Date.now()}`,{cache:"no-store"}),existing=check.ok?await check.json():null;if(existing){state.expiryRules[key]=existing;render();toast("สินค้านี้ตั้งค่าติดตามอายุไว้แล้ว หากต้องการแก้ให้ลบรายการเดิมก่อน");return}const payload={productId:p.id,code:p.code,easy:p.easy,days,updatedAt:new Date().toISOString(),updatedBy:activeEmployee()?.nick||""};const saved=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!saved.ok)throw new Error("firebase");state.expiryRules[key]=payload;render();toast(`ตั้งเตือน ${p.easy} หลังรับเข้า ${days} วันแล้ว`)}catch(e){toast("บันทึกการตั้งค่าไม่สำเร็จ")}}
-async function removeExpiryRule(id){const p=productByAnyId(id);if(!p)return;if(!confirm(`หยุดติดตามวันหมดอายุของ ${p.easy} หรือไม่?\nล็อตเดิมที่สร้างไว้จะยังคงอยู่จนกดรับทราบ`))return;const key=firebaseSafeKey(p.id);try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json`,{method:"DELETE"});delete state.expiryRules[key];render();toast("หยุดติดตามสินค้านี้แล้ว")}catch(e){toast("แก้การตั้งค่าไม่สำเร็จ")}}
+async function saveExpiryRule(event){event.preventDefault();const f=new FormData(event.currentTarget),id=String(f.get("product")||""),days=Math.floor(Number(f.get("days")||0)),p=productByAnyId(id);if(!p){toast("กรุณาเลือกสินค้า");return}const key=firebaseSafeKey(p.id);if(!Number.isFinite(days)||days<1){toast("จำนวนวันต้องอย่างน้อย 1 วัน");return}try{const check=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json?t=${Date.now()}`,{cache:"no-store"}),existing=check.ok?await check.json():null;if(existing){state.expiryRules[key]=existing;render();toast("สินค้านี้ตั้งค่าติดตามอายุไว้แล้ว หากต้องการแก้ให้ลบรายการเดิมก่อน");return}const payload={productId:p.id,code:p.code,easy:p.easy,days,updatedAt:new Date().toISOString(),updatedBy:activeEmployee()?.nick||""};const saved=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!saved.ok)throw new Error("firebase");state.expiryRules[key]=payload;state.expiryLoaded=true;ageLastSync.expiry=Date.now();render();toast(`ตั้งเตือน ${p.easy} หลังรับเข้า ${days} วันแล้ว`)}catch(e){toast("บันทึกการตั้งค่าไม่สำเร็จ")}}
+async function removeExpiryRule(id){const p=productByAnyId(id);if(!p)return;if(!confirm(`หยุดติดตามวันหมดอายุของ ${p.easy} หรือไม่?\nล็อตเดิมที่สร้างไว้จะยังคงอยู่จนกดรับทราบ`))return;const key=firebaseSafeKey(p.id);try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json`,{method:"DELETE"});delete state.expiryRules[key];ageLastSync.expiry=Date.now();render();toast("หยุดติดตามสินค้านี้แล้ว")}catch(e){toast("แก้การตั้งค่าไม่สำเร็จ")}}
 function expiryRisk(lot){const d=daysBetween(new Date(),new Date(lot.reviewDate+"T00:00:00"));if(d<0)return {cls:"risk-overdue",label:`เลยรอบตรวจ ${Math.abs(d)} วัน`,rank:0,days:d};if(d===0)return {cls:"risk-high",label:"ถึงรอบตรวจวันนี้",rank:1,days:d};if(d<=3)return {cls:"risk-high",label:`เหลือ ${d} วัน`,rank:2,days:d};if(d<=7)return {cls:"risk-watch",label:`เหลือ ${d} วัน`,rank:3,days:d};return {cls:"risk-ok",label:`อีก ${d} วัน`,rank:4,days:d}}
 async function acknowledgeExpiry(id){const lot=state.expiryLots.find(x=>x.id===id),user=activeEmployee();if(!lot||!user)return;if(!confirm(`ตรวจ ${lot.easy||lot.code} แล้ว และนำรายการนี้ออกจากหน้าเตือนใช่หรือไม่?`))return;const patch={acknowledged:true,acknowledgedAt:new Date().toISOString(),acknowledgedBy:user.nick,acknowledgedById:user.id};try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots/${id}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(patch)});Object.assign(lot,patch);render();toast(`รับทราบแล้ว · ${user.nick}`)}catch(e){toast("กดรับทราบไม่สำเร็จ")}}
 function expiryCounts(lots){return {overdue:lots.filter(x=>expiryRisk(x).days<0).length,today:lots.filter(x=>expiryRisk(x).days===0).length,three:lots.filter(x=>{const d=expiryRisk(x).days;return d>0&&d<=3}).length,seven:lots.filter(x=>{const d=expiryRisk(x).days;return d>3&&d<=7}).length}}
@@ -1883,7 +1953,7 @@ function renderExpiry(){
         configured=products.filter(p=>expiryRuleFor(p));
 
   return `${header(true,"ติดตามอายุสินค้า")}<main class="shell">
-    <div class="page-head"><div class="head-text"><div class="eyebrow">STORE AGE WATCH</div><h1 class="page-title">ติดตามอายุสินค้า</h1><p class="page-sub">ติดตามล็อตเก่าก่อนตาม FIFO และบอกให้เห็นว่าแต่ละล็อตยังอยู่ในสโตร์หรือถูกนำไปหน้าร้านแล้ว</p></div></div>
+    <div class="page-head"><div class="head-text"><div class="eyebrow">STORE AGE WATCH</div><h1 class="page-title">ติดตามอายุสินค้า</h1><p class="page-sub">ติดตามล็อตเก่าก่อนตาม FIFO และบอกให้เห็นว่าแต่ละล็อตยังอยู่ในสโตร์หรือถูกนำไปหน้าร้านแล้ว</p></div><button class="ghost-btn" onclick="ensureAgePageData('expiry',true)">↻ ซิงก์</button></div>
 
     <section class="age-manage">
       <div class="age-manage-head"><div><h3>⚙ จัดการสินค้าที่ติดตาม</h3><p>เพิ่มสินค้า หยุดติดตาม และดูค่าที่ตั้งไว้ทั้งหมดจากด้านบนนี้</p></div><span class="age-manage-count">${configured.length} รายการ</span></div>
@@ -1901,11 +1971,31 @@ function renderExpiry(){
   </main>`
 }
 
-async function loadOpenData(silent=false){if(state.openLoading)return;state.openLoading=true;if(state.view==="openmemo"&&!silent)render();try{const [rr,mr]=await Promise.all([fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules.json`),fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_memos.json`)]);state.openRules=rr.ok?(await rr.json()||{}):{};const raw=mr.ok?(await mr.json()||{}):{};state.openMemos=Object.entries(raw).map(([id,x])=>({id,...x})).sort((a,b)=>String(a.expiryAt||a.expiryDate||"").localeCompare(String(b.expiryAt||b.expiryDate||"")));state.openLoaded=true}catch(e){if(!silent)toast("ดึงข้อมูลอายุหลังเปิดใช้ไม่สำเร็จ")}finally{state.openLoading=false;if(state.view==="openmemo"&&!silent)render()}}
+async function loadOpenData(silent=false){
+  if(state.openLoading)return;
+  state.openLoading=true;
+  if(state.view==="openmemo"&&!silent)render();
+  try{
+    const [rr,mr]=await Promise.all([
+      fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules.json?t=${Date.now()}`,{cache:"no-store"}),
+      fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_memos.json?t=${Date.now()}`,{cache:"no-store"})
+    ]);
+    state.openRules=rr.ok?(await rr.json()||{}):{};
+    const raw=mr.ok?(await mr.json()||{}):{};
+    state.openMemos=Object.entries(raw).map(([id,x])=>({id,...x})).sort((a,b)=>String(a.expiryAt||a.expiryDate||"").localeCompare(String(b.expiryAt||b.expiryDate||"")));
+    state.openLoaded=true;
+    ageLastSync.openmemo=Date.now()
+  }catch(e){
+    if(!silent)toast("ดึงข้อมูลอายุหลังเปิดใช้ไม่สำเร็จ")
+  }finally{
+    state.openLoading=false;
+    if(state.view==="openmemo")render()
+  }
+}
 function openRuleFor(p){const r=state.openRules?.[firebaseSafeKey(p.id)]||state.openRules?.[firebaseSafeKey(p.code)]||Object.values(state.openRules||{}).find(x=>String(x?.productId)===String(p.id)||String(x?.code)===String(p.code))||{};return {openAmount:Number(r.openAmount??r.bagDays??0)||0,openUnit:r.openUnit||"day",transferAmount:Number(r.transferAmount??r.jarDays??0)||0,transferUnit:r.transferUnit||"day",...r}}
 function ruleText(amount,unit){if(!amount)return "";return unit==="hour"?`${amount} ชม.`:`${amount} วัน`}
-async function saveOpenRule(event){event.preventDefault();const f=new FormData(event.currentTarget),p=productByAnyId(String(f.get("product")||""));if(!p){toast("กรุณาเลือกสินค้า");return}const openAmount=Math.max(0,Number(f.get("openAmount")||0)),transferAmount=Math.max(0,Number(f.get("transferAmount")||0)),openUnit=String(f.get("openUnit")||"day"),transferUnit=String(f.get("transferUnit")||"day");if(!openAmount&&!transferAmount){toast("ใส่อย่างน้อย 1 แบบ");return}const key=firebaseSafeKey(p.id);try{const check=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json?t=${Date.now()}`,{cache:"no-store"}),existing=check.ok?await check.json():null;if(existing){state.openRules[key]=existing;render();toast("สินค้านี้ตั้งค่าอายุไว้แล้ว หากตั้งผิดให้ลบรายการเดิมก่อน");return}const payload={productId:p.id,code:p.code,easy:p.easy,openAmount,openUnit,transferAmount,transferUnit,updatedAt:new Date().toISOString(),updatedBy:activeEmployee()?.nick||""};const saved=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!saved.ok)throw new Error("firebase");state.openRules[key]=payload;render();toast("บันทึกอายุหลังเปิดใช้แล้ว")}catch(e){toast("บันทึกไม่สำเร็จ")}}
-async function removeOpenRule(id){const p=productByAnyId(id);if(!p)return;if(!confirm(`ลบการตั้งค่าอายุของ ${p.easy} หรือไม่?`))return;const key=firebaseSafeKey(p.id);try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json`,{method:"DELETE"});delete state.openRules[key];render();toast("ลบการตั้งค่าแล้ว")}catch(e){toast("ลบไม่สำเร็จ")}}
+async function saveOpenRule(event){event.preventDefault();const f=new FormData(event.currentTarget),p=productByAnyId(String(f.get("product")||""));if(!p){toast("กรุณาเลือกสินค้า");return}const openAmount=Math.max(0,Number(f.get("openAmount")||0)),transferAmount=Math.max(0,Number(f.get("transferAmount")||0)),openUnit=String(f.get("openUnit")||"day"),transferUnit=String(f.get("transferUnit")||"day");if(!openAmount&&!transferAmount){toast("ใส่อย่างน้อย 1 แบบ");return}const key=firebaseSafeKey(p.id);try{const check=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json?t=${Date.now()}`,{cache:"no-store"}),existing=check.ok?await check.json():null;if(existing){state.openRules[key]=existing;render();toast("สินค้านี้ตั้งค่าอายุไว้แล้ว หากตั้งผิดให้ลบรายการเดิมก่อน");return}const payload={productId:p.id,code:p.code,easy:p.easy,openAmount,openUnit,transferAmount,transferUnit,updatedAt:new Date().toISOString(),updatedBy:activeEmployee()?.nick||""};const saved=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!saved.ok)throw new Error("firebase");state.openRules[key]=payload;state.openLoaded=true;ageLastSync.openmemo=Date.now();render();toast("บันทึกอายุหลังเปิดใช้แล้ว")}catch(e){toast("บันทึกไม่สำเร็จ")}}
+async function removeOpenRule(id){const p=productByAnyId(id);if(!p)return;if(!confirm(`ลบการตั้งค่าอายุของ ${p.easy} หรือไม่?`))return;const key=firebaseSafeKey(p.id);try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json`,{method:"DELETE"});delete state.openRules[key];ageLastSync.openmemo=Date.now();render();toast("ลบการตั้งค่าแล้ว")}catch(e){toast("ลบไม่สำเร็จ")}}
 function openMemoRule(p,type){const r=openRuleFor(p);return type==="transfer"?{amount:r.transferAmount,unit:r.transferUnit}:{amount:r.openAmount,unit:r.openUnit}}
 function openExpiryAt(amount,unit,start=new Date()){const n=Number(amount)||0;if(unit==="hour")return new Date(start.getTime()+n*3600000);const d=new Date(start);d.setDate(d.getDate()+Math.max(0,Math.floor(n)-1));d.setHours(21,0,0,0);return d}
 function fmtDateTime(value){const d=new Date(value);return Number.isNaN(d.getTime())?"—":new Intl.DateTimeFormat('th-TH',{dateStyle:'medium',timeStyle:'short'}).format(d)}
@@ -1938,7 +2028,7 @@ function renderOpenMemo(){
         availableProducts=products.filter(p=>{const r=openRuleFor(p);return !(r.openAmount||r.transferAmount)});
 
   return `${header(true,"อายุใช้งานสินค้า")}<main class="shell">
-    <section class="openlife-hero"><div class="eyebrow">OPEN-USE GUIDE</div><h1>อายุใช้งานสินค้า</h1><p>เช็กอายุหลังเปิดหรือย้ายบรรจุภัณฑ์ได้ทันที ระบบคำนวณวัน Throwing จากวันนี้ให้พร้อมใช้</p></section>
+    <section class="openlife-hero"><div class="eyebrow">OPEN-USE GUIDE</div><h1>อายุใช้งานสินค้า</h1><p>เช็กอายุหลังเปิดหรือย้ายบรรจุภัณฑ์ได้ทันที ระบบคำนวณวัน Throwing จากวันนี้ให้พร้อมใช้</p><button class="ghost-btn" style="margin-top:10px" onclick="ensureAgePageData('openmemo',true)">↻ ซิงก์ข้อมูลล่าสุด</button></section>
 
     <section class="age-manage">
       <div class="age-manage-head"><div><h3>⚙ จัดการอายุสินค้า</h3><p>เพิ่มสินค้า ลบค่าที่ตั้งผิด และดูค่าทั้งหมดจากด้านบนนี้</p></div><span class="age-manage-count">${rules.length} รายการ</span></div>
@@ -2116,7 +2206,7 @@ async function createExpiryLotsForReceive(lines,now,user){await ensureExpiryRule
 let lastRenderedView=state.view;
 
 function render(){
-  const views={who:renderWho,home:renderHome,schedule:()=>renderSchedule(false),day:()=>renderSchedule(true),person:renderPerson,store:renderStore,history:renderHistory,counting:renderCounting,usage:renderUsage,memo:renderMemo,openmemo:renderOpenMemo,expiry:renderExpiry,qr:renderQr,scanner:renderScanner,leave:renderLeave},
+  const views={who:renderWho,home:renderHome,schedule:()=>renderSchedule(false),day:()=>renderSchedule(true),person:renderPerson,store:renderStore,history:renderHistory,counting:renderCounting,usage:renderUsage,incoming:renderIncoming,memo:renderMemo,openmemo:renderOpenMemo,expiry:renderExpiry,qr:renderQr,scanner:renderScanner,leave:renderLeave},
         sameView=lastRenderedView===state.view,keepY=sameView?window.scrollY:0;
   document.body.classList.toggle("home-body",state.view==="home");document.body.dataset.view=state.view;
   const content=(views[state.view]||renderHome)();
@@ -2142,6 +2232,11 @@ loadOpenData(true);
 loadLeaveData(true);
 startStoreRealtime();
 setTimeout(()=>checkForUpdates(false),1800);
+setInterval(()=>{
+  if(document.hidden)return;
+  if(state.view==="openmemo"&&!state.openLoading)ensureAgePageData("openmemo",true);
+  if(state.view==="expiry"&&!state.expiryLoading)ensureAgePageData("expiry",true);
+},12000);
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 </script>
 </body>
