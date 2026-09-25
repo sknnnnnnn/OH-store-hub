@@ -10,6 +10,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon-192.png">
   <title>OH Store Hub</title>
+  <script id="oh-update-manifest" type="application/json">{"version": "8.6.21", "label": "V8.6.21", "level": "recommended", "requiredFeatures": [], "changes": ["เพิ่มศูนย์อัปเดตแบบแจ้งเตือนเล็ก", "ตรวจสินค้าใหม่/ชื่อ/หน่วยจากชีตสโตร์", "บังคับซิงก์เฉพาะฟีเจอร์ที่ต้องใช้ Catalog ล่าสุด"]}</script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Itim&family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap');
     :root{--ink:#162033;--muted:#667085;--line:#e7eaf0;--paper:#fff;--bg:#f4f6f9;--navy:#101828;--green:#16875b;--green-soft:#eaf8f1;--orange:#d76d18;--orange-soft:#fff3e8;--blue:#2774d8;--blue-soft:#eaf2ff;--red:#d92d20;--shadow:0 14px 38px rgba(16,24,40,.09);--radius:22px}
@@ -296,6 +297,37 @@
     .age-existing{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
     .age-loading{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;text-align:center;color:var(--muted)}
 
+
+    /* V8.6.13 · PDF schedule import */
+    .pdf-import-card{background:#fff7f2;border:1px solid #f2cfbd;border-radius:18px;padding:14px;margin-bottom:14px}
+    .pdf-import-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .pdf-import-top b{font-size:16px}.pdf-import-top small{display:block;color:#7c6257;margin-top:3px}
+    .pdf-cycle-picker{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;margin-top:12px}
+    .pdf-cycle-picker button{min-height:42px;border:1px solid #d8c5b9;background:#fff;border-radius:12px;padding:0 12px;font-weight:900}
+    .pdf-cycle-current{text-align:center;background:#fff;border:1px solid #ead8cc;border-radius:12px;padding:8px}
+    .pdf-cycle-current small{display:block;color:var(--muted);font-size:10px}.pdf-cycle-current b{font-size:15px}
+    .pdf-import-note{margin-top:9px;font-size:11px;color:#7c6257;line-height:1.5}
+    @media(max-width:640px){.pdf-cycle-picker{grid-template-columns:1fr 1fr}.pdf-cycle-current{grid-column:1/-1;grid-row:1}.pdf-cycle-picker button{grid-row:2}}
+
+
+    .pdf-import-card .field select{width:100%;min-height:48px;border:1px solid #d8c5b9;border-radius:12px;background:#fff;padding:0 12px;font:inherit;font-weight:900;color:var(--ink)}
+
+
+    /* V8.6.21 · subtle update center */
+    .update-chip{position:fixed;right:12px;top:78px;z-index:46;border:1px solid #d8e0ea;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);color:#344054;border-radius:999px;min-height:34px;padding:0 11px;display:flex;align-items:center;gap:7px;box-shadow:0 5px 16px rgba(16,24,40,.08);font-size:11px;font-weight:900}
+    .update-chip i{width:7px;height:7px;border-radius:50%;background:#2774d8;box-shadow:0 0 0 4px #eaf2ff}
+    .update-chip.required i{background:#d76d18;box-shadow:0 0 0 4px #fff3e8}
+    .update-chip small{font-size:10px;color:#667085;font-weight:700}
+    .update-modal-backdrop{position:fixed;inset:0;z-index:1002;background:rgba(16,24,40,.36);display:grid;place-items:center;padding:18px}
+    .update-modal{width:min(470px,100%);max-height:min(680px,88dvh);overflow:auto;background:#fff;border-radius:24px;border:1px solid #e4e7ec;box-shadow:0 24px 70px rgba(16,24,40,.24);padding:19px}
+    .update-modal-head{display:flex;align-items:flex-start;gap:12px}.update-modal-head>div{flex:1}.update-modal-head h2{margin:0;font-size:21px}.update-modal-head p{margin:5px 0 0;color:#667085;font-size:12px;line-height:1.5}
+    .update-item{margin-top:12px;padding:13px;border:1px solid #e6eaf0;border-radius:16px;background:#f9fafb}
+    .update-item.required{background:#fff8ef;border-color:#f1d4a8}.update-item b{display:block;font-size:14px}.update-item p{margin:4px 0 0;color:#667085;font-size:11px;line-height:1.5}
+    .update-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.update-meta span{font-size:10px;padding:5px 8px;background:#fff;border:1px solid #e4e7ec;border-radius:999px;color:#667085}
+    .update-actions{display:grid;gap:8px;margin-top:15px}.update-actions button{width:100%}
+    .update-inline-status{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:11px;color:#667085}.update-inline-status i{width:8px;height:8px;border-radius:50%;background:#12b76a}
+    @media(max-width:760px){.update-chip{top:72px;right:9px}.update-chip small{display:none}}
+
 </style>
 
 <style>body.network-busy .sync-btn:not(:disabled),body.network-busy .primary-btn[data-network]{cursor:progress}.network-busy .network-loader.active{opacity:1}</style>
@@ -317,7 +349,8 @@ const CONFIG = {
   apiVersion: "OH_STORE_HUB_V8",
   storeSpreadsheetId: "1OyoRne2_qryU0K9k3fXo8sUufWS_wQmpGBSwPhUjlB0",
   firebaseDatabaseUrl: "https://oj-stock-a6af4-default-rtdb.asia-southeast1.firebasedatabase.app",
-  promotionDriveFolderId: "1l9fgwddPAkCuaM2HaRwJ5OHOMcSHtGLP"
+  promotionDriveFolderId: "1l9fgwddPAkCuaM2HaRwJ5OHOMcSHtGLP",
+  updateUrl: "./index.html"
 };
 
 const thaiDays = ["อา.","จ.","อ.","พ.","พฤ.","ศ.","ส."];
@@ -361,7 +394,7 @@ function avatarArt(emp,size=""){
 }
 const shiftInfo = {
   "6":{label:"06:00–15:00",short:"06–15",group:"กะเช้า",color:"green"},
-  "7":{label:"07:00–16:00",short:"07–16",group:"กะเช้า",color:"green"},
+  "7":{label:"07:00–16:00",short:"07–16",group:"กะเช้า",color:"green"},"8":{label:"08:00–17:00",short:"08–17",group:"กะเช้า"},
   "11":{label:"11:00–20:00",short:"11–20",group:"กะกลาง",color:"orange"},
   "13":{label:"13:00–22:00",short:"13–22",group:"กะบ่าย",color:""},
   "OFF":{label:"วันหยุด",short:"หยุด",group:"ไม่เข้างาน",color:"gray"},
@@ -414,7 +447,242 @@ function initials(name){return [...name].slice(0,2).join("")}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
 function saveData(){localStorage.setItem("oh_products",JSON.stringify(products));localStorage.setItem("oh_history",JSON.stringify(history));localStorage.setItem("oh_schedule_months",JSON.stringify(scheduleMonths));localStorage.setItem("oh_employees",JSON.stringify(employees))}
 function seedScheduleFromSourceImage(){if(!localStorage.getItem("oh_last_schedule_cycle"))localStorage.setItem("oh_last_schedule_cycle","2026-09-21");if(localStorage.getItem("oh_source_schedule_v1")==="1")return;const start=new Date(2026,8,21);Object.entries(sourceScheduleRows).forEach(([empId,shifts])=>{shifts.forEach((shift,i)=>{const d=addDays(start,i),mk=monthKey(d),dk=dateKey(d);scheduleMonths[mk]??={};scheduleMonths[mk][empId]??={};scheduleMonths[mk][empId][dk]=shift})});localStorage.setItem("oh_source_schedule_v1","1");saveData()}
-function go(view,extra={},push=true){if(state.view==="scanner"&&view!=="scanner")closeScanCamera();if(view==="history")centralHistoryLoaded=false;state={...state,view,...extra};if(push)window.history.pushState({view},"",`#${view}`);render();window.scrollTo({top:0,behavior:"smooth"})}
+
+const CURRENT_UPDATE_MANIFEST=(()=>{
+  try{return JSON.parse(document.getElementById("oh-update-manifest")?.textContent||"{}")}catch(e){return {version:"8.6.21",label:"V8.6.21",level:"recommended",requiredFeatures:[],changes:[]}}
+})();
+const updateCenter={
+  checking:false,
+  app:null,
+  catalog:null,
+  catalogItems:null,
+  modal:false,
+  gateView:null,
+  applying:false,
+  lastError:""
+};
+const CATALOG_FEATURES=new Set(["store","history","usage","openmemo","expiry"]);
+
+function versionParts(v){return String(v||"0").replace(/^v/i,"").split(".").map(x=>parseInt(x,10)||0)}
+function compareVersions(a,b){
+  const A=versionParts(a),B=versionParts(b),n=Math.max(A.length,B.length);
+  for(let i=0;i<n;i++){const x=A[i]||0,y=B[i]||0;if(x>y)return 1;if(x<y)return -1}
+  return 0
+}
+function currentPageUpdateUrl(){
+  try{
+    const u=new URL(CONFIG.updateUrl||"./index.html",location.href);
+    u.searchParams.set("oh_check",Date.now());
+    return u.toString()
+  }catch(e){return CONFIG.updateUrl||"./index.html"}
+}
+function featureLabel(view){
+  return {store:"สโตร์",history:"ประวัติสโตร์",usage:"การใช้",openmemo:"อายุใช้งานสินค้า",expiry:"ติดตามอายุสินค้า",schedule:"ตารางงาน",counting:"นับของ",qr:"QR ด่วน",scanner:"สแกน PDF",memo:"Memo & Promotion",leave:"ลา / แจ้งเรื่อง"}[view]||"ฟีเจอร์นี้"
+}
+function appUpdateRequiredFor(view){
+  const app=updateCenter.app;
+  if(!app)return false;
+  if(app.level==="force")return true;
+  return Array.isArray(app.requiredFeatures)&&app.requiredFeatures.includes(view)
+}
+function catalogUpdateRequiredFor(view){
+  return Boolean(updateCenter.catalog&&CATALOG_FEATURES.has(view))
+}
+function viewNeedsUpdate(view){return appUpdateRequiredFor(view)||catalogUpdateRequiredFor(view)}
+function pendingUpdateCount(){return (updateCenter.app?1:0)+(updateCenter.catalog?1:0)}
+function renderUpdateChip(){
+  const count=pendingUpdateCount();
+  if(!count||state.view==="who")return "";
+  const required=updateCenter.app?.level==="force"||Boolean(updateCenter.catalog);
+  const text=updateCenter.catalog&&updateCenter.app?"มี 2 อัปเดต":updateCenter.catalog?"ข้อมูลสินค้าใหม่":"มีอัปเดต";
+  return `<button class="update-chip ${required?'required':''}" onclick="openUpdateCenter()"><i></i><span>${text}</span><small>แตะเพื่อดู</small></button>`
+}
+function updateCatalogSignature(items){
+  return (items||[]).map(x=>[
+    String(x.id||x.code||"").trim(),
+    String(x.name||x.real||"").trim(),
+    String(x.unit||"").trim()
+  ]).filter(x=>x[0]).sort((a,b)=>a[0].localeCompare(b[0])).map(x=>x.join("¦")).join("¶")
+}
+function localCatalogSignature(){
+  return updateCatalogSignature(products.map(p=>({id:p.code,name:p.real,unit:p.unit})))
+}
+function catalogDiff(sheetItems){
+  const local=new Map(products.map(p=>[String(p.code),p])),sheet=new Map();
+  (sheetItems||[]).forEach(row=>{const id=String(row.id||row.code||"").trim();if(id)sheet.set(id,row)});
+  let added=0,changed=0,removed=0;
+  sheet.forEach((row,id)=>{
+    const p=local.get(id);
+    if(!p)added++;
+    else if(String(p.real||"").trim()!==String(row.name||row.real||"").trim()||String(p.unit||"").trim()!==String(row.unit||"").trim())changed++
+  });
+  local.forEach((p,id)=>{if(!sheet.has(id))removed++});
+  return {added,changed,removed,total:sheet.size}
+}
+async function fetchStoreSheetCatalog(){
+  const r=await fetch(`${CONFIG.sheetsWebAppUrl}?mode=store&t=${Date.now()}`,{cache:"no-store"});
+  if(!r.ok)throw new Error("sheet");
+  const data=assertHubResponse(await r.json(),"store");
+  return Array.isArray(data.items)?data.items:[]
+}
+async function checkAppUpdate(){
+  if(!/^https?:$/i.test(location.protocol))return;
+  try{
+    const r=await fetch(currentPageUpdateUrl(),{cache:"no-store"});
+    if(!r.ok)return;
+    const text=await r.text(),doc=new DOMParser().parseFromString(text,"text/html"),
+          node=doc.getElementById("oh-update-manifest");
+    if(!node)return;
+    const latest=JSON.parse(node.textContent||"{}");
+    if(latest?.version&&compareVersions(latest.version,CURRENT_UPDATE_MANIFEST.version)>0)updateCenter.app=latest;
+    else updateCenter.app=null
+  }catch(e){}
+}
+async function checkCatalogUpdate(){
+  try{
+    const items=await fetchStoreSheetCatalog();
+    updateCenter.catalogItems=items;
+    if(updateCatalogSignature(items)!==localCatalogSignature()){
+      const diff=catalogDiff(items);
+      if(diff.added||diff.changed||diff.removed)updateCenter.catalog=diff;
+      else updateCenter.catalog=null
+    }else updateCenter.catalog=null
+  }catch(e){}
+}
+async function checkForUpdates(force=false){
+  if(updateCenter.checking)return;
+  const last=Number(localStorage.getItem("oh_update_last_check")||0);
+  if(!force&&Date.now()-last<5*60*1000)return;
+  updateCenter.checking=true;
+  try{
+    await Promise.allSettled([checkAppUpdate(),checkCatalogUpdate()]);
+    localStorage.setItem("oh_update_last_check",String(Date.now()))
+  }finally{
+    updateCenter.checking=false;
+    if(document.getElementById("app"))render()
+  }
+}
+function openUpdateCenter(gateView=null){
+  updateCenter.modal=true;
+  updateCenter.gateView=gateView||null;
+  render()
+}
+function closeUpdateCenter(){
+  if(updateCenter.gateView&&viewNeedsUpdate(updateCenter.gateView))return;
+  updateCenter.modal=false;updateCenter.gateView=null;render()
+}
+async function clearWebCaches(){
+  try{
+    if("serviceWorker" in navigator){
+      const regs=await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r=>r.unregister()))
+    }
+  }catch(e){}
+  try{
+    if("caches" in window){
+      const keys=await caches.keys();
+      await Promise.all(keys.map(k=>caches.delete(k)))
+    }
+  }catch(e){}
+}
+async function performAppUpdate(){
+  if(updateCenter.applying)return;
+  updateCenter.applying=true;render();
+  try{
+    await clearWebCaches();
+    const u=new URL(CONFIG.updateUrl||"./index.html",location.href);
+    u.searchParams.set("updated",Date.now());
+    u.hash=location.hash||"#home";
+    location.replace(u.toString())
+  }catch(e){
+    updateCenter.applying=false;
+    toast("เปิดเวอร์ชันใหม่ไม่สำเร็จ กรุณารีเฟรชหน้าอีกครั้ง");
+    render()
+  }
+}
+async function applyCatalogUpdate(){
+  if(updateCenter.applying)return;
+  updateCenter.applying=true;render();
+  try{
+    const [items,invRes]=await Promise.all([
+      updateCenter.catalogItems?.length?Promise.resolve(updateCenter.catalogItems):fetchStoreSheetCatalog(),
+      fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory.json?t=${Date.now()}`,{cache:"no-store"})
+    ]);
+    const central=invRes.ok?(await invRes.json()||{}):{},
+          old=new Map(products.map(p=>[String(p.code),p])),
+          next=[],newWrites={};
+    for(const row of items){
+      const id=String(row.id||row.code||"").trim();
+      if(!id)continue;
+      const prev=old.get(id)||{},saved=central[id]||{},
+            isNew=!old.has(id);
+      const item={
+        id,code:id,
+        easy:saved.easy||prev.easy||easyCatalogName(row.name||row.real||id),
+        real:String(row.name||row.real||prev.real||""),
+        category:prev.category||row.category||"ทั่วไป",
+        stock:Number(saved.stock??prev.stock??row.stock??row.balance??0)||0,
+        unit:String(row.unit||prev.unit||saved.unit||"หน่วย"),
+        min:Number(saved.min??prev.min??0)||0,
+        last:saved.last||prev.last||null
+      };
+      next.push(item);
+      // Existing central stock is never overwritten by Sheet catalog sync.
+      if(isNew&&!central[id]){
+        newWrites[id]={easy:item.easy,stock:item.stock,unit:item.unit,last:item.last}
+      }else if(central[id]){
+        newWrites[id]={easy:item.easy,unit:item.unit}
+      }
+    }
+    products=next;
+    state.catalogLoaded=true;
+    saveData();
+    if(Object.keys(newWrites).length){
+      await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory.json`,{
+        method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(newWrites)
+      }).catch(()=>null)
+    }
+    const diff=updateCenter.catalog;
+    updateCenter.catalog=null;updateCenter.catalogItems=null;
+    localStorage.setItem("oh_update_last_check",String(Date.now()));
+    updateCenter.applying=false;
+    if(updateCenter.gateView&&!viewNeedsUpdate(updateCenter.gateView)){
+      const target=updateCenter.gateView;updateCenter.modal=false;updateCenter.gateView=null;
+      state.view=target;window.history.pushState({view:target},"",`#${target}`);render();window.scrollTo(0,0)
+    }else render();
+    toast(`อัปเดตรายการสินค้าแล้ว${diff?.added?` · เพิ่ม ${diff.added}`:""}${diff?.changed?` · แก้ ${diff.changed}`:""}`)
+  }catch(e){
+    updateCenter.applying=false;
+    toast("อัปเดตรายการสินค้าจากชีตไม่สำเร็จ");
+    render()
+  }
+}
+function renderUpdateCenter(){
+  if(!updateCenter.modal)return "";
+  const gate=updateCenter.gateView,app=updateCenter.app,cat=updateCenter.catalog,
+        blocking=gate&&viewNeedsUpdate(gate),
+        changes=Array.isArray(app?.changes)?app.changes:[];
+  return `<div class="update-modal-backdrop" onclick="if(event.target===this&&!${blocking?'true':'false'})closeUpdateCenter()"><section class="update-modal">
+    <div class="update-modal-head"><div><h2>${blocking?`อัปเดตก่อนใช้ ${esc(featureLabel(gate))}`:"ศูนย์อัปเดต"}</h2><p>${blocking?"ฟีเจอร์นี้ต้องใช้ข้อมูล/เวอร์ชันล่าสุดก่อน จึงจะทำงานได้ถูกต้อง":"เลือกอัปเดตเฉพาะสิ่งที่ต้องการได้ ไม่บังคับทั้งแอป"}</p></div>${blocking?"":`<button class="icon-btn" onclick="closeUpdateCenter()">×</button>`}</div>
+    ${app?`<div class="update-item ${app.level==="force"||appUpdateRequiredFor(gate)?'required':''}"><b>⬆ อัปเดตแอป ${esc(app.label||app.version||"ใหม่")}</b><p>${changes.length?changes.map(esc).join(" · "):"มีเวอร์ชันใหม่พร้อมใช้งาน"}</p><div class="update-meta"><span>ปัจจุบัน ${esc(CURRENT_UPDATE_MANIFEST.label||CURRENT_UPDATE_MANIFEST.version)}</span>${app.level==="force"?`<span>จำเป็น</span>`:app.requiredFeatures?.length?`<span>บางฟีเจอร์ต้องอัปเดต</span>`:`<span>แนะนำ</span>`}</div></div>`:""}
+    ${cat?`<div class="update-item ${catalogUpdateRequiredFor(gate)?'required':''}"><b>▦ รายการสินค้าใน Sheet เปลี่ยน</b><p>ซิงก์เฉพาะรหัส ชื่อ และหน่วยสินค้า โดย <strong>ไม่เอายอด Sheet ไปทับยอดกลาง Firebase ของสินค้าที่มีอยู่</strong></p><div class="update-meta">${cat.added?`<span>เพิ่ม ${cat.added}</span>`:""}${cat.changed?`<span>แก้ข้อมูล ${cat.changed}</span>`:""}${cat.removed?`<span>นำออก ${cat.removed}</span>`:""}<span>รวมใน Sheet ${cat.total}</span></div></div>`:""}
+    ${!app&&!cat?`<div class="update-item"><b>✓ พร้อมใช้งาน</b><p>ยังไม่พบอัปเดตใหม่</p></div>`:""}
+    <div class="update-actions">
+      ${app?`<button class="primary-btn" onclick="performAppUpdate()" ${updateCenter.applying?'disabled':''}>${updateCenter.applying?"กำลังอัปเดต…":"อัปเดตแอป"}</button>`:""}
+      ${cat?`<button class="${app?'ghost-btn':'primary-btn'}" onclick="applyCatalogUpdate()" ${updateCenter.applying?'disabled':''}>${updateCenter.applying?"กำลังอัปเดต…":"อัปเดตรายการสินค้าจาก Sheet"}</button>`:""}
+      ${!blocking?`<button class="ghost-btn" onclick="checkForUpdates(true)" ${updateCenter.checking?'disabled':''}>${updateCenter.checking?"กำลังตรวจ…":"ตรวจอีกครั้ง"}</button>`:""}
+    </div>
+  </section></div>`
+}
+
+function go(view,extra={},push=true){
+  if(viewNeedsUpdate(view)){openUpdateCenter(view);return}
+  if(state.view==="scanner"&&view!=="scanner")closeScanCamera();
+  if(view==="history")centralHistoryLoaded=false;
+  state={...state,view,...extra};
+  if(push)window.history.pushState({view},"",`#${view}`);
+  render();window.scrollTo({top:0,behavior:"smooth"})
+}
 function toast(msg){const old=document.querySelector(".toast");if(old)old.remove();const el=document.createElement("div"),t=String(msg||"");let kind="info";if(/สำเร็จ|เรียบร้อย|บันทึกแล้ว|รับทราบ|อัปโหลดแล้ว|ลบรายการแล้ว|สร้าง PDF/.test(t))kind="success";else if(/ไม่สำเร็จ|ไม่ได้|ผิดพลาด|หยุด|หาไม่พบ|ล้มเหลว/.test(t))kind="error";else if(/เตือน|เกิน|ใกล้|หมดเวลา/.test(t))kind="warn";el.className=`toast ${kind}`;el.textContent=t;document.body.appendChild(el);setTimeout(()=>{el.style.opacity="0";setTimeout(()=>el.remove(),180)},3200)}
 const _ohNativeFetch=window.fetch.bind(window);let _ohPendingFetch=0,_ohLoadTimer=null;
 function _ohLoading(on){let el=document.getElementById("networkLoader");if(!el){el=document.createElement("div");el.id="networkLoader";el.className="network-loader";el.innerHTML="<i></i>";document.body.appendChild(el)}document.body.classList.toggle("network-busy",Boolean(on));if(on){clearTimeout(_ohLoadTimer);_ohLoadTimer=setTimeout(()=>el.classList.add("active"),180)}else{clearTimeout(_ohLoadTimer);el.classList.remove("active")}}
@@ -459,7 +727,7 @@ function buildBlankScheduleCycle(start){const cycle=buildScheduleCycle(start);em
 function getNextScheduleCycleStart(){let latest=null;Object.values(scheduleMonths).forEach(month=>Object.values(month||{}).forEach(days=>Object.keys(days||{}).forEach(key=>{const d=new Date(key+"T00:00:00");if(!latest||d>latest)latest=d})));if(!latest){const lastKey=localStorage.getItem("oh_last_schedule_cycle")||"2026-09-21",last=new Date(lastKey+"T00:00:00");return new Date(last.getFullYear(),last.getMonth()+1,21)}return latest.getDate()>=21?new Date(latest.getFullYear(),latest.getMonth()+1,21):new Date(latest.getFullYear(),latest.getMonth(),21)}
 function openNextMonthEditor(){const start=getNextScheduleCycleStart(),cycle=buildBlankScheduleCycle(start);state.scheduleEditor={start,end:cycle.end,dates:cycle.dates,data:cycle.data,source:"manual"};pushOverlay("schedule");render()}
 function closeScheduleEditor(fromHistory=false){if(!fromHistory&&window.history.state?.overlay==="schedule"){window.history.back();return}state.scheduleEditor=null;render()}
-function cycleEditorShift(empId,dayKey){const order=["NONE","6","7","11","13","OFF","LEAVE"],current=state.scheduleEditor.data[empId][dayKey]||"NONE",next=order[(order.indexOf(current)+1)%order.length];state.scheduleEditor.data[empId][dayKey]=next;render()}
+function cycleEditorShift(empId,dayKey){const order=["NONE","6","7","8","11","13","OFF","LEAVE"],current=state.scheduleEditor.data[empId][dayKey]||"NONE",next=order[(order.indexOf(current)+1)%order.length];state.scheduleEditor.data[empId][dayKey]=next;render()}
 function renderScheduleEditor(){
   const ed=state.scheduleEditor,dates=ed.dates,
         head=dates.map(d=>`<th><span>${thaiDays[d.getDay()]}</span><br><b>${d.getDate()}</b></th>`).join(""),
@@ -467,24 +735,383 @@ function renderScheduleEditor(){
           ed.data[emp.id]??={};
           return `<tr><td class="name-col"><span class="matrix-person">${avatarArt(emp)}<b>${esc(emp.nick)}</b></span></td>${dates.map(d=>{
             const key=dateKey(d),code=ed.data[emp.id][key]||"NONE",s=shiftInfo[code]||shiftInfo.NONE,
-                  old=scheduleExistingAt(emp.id,d),changed=ed.source==="excel"&&old!==code;
+                  old=scheduleExistingAt(emp.id,d),changed=(ed.source==="excel"||ed.source==="pdf"||ed.source==="image")&&old!==code;
             return `<td><button class="shift-cell shift-${code} excel-change ${changed?'changed':''}" onclick="cycleEditorShift('${emp.id}','${key}')" title="${changed?`เดิม ${shiftInfo[old]?.short||"—"} → ใหม่ ${s.short}`:""}">${s.short}</button></td>`
           }).join("")}</tr>`
         }).join(""),
         period=`${fmtDate(ed.start,false)} – ${fmtDate(ed.end,false)}`,
         importCard=ed.imageUrl?`<div class="import-card"><img src="${ed.imageUrl}" alt="รูปตารางที่อัปโหลด"><div class="import-copy"><b>${esc(ed.imageName||"รูปตารางงาน")}</b><span id="importStatus">${esc(ed.importStatus||"เตรียมอ่านรูป…")}</span><div class="import-progress"><i id="importProgress" style="width:${ed.importProgress||0}%"></i></div></div></div>`:"",
-        excelCard=ed.source==="excel"?`<section class="excel-import-card"><div class="excel-import-top"><span><b>▦ ${esc(ed.excelName||"Excel")}</b><small>ชีต ${esc(ed.excelSheet||"")} · ตรวจพบช่วง <strong>${esc(ed.excelPeriod||period)}</strong></small></span></div><div class="excel-badges"><span class="excel-badge ok">จับคู่พนักงาน ${ed.excelMatched||0} คน</span><span class="excel-badge">${dates.length} วัน</span><span class="excel-badge ${ed.existingCells?'warn':''}">${ed.existingCells?`มีข้อมูลเดิม ${ed.existingCells} ช่อง`:"ช่วงนี้ยังไม่มีข้อมูลเดิม"}</span><span class="excel-badge">${ed.changedCells||0} ช่องจะเปลี่ยน</span></div>${(ed.excelUnmatched?.length||ed.excelUnknown?.length)?`<div class="excel-errors">${ed.excelUnmatched?.length?`<b>ชื่อที่จับคู่ไม่ได้:</b> ${ed.excelUnmatched.map(esc).join(", ")}<br>`:""}${ed.excelUnknown?.length?`<b>กะที่อ่านไม่ได้:</b> ${ed.excelUnknown.map(esc).join(", ")}`:""}</div>`:""}<div class="excel-mode"><button class="${ed.importMode!=="replace"?'active':''}" onclick="setExcelImportMode('update')">อัปเดตเฉพาะวันที่ในไฟล์<small>เหมาะกับไฟล์แก้ตารางเดิม ข้อมูลวันอื่นจะไม่ถูกแตะ</small></button><button class="${ed.importMode==="replace"?'active':''}" onclick="setExcelImportMode('replace')">แทนที่ช่วงวันที่นี้ทั้งหมด<small>ล้างตารางเดิมเฉพาะช่วง ${period} แล้วใช้ Excel ชุดนี้แทน</small></button></div></section>`:"",
-        title=ed.source==="excel"?"ตรวจตารางจาก Excel":ed.source==="image"?"รูปนี้จะลงรอบถัดไป":"เพิ่มตารางรอบถัดไป",
-        subtitle=ed.source==="excel"?`${ed.excelPeriod||period} · ตรวจ Preview และเลือกวิธีอัปเดตก่อนยืนยัน`:`${period} · เป็นฉบับร่างและจะไม่ทับรอบเก่า`;
-  return `<div class="modal-backdrop" onclick="if(event.target===this)closeScheduleEditor()"><section class="modal schedule-modal"><div class="editor-head"><div class="head-text"><h2>${title}</h2><p><strong>${subtitle}</strong></p></div><button class="icon-btn" onclick="closeScheduleEditor()">×</button></div>${excelCard}${importCard}<div class="matrix-wrap"><table class="schedule-matrix"><thead><tr><th class="name-col">พนักงาน</th>${head}</tr></thead><tbody>${rows}</tbody></table></div><p class="matrix-hint">${ed.source==="excel"?"จุดสีน้ำเงิน = ช่องที่ต่างจากตารางเดิม · แตะช่องเพื่อแก้กะก่อนยืนยัน":"ตรวจทุกช่องก่อนบันทึก · ช่อง — คือยังไม่มีข้อมูลและระบบจะไม่เดากะให้"}</p><div class="editor-legend"><span>— ไม่มีข้อมูล</span><span>06–15 กะเช้า</span><span>07–16 กะเช้า</span><span>11–20 กะกลาง</span><span>13–22 กะบ่าย</span><span>หยุด</span><span>ลา</span></div><div class="editor-actions"><button class="ghost-btn" onclick="closeScheduleEditor()">ยกเลิก</button><button class="save-schedule" onclick="saveScheduleEditor()">${ed.source==="excel"?(ed.importMode==="replace"?"ยืนยันแทนที่ช่วงนี้":"ยืนยันอัปเดตตาราง"):`บันทึกเฉพาะรอบ ${period}`}</button></div></section></div>`
+        imageCard=ed.source==="image"?`<section class="pdf-import-card"><div class="pdf-import-top"><span><b>▧ ${esc(ed.imageName||"รูปตารางงาน")}</b><small>${ed.imageMatched||employees.length} คน · ${dates.length} วัน · อ่านได้ ${ed.imageFound||0} ช่อง</small></span><span class="excel-badge ${ed.existingCells?'warn':'ok'}">${ed.existingCells?`มีตารางเดิม ${ed.existingCells} ช่อง`:"รอบนี้ยังไม่มีข้อมูลเดิม"}</span></div><div class="field wide" style="margin-top:12px"><label>เลือกรอบตาราง</label><select onchange="setImageScheduleCycle(this.value)">${pdfCycleOptions(ed.start).map(o=>`<option value="${o.value}" ${dateKey(ed.start)===o.value?'selected':''}>${o.label}</option>`).join("")}</select></div><div class="pdf-cycle-current" style="margin-top:8px"><small>ช่วงวันที่ที่จะบันทึก</small><b>${pdfScheduleCycleLabel(ed.start)}</b></div><div class="pdf-import-note">ใช้รูปตารางเป็นตัวหลัก · เลือกรอบเดือน แล้วตรวจ Preview ก่อนยืนยัน${ed.imageUnknown?.length?`<br>มี ${ed.imageUnknown.length} ช่องที่อ่านไม่ชัด ให้แตะแก้ก่อนบันทึก`:""}</div><div class="excel-mode"><button class="${ed.importMode!=="replace"?'active':''}" onclick="setExcelImportMode('update')">อัปเดตรอบเดิม<small>ใช้เมื่อผู้จัดการส่งรูปมาแก้เฉพาะรอบเดิม</small></button><button class="${ed.importMode==="replace"?'active':''}" onclick="setExcelImportMode('replace')">แทนที่รอบนี้ทั้งหมด<small>ล้างข้อมูลเดิมช่วง 21 → 20 แล้วใช้รูปนี้แทน</small></button></div></section>`:"",
+        excelCard=ed.source==="excel"?`<section class="excel-import-card"><div class="excel-import-top"><span><b>▦ ${esc(ed.excelName||"Excel")}</b><small>ชีต ${esc(ed.excelSheet||"")} · ตรวจพบช่วง <strong>${esc(ed.excelPeriod||period)}</strong></small></span></div><div class="excel-badges"><span class="excel-badge ok">จับคู่พนักงาน ${ed.excelMatched||0} คน</span><span class="excel-badge">${dates.length} วัน</span><span class="excel-badge ${ed.existingCells?'warn':''}">${ed.existingCells?`มีข้อมูลเดิม ${ed.existingCells} ช่อง`:"ช่วงนี้ยังไม่มีข้อมูลเดิม"}</span><span class="excel-badge">${ed.changedCells||0} ช่องจะเปลี่ยน</span></div></section>`:"",
+        pdfCard=ed.source==="pdf"?`<section class="pdf-import-card"><div class="pdf-import-top"><span><b>▣ ${esc(ed.pdfName||"ตาราง PDF")}</b><small>${ed.pdfPages||1} หน้า · ${ed.pdfMatched||0} คน · ${ed.pdfShiftDays||ed.dates.length} วัน · อ่านกะ ${ed.pdfFound||0} ช่อง</small></span><span class="excel-badge ${ed.existingCells?'warn':'ok'}">${ed.existingCells?`มีตารางเดิม ${ed.existingCells} ช่อง`:"รอบนี้ยังไม่มีข้อมูลเดิม"}</span></div><div class="field wide" style="margin-top:12px"><label>เลือกรอบตาราง</label><select onchange="setPdfScheduleCycle(this.value)">${pdfCycleOptions(ed.start).map(o=>`<option value="${o.value}" ${dateKey(ed.start)===o.value?'selected':''}>${o.label}</option>`).join("")}</select></div><div class="pdf-cycle-current" style="margin-top:8px"><small>ช่วงวันที่ที่จะบันทึก</small><b>${pdfScheduleCycleLabel(ed.start)}</b></div><div class="pdf-import-note">PDF ของร้านไม่มีเดือน ระบบจะไม่เดาให้เอง · เลือกรอบเดือนตรงนี้ก่อนกดยืนยัน${ed.pdfUnknown?.length?`<br>มี ${ed.pdfUnknown.length} ช่องที่อ่านไม่ชัด ให้ตรวจช่อง — ใน Preview`:""}</div><div class="excel-mode"><button class="${ed.importMode!=="replace"?'active':''}" onclick="setExcelImportMode('update')">อัปเดตรอบเดิม<small>ใช้เมื่อผู้จัดการส่ง PDF รอบเดิมมาแก้ตาราง</small></button><button class="${ed.importMode==="replace"?'active':''}" onclick="setExcelImportMode('replace')">แทนที่รอบนี้ทั้งหมด<small>ล้างข้อมูลเดิมช่วง 21 → 20 แล้วใช้ PDF นี้แทน</small></button></div></section>`:"",
+        title=ed.source==="pdf"?"ตรวจตารางจาก PDF":ed.source==="excel"?"ตรวจตารางจาก Excel":ed.source==="image"?"ตรวจตารางจากรูป":"เพิ่มตารางรอบถัดไป",
+        subtitle=ed.source==="pdf"?`เลือกรอบเดือน → ตรวจ Preview → ยืนยันบันทึก`:ed.source==="excel"?`${ed.excelPeriod||period} · ตรวจ Preview และเลือกวิธีอัปเดตก่อนยืนยัน`:ed.source==="image"?`เลือกรอบเดือน → ตรวจ Preview → ยืนยันบันทึก`:`${period} · เป็นฉบับร่างและจะไม่ทับรอบเก่า`;
+  return `<div class="modal-backdrop" onclick="if(event.target===this)closeScheduleEditor()"><section class="modal schedule-modal"><div class="editor-head"><div class="head-text"><h2>${title}</h2><p><strong>${subtitle}</strong></p></div><button class="icon-btn" onclick="closeScheduleEditor()">×</button></div>${pdfCard}${imageCard}${excelCard}${importCard}<div class="matrix-wrap"><table class="schedule-matrix"><thead><tr><th class="name-col">พนักงาน</th>${head}</tr></thead><tbody>${rows}</tbody></table></div><p class="matrix-hint">${(ed.source==="excel"||ed.source==="pdf"||ed.source==="image")?"จุดสีน้ำเงิน = ช่องที่ต่างจากตารางเดิม · ช่อง — ให้แตะตรวจ/แก้ก่อนยืนยัน":"ตรวจทุกช่องก่อนบันทึก · ช่อง — คือยังไม่มีข้อมูลและระบบจะไม่เดากะให้"}</p><div class="editor-legend"><span>— ไม่มีข้อมูล</span><span>06–15 กะเช้า</span><span>07–16 กะเช้า</span><span>08–17 กะเช้า</span><span>11–20 กะกลาง</span><span>13–22 กะบ่าย</span><span>หยุด</span><span>ลา</span></div><div class="editor-actions"><button class="ghost-btn" onclick="closeScheduleEditor()">ยกเลิก</button><button class="save-schedule" onclick="saveScheduleEditor()">${(ed.source==="excel"||ed.source==="pdf"||ed.source==="image")?(ed.importMode==="replace"?"ยืนยันแทนที่ช่วงนี้":"ยืนยันอัปเดตตาราง"):`บันทึกเฉพาะรอบ ${period}`}</button></div></section></div>`
 }
 function updateImportStatus(textValue,progress){if(!state.scheduleEditor)return;state.scheduleEditor.importStatus=textValue;state.scheduleEditor.importProgress=Math.round(progress||0);const label=document.getElementById("importStatus"),bar=document.getElementById("importProgress");if(label)label.textContent=textValue;if(bar)bar.style.width=`${state.scheduleEditor.importProgress}%`}
-function fileToDataUrl(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)})}
-function loadImageFile(file){return new Promise((resolve,reject)=>{const img=new Image();const url=URL.createObjectURL(file);img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("image"))};img.src=url})}
+function fileToDataUrl(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error("read"));reader.readAsDataURL(file)})}
+function loadImageFromSrc(src){return new Promise((resolve,reject)=>{const img=new Image();img.decoding="async";img.onload=()=>resolve(img);img.onerror=()=>reject(new Error("image_load"));img.src=src})}
+async function loadImageFile(file){
+  try{
+    const url=URL.createObjectURL(file);
+    try{
+      const img=await loadImageFromSrc(url);
+      URL.revokeObjectURL(url);
+      return img
+    }catch(error){
+      URL.revokeObjectURL(url)
+    }
+  }catch(error){}
+  const dataUrl=await fileToDataUrl(file);
+  return loadImageFromSrc(dataUrl)
+}
 function loadTesseract(){if(window.Tesseract)return Promise.resolve(window.Tesseract);return new Promise((resolve,reject)=>{const old=document.getElementById("tesseractScript");if(old){old.addEventListener("load",()=>resolve(window.Tesseract),{once:true});old.addEventListener("error",reject,{once:true});return}const script=document.createElement("script");script.id="tesseractScript";script.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";script.onload=()=>resolve(window.Tesseract);script.onerror=reject;document.head.appendChild(script)})}
 function cellColorCode(ctx,x0,y0,x1,y1){let red=0,yellow=0,total=0;const data=ctx.getImageData(Math.max(0,Math.floor(x0)),Math.max(0,Math.floor(y0)),Math.max(1,Math.floor(x1-x0)),Math.max(1,Math.floor(y1-y0))).data;for(let i=0;i<data.length;i+=16){const r=data[i],g=data[i+1],b=data[i+2];total++;if(r>150&&r>g*1.38&&r>b*1.35)red++;if(r>155&&g>115&&b<115&&r>g*1.02)yellow++}if(red/total>.16)return "OFF";if(yellow/total>.13)return "LEAVE";return null}
-function normalizeOcrShift(textValue){const s=String(textValue||"").toUpperCase().replace(/[^A-Z0-9]/g,"");if(/^F+$/.test(s)||s.includes("OFF"))return "OFF";if(s.includes("13"))return "13";if(s.includes("11")||s==="II")return "11";if(s==="7")return "7";if(s==="6")return "6";return null}
-async function parseScheduleImage(file,img){const ed=state.scheduleEditor,canvas=document.createElement("canvas"),maxWidth=1800,scale=Math.min(1,maxWidth/img.naturalWidth);canvas.width=Math.round(img.naturalWidth*scale);canvas.height=Math.round(img.naturalHeight*scale);const ctx=canvas.getContext("2d",{willReadFrequently:true});ctx.drawImage(img,0,0,canvas.width,canvas.height);const roster=employees.filter(e=>e.id!=="p00"),rowCount=roster.length,colCount=ed.dates.length,xStart=canvas.width*.232,xEnd=canvas.width*.997,yStart=canvas.height*.102,yEnd=canvas.height*.995,rowH=(yEnd-yStart)/Math.max(1,rowCount),colW=(xEnd-xStart)/colCount;let words=[];try{const T=await loadTesseract();const result=await T.recognize(canvas,"eng",{logger:m=>{if(m.status==="recognizing text")updateImportStatus(`กำลังอ่านตัวเลขจากรูป ${Math.round((m.progress||0)*100)}%`,15+(m.progress||0)*65)}});words=result?.data?.words||[]}catch(error){updateImportStatus("อ่านสีในตารางได้ แต่ระบบอ่านข้อความจากรูปไม่สำเร็จ",78)}let found=0;roster.forEach((emp,row)=>{ed.data[emp.id]??={};ed.dates.forEach((date,col)=>{const x0=xStart+col*colW,x1=x0+colW,y0=yStart+row*rowH,y1=y0+rowH;let code=cellColorCode(ctx,x0+1,y0+1,x1-1,y1-1);if(!code){const matches=words.filter(w=>{const box=w.bbox||{},cx=((box.x0||0)+(box.x1||0))/2,cy=((box.y0||0)+(box.y1||0))/2;return cx>=x0&&cx<x1&&cy>=y0&&cy<y0+rowH*.62}).map(w=>normalizeOcrShift(w.text)).filter(Boolean);code=matches[0]||null}if(code){ed.data[emp.id][dateKey(date)]=code;found++}})});const total=roster.length*ed.dates.length,unresolved=total-found;updateImportStatus(`อ่านได้ ${found} ช่อง · เหลือ ${unresolved} ช่องให้แตะตรวจ`,100);render();toast("อ่านรูปเป็นตารางร่างแล้ว กรุณาตรวจช่อง — ก่อนบันทึก")}
+function normalizeOcrShift(textValue){const s=String(textValue||"").toUpperCase().replace(/[^A-Z0-9]/g,"");if(/^F+$/.test(s)||s.includes("OFF"))return "OFF";if(s.includes("13"))return "13";if(s.includes("11")||s==="II")return "11";if(s==="8"||s==="B")return "8";if(s==="7")return "7";if(s==="6")return "6";if(s.includes("NB")||s.includes("N8"))return "LEAVE";return null}
+async function parseScheduleImage(file,img){const ed=state.scheduleEditor,w=img.naturalWidth||img.width||0,h=img.naturalHeight||img.height||0;if(!w||!h)throw new Error("image_size");const canvas=document.createElement("canvas"),maxWidth=2200,scale=Math.min(1,maxWidth/w);canvas.width=Math.max(1,Math.round(w*scale));canvas.height=Math.max(1,Math.round(h*scale));const ctx=canvas.getContext("2d",{willReadFrequently:true});if(!ctx)throw new Error("canvas");ctx.drawImage(img,0,0,canvas.width,canvas.height);const roster=employees.slice(0,11),rowCount=roster.length,colCount=Math.min(30,ed.dates.length),xStart=canvas.width*.215,xEnd=canvas.width*.983,yStart=canvas.height*.055,yEnd=canvas.height*.965,rowH=(yEnd-yStart)/Math.max(1,rowCount),colW=(xEnd-xStart)/colCount;let words=[];try{const T=await loadTesseract();const result=await T.recognize(canvas,"eng",{logger:m=>{if(m.status==="recognizing text")updateImportStatus(`กำลังอ่านตัวเลขจากรูป ${Math.round((m.progress||0)*100)}%`,15+(m.progress||0)*65)}});words=result?.data?.words||[]}catch(error){updateImportStatus("อ่านสีในตารางได้ แต่ระบบอ่านข้อความจากรูปไม่สำเร็จ",78)}let found=0,unknown=[];roster.forEach((emp,row)=>{ed.data[emp.id]??={};ed.dates.slice(0,colCount).forEach((date,col)=>{const x0=xStart+col*colW,x1=x0+colW,y0=yStart+row*rowH,y1=y0+rowH;let code=cellColorCode(ctx,x0+2,y0+2,x1-2,y1-2);if(!code){const matches=words.filter(w=>{const box=w.bbox||{},cx=((box.x0||0)+(box.x1||0))/2,cy=((box.y0||0)+(box.y1||0))/2;return cx>=x0&&cx<x1&&cy>=y0&&cy<y0+rowH*.72}).map(w=>({raw:w.text,code:normalizeOcrShift(w.text)})).filter(Boolean);code=matches.find(m=>m.code)?.code||null;if(!code&&matches[0]?.raw)unknown.push(`${emp.nick} วันที่ ${date.getDate()} : ${matches[0].raw}`)}if(code){ed.data[emp.id][dateKey(date)]=code;found++}})});ed.imageFound=found;ed.imageUnknown=[...new Set(unknown)].slice(0,20);ed.changedCells=excelChangeCount(ed.data,ed.dates);const total=roster.length*colCount,unresolved=total-found;updateImportStatus(`อ่านได้ ${found} ช่อง · เหลือ ${unresolved} ช่องให้แตะตรวจ`,100);render();toast("อ่านรูปเป็นตารางร่างแล้ว กรุณาตรวจช่อง — ก่อนบันทึก")}
+
+function loadSchedulePdfJs(){
+  if(window.pdfjsLib){
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    return Promise.resolve(window.pdfjsLib)
+  }
+  if(window.__ohSchedulePdfLoading)return window.__ohSchedulePdfLoading;
+  window.__ohSchedulePdfLoading=new Promise((resolve,reject)=>{
+    const script=document.createElement("script");
+    script.src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+    script.async=true;
+    script.onload=()=>{
+      if(!window.pdfjsLib){reject(new Error("pdfjs_load"));return}
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      resolve(window.pdfjsLib)
+    };
+    script.onerror=()=>reject(new Error("pdfjs_load"));
+    document.head.appendChild(script)
+  }).finally(()=>window.__ohSchedulePdfLoading=null);
+  return window.__ohSchedulePdfLoading
+}
+async function renderPdfSchedulePage(pdf,pageNo=1){
+  const page=await pdf.getPage(pageNo),
+        viewport=page.getViewport({scale:2}),
+        canvas=document.createElement("canvas");
+  canvas.width=Math.ceil(viewport.width);
+  canvas.height=Math.ceil(viewport.height);
+  await page.render({canvasContext:canvas.getContext("2d",{alpha:false}),viewport}).promise;
+  return canvas
+}
+async function parseSchedulePdfVisual(pdf,file){
+  const start=getNextScheduleCycleStart(),cycle=buildBlankScheduleCycle(start),
+        canvas=await renderPdfSchedulePage(pdf,1),
+        ctx=canvas.getContext("2d",{willReadFrequently:true}),
+        roster=employees.filter(e=>e.id!=="p00"),
+        rowCount=roster.length,colCount=cycle.dates.length,
+        xStart=canvas.width*.232,xEnd=canvas.width*.997,
+        yStart=canvas.height*.102,yEnd=canvas.height*.995,
+        rowH=(yEnd-yStart)/Math.max(1,rowCount),colW=(xEnd-xStart)/colCount,
+        data=cycle.data;
+  let words=[];
+  try{
+    const T=await loadTesseract();
+    toast("PDF ไม่มีข้อความที่อ่านตรงได้ · กำลังอ่านจากภาพใน PDF…");
+    const result=await T.recognize(canvas,"eng");
+    words=result?.data?.words||[]
+  }catch(e){}
+  let found=0;
+  roster.forEach((emp,row)=>{
+    data[emp.id]??={};
+    cycle.dates.forEach((date,col)=>{
+      const x0=xStart+col*colW,x1=x0+colW,y0=yStart+row*rowH,y1=y0+rowH;
+      let code=cellColorCode(ctx,x0+1,y0+1,x1-1,y1-1);
+      if(!code){
+        const matches=words.filter(w=>{
+          const box=w.bbox||{},cx=((box.x0||0)+(box.x1||0))/2,cy=((box.y0||0)+(box.y1||0))/2;
+          return cx>=x0&&cx<x1&&cy>=y0&&cy<y0+rowH*.65
+        }).map(w=>normalizeOcrShift(w.text)).filter(Boolean);
+        code=matches[0]||null
+      }
+      if(code){data[emp.id][dateKey(date)]=code;found++}
+    })
+  });
+  if(found<Math.max(6,roster.length))throw new Error("visual_fail");
+  const existingCells=employees.reduce((n,e)=>n+cycle.dates.filter(d=>scheduleExistingAt(e.id,d)!=="NONE").length,0);
+  state.scheduleEditor={
+    start:cycle.start,end:cycle.end,dates:cycle.dates,data,
+    source:"pdf",pdfName:file.name,pdfPages:pdf.numPages,pdfTextCount:0,
+    pdfMatched:roster.length,pdfUnknown:[],pdfVisual:true,pdfFound:found,
+    existingCells,changedCells:excelChangeCount(data,cycle.dates),importMode:"update",protectedNextCycle:false
+  };
+  pushOverlay("schedule");render();
+  toast(`อ่าน PDF จากภาพได้ ${found} ช่อง · เลือกรอบเดือนและตรวจ Preview`)
+}
+function pdfTextRows(items,tolerance=3.2){
+  const rows=[];
+  [...items].sort((a,b)=>b.y-a.y||a.x-b.x).forEach(item=>{
+    let row=rows.find(r=>Math.abs(r.y-item.y)<=tolerance);
+    if(!row){row={y:item.y,items:[]};rows.push(row)}
+    row.items.push(item)
+  });
+  rows.forEach(r=>r.items.sort((a,b)=>a.x-b.x));
+  return rows.sort((a,b)=>b.y-a.y)
+}
+function pdfEmployeeMatch(text){
+  const key=scheduleNameKey(text);
+  if(!key)return null;
+  return employees.find(e=>{
+    const nick=scheduleNameKey(e.nick),full=scheduleNameKey(e.full||"");
+    return key===nick||(full&&key===full)||key.includes(nick)||(nick.length>=2&&nick.includes(key))
+  })||null
+}
+function pdfScheduleCycleLabel(start){
+  const cycle=buildBlankScheduleCycle(start);
+  return `${fmtDate(cycle.start,false)} ${cycle.start.getFullYear()+543} – ${fmtDate(cycle.end,false)} ${cycle.end.getFullYear()+543}`
+}
+function changePdfScheduleCycle(dir){
+  const ed=state.scheduleEditor;
+  if(!ed||ed.source!=="pdf")return;
+  const oldDates=ed.dates.slice(),oldData=JSON.parse(JSON.stringify(ed.data||{})),
+        newStart=new Date(ed.start.getFullYear(),ed.start.getMonth()+dir,21),
+        cycle=buildBlankScheduleCycle(newStart);
+  employees.forEach(emp=>{
+    cycle.data[emp.id]??={};
+    cycle.dates.forEach((d,i)=>{
+      const old=oldDates[i];
+      if(old)cycle.data[emp.id][dateKey(d)]=oldData?.[emp.id]?.[dateKey(old)]||"NONE"
+    })
+  });
+  ed.start=cycle.start;ed.end=cycle.end;ed.dates=cycle.dates;ed.data=cycle.data;
+  ed.existingCells=employees.reduce((n,e)=>n+cycle.dates.filter(d=>scheduleExistingAt(e.id,d)!=="NONE").length,0);
+  ed.changedCells=excelChangeCount(ed.data,ed.dates);
+  render()
+}
+
+function pdfCycleOptions(centerStart){
+  const base=new Date(centerStart.getFullYear(),centerStart.getMonth(),21),opts=[];
+  for(let offset=-2;offset<=3;offset++){
+    const start=new Date(base.getFullYear(),base.getMonth()+offset,21),
+          end=new Date(start.getFullYear(),start.getMonth()+1,20),
+          label=`${new Intl.DateTimeFormat("th-TH",{month:"short"}).format(start)} ${String(start.getFullYear()+543).slice(-2)} → ${new Intl.DateTimeFormat("th-TH",{month:"short"}).format(end)} ${String(end.getFullYear()+543).slice(-2)}`;
+    opts.push({value:dateKey(start),label,start,end})
+  }
+  return opts
+}
+function setPdfScheduleCycle(value){
+  const ed=state.scheduleEditor;
+  if(!ed||ed.source!=="pdf")return;
+  const target=new Date(String(value)+"T00:00:00");
+  if(Number.isNaN(target.getTime()))return;
+  const oldDates=ed.dates.slice(),oldData=JSON.parse(JSON.stringify(ed.data||{})),
+        cycle=buildBlankScheduleCycle(new Date(target.getFullYear(),target.getMonth(),21));
+  employees.forEach(emp=>{
+    cycle.data[emp.id]??={};
+    cycle.dates.forEach((d,i)=>{
+      const old=oldDates[i];
+      if(old)cycle.data[emp.id][dateKey(d)]=oldData?.[emp.id]?.[dateKey(old)]||"NONE"
+    })
+  });
+  ed.start=cycle.start;ed.end=cycle.end;ed.dates=cycle.dates;ed.data=cycle.data;
+  ed.existingCells=employees.reduce((n,e)=>n+cycle.dates.filter(d=>scheduleExistingAt(e.id,d)!=="NONE").length,0);
+  ed.changedCells=excelChangeCount(ed.data,ed.dates);
+  render()
+}
+function setImageScheduleCycle(value){
+  const ed=state.scheduleEditor;
+  if(!ed||ed.source!=="image")return;
+  const target=new Date(String(value)+"T00:00:00");
+  if(Number.isNaN(target.getTime()))return;
+  const oldDates=ed.dates.slice(),oldData=JSON.parse(JSON.stringify(ed.data||{})),
+        cycle=buildBlankScheduleCycle(new Date(target.getFullYear(),target.getMonth(),21));
+  employees.forEach(emp=>{
+    cycle.data[emp.id]??={};
+    cycle.dates.forEach((d,i)=>{
+      const old=oldDates[i];
+      if(old)cycle.data[emp.id][dateKey(d)]=oldData?.[emp.id]?.[dateKey(old)]||"NONE"
+    })
+  });
+  ed.start=cycle.start;ed.end=cycle.end;ed.dates=cycle.dates;ed.data=cycle.data;
+  ed.existingCells=employees.reduce((n,e)=>n+cycle.dates.filter(d=>scheduleExistingAt(e.id,d)!=="NONE").length,0);
+  ed.changedCells=excelChangeCount(ed.data,ed.dates);
+  render()
+}
+
+async function importSchedulePdf(input){
+  const file=input.files?.[0];input.value="";
+  if(!file)return;
+  if(file.type!=="application/pdf"&&!file.name.toLowerCase().endsWith(".pdf")){
+    toast("กรุณาเลือกไฟล์ PDF");return
+  }
+  try{
+    toast("กำลังอ่าน OJ16 ตารางงาน…");
+    const pdfjs=await loadSchedulePdfJs(),
+          pdf=await pdfjs.getDocument({data:await file.arrayBuffer()}).promise,
+          page=await pdf.getPage(1),
+          content=await page.getTextContent(),
+          items=(content.items||[]).map(it=>({
+            text:String(it.str||"").trim(),
+            x:Number(it.transform?.[4]||0),
+            y:Number(it.transform?.[5]||0),
+            w:Number(it.width||0)
+          })).filter(it=>it.text);
+
+    if(items.length<100)throw new Error("no_text");
+
+    // 1) หา "หัววันที่จริง" จากลำดับ 21,22,23... ไม่ใช้แค่แถวที่มีตัวเลขเยอะ
+    const numeric=items.filter(it=>{
+      const s=it.text.replace(/\s/g,""),n=Number(s);
+      return Number.isInteger(n)&&n>=1&&n<=31&&it.x>190&&it.x<805
+    });
+    const yGroups=[];
+    numeric.forEach(it=>{
+      let g=yGroups.find(g=>Math.abs(g.y-it.y)<=2.3);
+      if(!g){g={y:it.y,items:[]};yGroups.push(g)}
+      g.items.push(it)
+    });
+
+    const scoreHeader=g=>{
+      const arr=g.items.map(it=>({n:Number(it.text.replace(/\s/g,"")),x:it.x+(it.w||0)/2})).sort((a,b)=>a.x-b.x);
+      let score=0;
+      const expected=[21,22,23,24,25,26,27,28,29,30];
+      for(let i=0;i<expected.length;i++)if(arr[i]?.n===expected[i])score+=3;
+      const oneIndex=arr.findIndex(x=>x.n===1);
+      if(oneIndex>=9&&oneIndex<=11)score+=8;
+      if(arr.slice(-5).map(x=>x.n).join(",")==="16,17,18,19,20")score+=8;
+      return {score,arr}
+    };
+    let bestHeader=null;
+    for(const g of yGroups){
+      const scored=scoreHeader(g);
+      if(!bestHeader||scored.score>bestHeader.score)bestHeader={...g,...scored}
+    }
+    if(!bestHeader||bestHeader.score<25)throw new Error("dates");
+
+    let cols=bestHeader.arr;
+    const startIndex=cols.findIndex(c=>c.n===21);
+    if(startIndex<0)throw new Error("dates");
+    cols=cols.slice(startIndex);
+
+    // สร้าง run 21 -> 20 จริง รองรับเดือน 30/31 วัน
+    const run=[];
+    let phase="late",next=21;
+    for(const c of cols){
+      if(phase==="late"){
+        if(c.n===next){
+          run.push({day:c.n,x:c.x});
+          next++;
+          if(next===31){
+            // อาจเป็น 30 หรือ 31 วัน
+          }
+          continue
+        }
+        if((next===31||next===32)&&c.n===1){
+          phase="early";next=2;run.push({day:1,x:c.x});continue
+        }
+        if(next===31&&c.n===31){
+          run.push({day:31,x:c.x});next=32;continue
+        }
+      }else{
+        if(c.n===next){
+          run.push({day:c.n,x:c.x});
+          if(c.n===20)break;
+          next++
+        }
+      }
+    }
+    if(run.length<30)throw new Error("dates");
+    cols=run;
+
+    // 2) จับแถวด้วยรหัสพนักงานจริงจาก PDF ใหม่
+    const pdfCodes=["021396","021411","017604","019759","022909","021915","021587","021706","021914","022620","015550"];
+    const byCode={};
+    for(const code of pdfCodes){
+      const it=items.find(x=>x.text===code);
+      if(it)byCode[code]=it
+    }
+    if(Object.keys(byCode).length<10)throw new Error("rows");
+
+    // 3) แมปแถว PDF -> คนในระบบ
+    // แถว 1 คือช่องผู้จัดการของระบบ, ที่เหลือตรงกับรายชื่อพนักงานเดิม
+    const roster=employees.slice(0,11);
+    const start=getNextScheduleCycleStart(),cycle=buildBlankScheduleCycle(start),data=cycle.data;
+    const dates=cycle.dates.slice(0,cols.length);
+
+    const normalizeShift=raw=>{
+      const s=String(raw||"").trim().toUpperCase().replace(/\s+/g,"");
+      if(s==="F"||s==="OFF"||s==="OFFOP")return "OFF";
+      if(s==="นข"||s==="ร"||s==="ลา"||s==="LEAVE")return "LEAVE";
+      if(["6","7","8","11","13"].includes(s))return s;
+      return null
+    };
+
+    let found=0;
+    const unknown=[];
+    pdfCodes.forEach((code,rowIndex)=>{
+      const anchor=byCode[code],emp=roster[rowIndex];
+      if(!anchor||!emp)return;
+      data[emp.id]??={};
+
+      cols.forEach((col,colIndex)=>{
+        const date=dates[colIndex];
+        if(!date)return;
+        const candidates=items.filter(it=>{
+          const cx=it.x+(it.w||0)/2;
+          return Math.abs(it.y-anchor.y)<=2.8 &&
+                 Math.abs(cx-col.x)<=9.5
+        }).sort((a,b)=>Math.abs((a.x+(a.w||0)/2)-col.x)-Math.abs((b.x+(b.w||0)/2)-col.x));
+
+        let codeValue=null,raw="";
+        for(const it of candidates){
+          raw=it.text;
+          codeValue=normalizeShift(raw);
+          if(codeValue)break
+        }
+
+        if(codeValue){
+          data[emp.id][dateKey(date)]=codeValue;
+          found++
+        }else{
+          data[emp.id][dateKey(date)]="NONE";
+          if(raw)unknown.push(`${emp.nick} วันที่ ${col.day}: ${raw}`)
+        }
+      })
+    });
+
+    const expectedTotal=Math.min(roster.length,Object.keys(byCode).length)*cols.length;
+    if(found<Math.max(250,expectedTotal*.82))throw new Error("too_few");
+
+    const existingCells=employees.reduce(
+      (n,e)=>n+cycle.dates.filter(d=>scheduleExistingAt(e.id,d)!=="NONE").length,0
+    );
+
+    state.scheduleEditor={
+      start:cycle.start,end:cycle.end,dates:cycle.dates,data,
+      source:"pdf",
+      pdfName:file.name,
+      pdfPages:pdf.numPages,
+      pdfMatched:Object.keys(byCode).length,
+      pdfUnknown:[...new Set(unknown)].slice(0,20),
+      pdfFound:found,
+      pdfShiftDays:cols.length,
+      pdfTemplate:"OJ16-2026-09",
+      existingCells,
+      changedCells:excelChangeCount(data,cycle.dates),
+      importMode:"update",
+      protectedNextCycle:false
+    };
+
+    pushOverlay("schedule");
+    render();
+    toast(`อ่าน PDF สำเร็จ ${Object.keys(byCode).length} คน · ${cols.length} วัน · ${found} ช่อง`)
+  }catch(error){
+    console.error("OJ16 PDF parser",error);
+    const map={
+      no_text:"PDF ไม่มีข้อความที่อ่านได้",
+      dates:"หาแถววันที่ 21–20 ของไฟล์นี้ไม่เจอ",
+      rows:"หารหัสพนักงานใน PDF ไม่ครบ",
+      too_few:"อ่านกะได้ไม่ครบพอ"
+    };
+    toast(`${map[error.message]||"อ่าน PDF ไม่สำเร็จ"} · ใช้ไฟล์ OJ16 ตารางงานรูปแบบเดียวกับไฟล์ล่าสุด`)
+  }
+}
+
 function loadSheetJs(){
   if(window.XLSX)return Promise.resolve(window.XLSX);
   if(window.__ohSheetJsLoading)return window.__ohSheetJsLoading;
@@ -563,7 +1190,7 @@ function excelChangeCount(data,dates){
   employees.forEach(emp=>dates.forEach(d=>{const dk=dateKey(d),next=data?.[emp.id]?.[dk]??"NONE",old=scheduleExistingAt(emp.id,d);if(next!==old)n++}));
   return n;
 }
-function setExcelImportMode(mode){if(!state.scheduleEditor||state.scheduleEditor.source!=="excel")return;state.scheduleEditor.importMode=mode==="replace"?"replace":"update";render()}
+function setExcelImportMode(mode){if(!state.scheduleEditor||!["excel","pdf","image"].includes(state.scheduleEditor.source))return;state.scheduleEditor.importMode=mode==="replace"?"replace":"update";render()}
 async function importScheduleExcel(input){
   const file=input.files?.[0];input.value="";
   if(!file)return;
@@ -659,13 +1286,30 @@ async function importScheduleExcel(input){
   }
 }
 
-async function importScheduleImage(input){const file=input.files?.[0];input.value="";if(!file)return;if(!file.type.startsWith("image/")){toast("กรุณาเลือกรูปภาพตารางงาน");return}const start=getNextScheduleCycleStart(),cycle=buildBlankScheduleCycle(start);try{const [imageUrl,img]=await Promise.all([fileToDataUrl(file),loadImageFile(file)]);state.scheduleEditor={start,end:cycle.end,dates:cycle.dates,data:cycle.data,imageUrl,imageName:file.name,importStatus:"กำลังเตรียมอ่านรูป…",importProgress:5,source:"image",protectedNextCycle:true};pushOverlay("schedule");render();await parseScheduleImage(file,img)}catch(error){toast("เปิดรูปนี้ไม่สำเร็จ ลองใช้ไฟล์ JPG หรือ PNG")}}
+async function importScheduleImage(input){
+  const file=input.files?.[0];
+  input.value="";
+  if(!file)return;
+  const byType=String(file.type||"").startsWith("image/"),byName=/\.(png|jpg|jpeg|webp)$/i.test(String(file.name||""));
+  if(!byType&&!byName){toast("กรุณาเลือกไฟล์รูป JPG, PNG หรือ WEBP");return}
+  const start=getNextScheduleCycleStart(),cycle=buildBlankScheduleCycle(start);
+  try{
+    const imageUrl=await fileToDataUrl(file),img=await loadImageFile(file);
+    state.scheduleEditor={start,end:cycle.end,dates:cycle.dates,data:cycle.data,imageUrl,imageName:file.name,importStatus:"กำลังเตรียมอ่านรูป…",importProgress:5,source:"image",protectedNextCycle:false,importMode:"update",existingCells:employees.reduce((n,e)=>n+cycle.dates.filter(d=>scheduleExistingAt(e.id,d)!=="NONE").length,0),changedCells:0,imageMatched:Math.min(11,employees.length),imageFound:0,imageUnknown:[]};
+    pushOverlay("schedule");render();
+    await parseScheduleImage(file,img)
+  }catch(error){
+    console.error("OH schedule image import",error);
+    const msg=error?.message==="read"?"เปิดไฟล์รูปไม่ได้":error?.message==="image_load"?"เบราว์เซอร์เปิดรูปนี้ไม่สำเร็จ":error?.message||"unknown";
+    toast(`${msg} · ลองเลือกรูปใหม่อีกครั้ง`)
+  }
+}
 async function saveScheduleEditor(){
   const ed=state.scheduleEditor;if(!ed)return;
   if(ed.protectedNextCycle&&dateKey(ed.start)!==dateKey(getNextScheduleCycleStart())){toast("มีตารางรอบใหม่ถูกบันทึกแล้ว กรุณาปิดและอัปโหลดอีกครั้ง");return}
   const touched=new Set();
 
-  if(ed.source==="excel"&&ed.importMode==="replace"){
+  if((ed.source==="excel"||ed.source==="pdf"||ed.source==="image")&&ed.importMode==="replace"){
     // Clear only the detected Excel date range, not unrelated months/dates.
     employees.forEach(emp=>ed.dates.forEach(d=>{
       const mk=monthKey(d),dk=dateKey(d);
@@ -681,9 +1325,9 @@ async function saveScheduleEditor(){
     scheduleMonths[mk][empId][dk]=shift;touched.add(mk);
   }));
 
-  if(ed.source!=="excel")localStorage.setItem("oh_last_schedule_cycle",dateKey(ed.start));
+  if(ed.source!=="excel"&&ed.source!=="pdf")localStorage.setItem("oh_last_schedule_cycle",dateKey(ed.start));
   saveData();state.selectedDate=new Date(ed.start);state.scheduleEditor=null;consumeOverlay();render();
-  const action=ed.source==="excel"?(ed.importMode==="replace"?"แทนที่ช่วง":"อัปเดต"):"บันทึก";
+  const action=(ed.source==="excel"||ed.source==="pdf"||ed.source==="image")?(ed.importMode==="replace"?"แทนที่ช่วง":"อัปเดต"):"บันทึก";
   toast(`${action}ตาราง ${fmtDate(ed.start,false)} – ${fmtDate(ed.end,false)} แล้ว`);
   try{
     await Promise.all([...touched].map(mk=>fetch(`${CONFIG.firebaseDatabaseUrl}/work_schedules/${mk}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(scheduleMonths[mk])})))
@@ -704,7 +1348,7 @@ async function removeEmployee(id){const emp=employees.find(e=>e.id===id);if(!emp
 function renderRosterModal(){const rows=employees.map(emp=>`<div class="roster-row">${avatarArt(emp)}<span><b>${esc(emp.nick)}</b><small>${esc(emp.role)} · ${emp.gender==="F"?"หญิง":"ชาย"}${emp.id==="p00"?" · ผู้จัดการหลัก":""}</small></span><div class="roster-row-actions"><button class="tiny-btn" onclick="randomizeEmployeeAvatar('${emp.id}')">🎲 สุ่ม Pixel</button>${emp.id==="p00"?"":`<button class="tiny-btn delete" onclick="removeEmployee('${emp.id}')">ลบ</button>`}</div></div>`).join("");return `<div class="modal-backdrop" onclick="if(event.target===this)closeRosterModal()"><section class="modal roster-modal"><div class="editor-head"><div class="head-text"><h2>จัดการพนักงาน</h2><p>ผู้จัดการสุ่ม Pixel ได้ ส่วนรูปจริงต้องให้เจ้าตัวอัปโหลดจากชื่อของตนเอง</p></div><button class="icon-btn" onclick="closeRosterModal()">×</button></div><div class="roster-list">${rows}</div><form class="add-person" onsubmit="addEmployee(event)"><h3>＋ เพิ่มพนักงาน</h3><div class="person-form"><div class="field"><label>ชื่อเล่น</label><input name="nick" maxlength="30" placeholder="เช่น น้องเอ" required></div><div class="field"><label>ตำแหน่ง</label><input name="role" maxlength="40" placeholder="พนักงานบาร์"></div><div class="field"><label>รูปแบบตัวละคร</label><select name="gender"><option value="F">ผู้หญิง</option><option value="M">ผู้ชาย</option></select></div><button class="primary-btn wide" type="submit">สุ่มตัวละครและเพิ่มคนนี้</button></div><p class="roster-note">ระบบจะสุ่มสีเสื้อ สีผม ทรงผม และเครื่องประดับให้ คนใหม่จะมีตารางว่างรอใส่กะ</p></form></section></div>`}
 function moveScheduleMonth(delta){const d=new Date(state.selectedDate);d.setDate(1);d.setMonth(d.getMonth()+delta);state.selectedDate=startOfDay(d);render()}
 function renderScheduleMonthPicker(date){const first=new Date(date.getFullYear(),date.getMonth(),1),title=new Intl.DateTimeFormat('th-TH',{month:'long',year:'numeric'}).format(first),gridStart=startOfWeek(first);let cells=["จ","อ","พ","พฤ","ศ","ส","อา"].map(x=>`<div class="month-weekday">${x}</div>`).join("");for(let i=0;i<42;i++){const d=addDays(gridStart,i),muted=d.getMonth()!==first.getMonth(),today=dateKey(d)===dateKey(new Date()),selected=dateKey(d)===dateKey(state.selectedDate),sum=daySummary(d);cells+=`<button class="month-day schedule-month-day ${muted?'muted':''} ${today?'today':''} ${selected?'selected':''}" onclick="state.selectedDate=startOfDay(new Date('${dateKey(d)}T00:00:00'));state.scheduleMonthOpen=false;state.view='schedule';render()"><b>${d.getDate()}</b><span>${sum.working?`${sum.working} คน`:'—'}</span></button>`}return `<section class="schedule-month-panel"><div class="schedule-month-head"><button class="ghost-btn" onclick="moveScheduleMonth(-1)">‹</button><div><small>เลือกวันที่</small><b>${title}</b></div><button class="ghost-btn" onclick="moveScheduleMonth(1)">›</button></div><div class="month-grid">${cells}</div></section>`}
-function renderSchedule(isDay=false){const d=state.selectedDate,sum=daySummary(d),groups=groupEmployees(d);return `${header(true,"ตารางงาน")}<main class="shell"><section class="schedule-hero"><div><div class="eyebrow">WORK SCHEDULE</div><h1>${fmtDate(d)}</h1><p>เปิดมาเห็นตารางของวันที่เลือกทันที หากต้องการวันอื่นค่อยเปิดปฏิทินรายเดือน</p></div><div class="schedule-actions"><button class="ghost-btn" onclick="state.scheduleMonthOpen=!state.scheduleMonthOpen;render()">${state.scheduleMonthOpen?'ปิดปฏิทิน':'เลือกวันจากเดือน'}</button><button class="ghost-btn hero-today" onclick="state.selectedDate=startOfDay(new Date());state.scheduleMonthOpen=false;state.view='schedule';render()">วันนี้</button></div></section>${state.scheduleMonthOpen?renderScheduleMonthPicker(d):''}<details class="schedule-manager"><summary>⚙ จัดการตารางและพนักงาน</summary><div class="schedule-manager-actions"><button class="upload-btn" onclick="document.getElementById('scheduleExcelInput').click()">▦ อัปโหลดตาราง Excel</button><button class="ghost-btn" onclick="document.getElementById('scheduleImageInput').click()">▧ อัปโหลดรูป (สำรอง)</button><button class="roster-btn" onclick="openRosterModal()">☺ จัดการพนักงาน</button><button class="manager-btn" onclick="openNextMonthEditor()">＋ กรอกตารางเอง</button></div></details><input id="scheduleExcelInput" type="file" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" hidden onchange="importScheduleExcel(this)"><input id="scheduleImageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden onchange="importScheduleImage(this)"><div class="summary-row"><div class="summary green"><b>${sum.working}</b><span>เข้างาน</span></div><div class="summary"><b>${groups["กะเช้า"].length}</b><span>กะเช้า</span></div><div class="summary orange"><b>${groups["กะบ่าย"].length}</b><span>กะบ่าย</span></div><div class="summary red"><b>${sum.off}</b><span>หยุด / ลา</span></div><div class="summary gray"><b>${sum.unassigned}</b><span>ไม่มีข้อมูล</span></div></div><div class="panel schedule-people-panel"><div class="panel-head"><h3>พนักงานทั้งหมด</h3><span class="count">${employees.length} คน</span></div>${dayContent(d)}</div></main>${state.scheduleEditor?renderScheduleEditor():""}${state.rosterModal?renderRosterModal():""}`}
+function renderSchedule(isDay=false){const d=state.selectedDate,sum=daySummary(d),groups=groupEmployees(d);return `${header(true,"ตารางงาน")}<main class="shell"><section class="schedule-hero"><div><div class="eyebrow">WORK SCHEDULE</div><h1>${fmtDate(d)}</h1><p>เปิดมาเห็นตารางของวันที่เลือกทันที หากต้องการวันอื่นค่อยเปิดปฏิทินรายเดือน</p></div><div class="schedule-actions"><button class="ghost-btn" onclick="state.scheduleMonthOpen=!state.scheduleMonthOpen;render()">${state.scheduleMonthOpen?'ปิดปฏิทิน':'เลือกวันจากเดือน'}</button><button class="ghost-btn hero-today" onclick="state.selectedDate=startOfDay(new Date());state.scheduleMonthOpen=false;state.view='schedule';render()">วันนี้</button></div></section>${state.scheduleMonthOpen?renderScheduleMonthPicker(d):''}<details class="schedule-manager"><summary>⚙ จัดการตารางและพนักงาน</summary><div class="schedule-manager-actions"><button class="upload-btn" onclick="document.getElementById('scheduleImageInput').click()">▧ อัปโหลดรูปตาราง</button><button class="ghost-btn" onclick="document.getElementById('schedulePdfInput').click()">▣ อัปโหลด PDF (ทดลอง)</button><button class="roster-btn" onclick="openRosterModal()">☺ จัดการพนักงาน</button><button class="manager-btn" onclick="openNextMonthEditor()">＋ กรอกตารางเอง</button></div></details><input id="schedulePdfInput" type="file" accept="application/pdf,.pdf" hidden onchange="importSchedulePdf(this)"><input id="scheduleImageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden onchange="importScheduleImage(this)"><div class="summary-row"><div class="summary green"><b>${sum.working}</b><span>เข้างาน</span></div><div class="summary"><b>${groups["กะเช้า"].length}</b><span>กะเช้า</span></div><div class="summary orange"><b>${groups["กะบ่าย"].length}</b><span>กะบ่าย</span></div><div class="summary red"><b>${sum.off}</b><span>หยุด / ลา</span></div><div class="summary gray"><b>${sum.unassigned}</b><span>ไม่มีข้อมูล</span></div></div><div class="panel schedule-people-panel"><div class="panel-head"><h3>พนักงานทั้งหมด</h3><span class="count">${employees.length} คน</span></div>${dayContent(d)}</div></main>${state.scheduleEditor?renderScheduleEditor():""}${state.rosterModal?renderRosterModal():""}`}
 function openPerson(id){state.selectedEmployee=id;state.personMode="week";go("person")}
 function movePersonPeriod(n){state.selectedDate=state.personMode==="week"?addDays(state.selectedDate,n*7):new Date(state.selectedDate.getFullYear(),state.selectedDate.getMonth()+n,1);render()}
 function personPeriodStats(emp){const days=state.personMode==='month'?new Date(state.selectedDate.getFullYear(),state.selectedDate.getMonth()+1,0).getDate():7,start=state.personMode==='month'?new Date(state.selectedDate.getFullYear(),state.selectedDate.getMonth(),1):startOfWeek(state.selectedDate);let work=0,off=0,leave=0;for(let i=0;i<days;i++){const code=getShift(emp,addDays(start,i));if(code==='OFF')off++;else if(code==='LEAVE')leave++;else if(code!=='NONE')work++}return {work,off,leave}}
@@ -1113,7 +1757,29 @@ function usageRoundLabel(round){const t=usageRoundTime(round);if(!t)return "ไ�
 function usageRoundKey(timestamp){return `round_${String(timestamp||Date.now()).replace(/[.#$\[\]\/:]/g,"_")}`}
 function normalizeUsageRounds(data){return Object.entries(data||{}).map(([key,value])=>({key,...value})).filter(x=>x&&x.items).sort((a,b)=>new Date(usageRoundTime(b)||0)-new Date(usageRoundTime(a)||0))}
 function transactionAdjustments(transactions,from,to){const received={},neutralIn={},neutralOut={};firebaseValues(transactions).forEach(tx=>{const t=new Date(tx?.time||0);if(!tx?.time||t<=from||t>to||tx.type==="undo")return;(tx.lines||[]).forEach(line=>{const id=String(line.productId||line.code||""),qty=Math.max(0,finiteNumber(line.qty));if(!id||!qty)return;if(tx.type==="receive")received[id]=(received[id]||0)+qty;else if(tx.type==="adjust"){const before=finiteNumber(line.before),after=finiteNumber(line.balance);if(after>before)neutralIn[id]=(neutralIn[id]||0)+(after-before);else if(after<before&&line.reason!=="forgot_issue")neutralOut[id]=(neutralOut[id]||0)+(before-after)}})});return {received,neutralIn,neutralOut}}
-function buildUsageRows(currentItems,previous,transactions,currentTime){const from=new Date(usageRoundTime(previous)||0),to=new Date(currentTime||Date.now()),adj=previous?transactionAdjustments(transactions,from,to):{received:{},neutralIn:{},neutralOut:{}};return (currentItems||[]).map(item=>{const id=String(item.id||item.code||""),dailyMissing=Boolean(item.dailyMissing),daily=dailyMissing?null:finiteNumber(item.daily),store=finiteNumber(item.store),total=dailyMissing?null:finiteNumber(item.total??daily+store),prev=previous?.items?.[id],previousTotal=prev&&prev.total!==null?finiteNumber(prev.total):null,received=adj.received[id]||0,correctionIn=adj.neutralIn[id]||0,excludedOut=adj.neutralOut[id]||0,used=previousTotal!==null&&total!==null?previousTotal+received+correctionIn-total-excludedOut:null;return {id,name:item.name||prev?.name||id,unit:usageUnit({...item,id}),daily,store,total,dailyMissing,previous:previousTotal,received,correctionIn,excludedOut,used}})}
+function buildUsageRows(currentItems,previous,transactions,currentTime){
+  const from=new Date(usageRoundTime(previous)||0),to=new Date(currentTime||Date.now()),issued={};
+  if(previous){
+    firebaseValues(transactions).forEach(tx=>{
+      if(!tx?.time||new Date(tx.time)<=from||new Date(tx.time)>to)return;
+      if(tx.type!=="issue"&&!(tx.type==="adjust"&&tx.lines?.some(l=>l.reason==="forgot_issue")))return;
+      (tx.lines||[]).forEach(line=>{
+        if(tx.type==="adjust"&&line.reason!=="forgot_issue")return;
+        const id=String(line.productId||line.code||"");
+        issued[id]=(issued[id]||0)+finiteNumber(line.qty)
+      })
+    })
+  }
+  return (currentItems||[]).map(item=>{
+    const id=String(item.id||item.code||""),dailyMissing=Boolean(item.dailyMissing),
+          daily=dailyMissing?null:finiteNumber(item.daily),store=finiteNumber(item.store),
+          prev=previous?.items?.[id],
+          previousFront=prev&&prev.daily!==null&&!prev.dailyMissing?finiteNumber(prev.daily):null,
+          movedFromStore=issued[id]||0,
+          used=previousFront!==null&&daily!==null?previousFront+movedFromStore-daily:null;
+    return {id,name:item.name||prev?.name||id,unit:usageUnit({...item,id}),daily,store,total:daily,dailyMissing,previous:previousFront,received:movedFromStore,correctionIn:0,excludedOut:0,used}
+  })
+}
 async function cleanupOldUsageRounds(rounds){const cutoff=Date.now()-3*24*60*60*1000,old=(rounds||[]).filter(r=>{const t=new Date(usageRoundTime(r)||0).getTime();return Number.isFinite(t)&&t<cutoff});if(!old.length)return;await Promise.all(old.map(r=>fetch(`${CONFIG.firebaseDatabaseUrl}/usage_rounds/${encodeURIComponent(r.key)}.json`,{method:"DELETE"}).catch(()=>null)))}
 async function loadUsage(){if(state.usageLoading)return;state.usageLoading=true;render();try{const [currentRes,roundRes,transactionRes]=await Promise.all([fetch(`${CONFIG.sheetsWebAppUrl}?mode=usageCurrent&t=${Date.now()}`),fetch(`${CONFIG.firebaseDatabaseUrl}/usage_rounds.json?t=${Date.now()}`),fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_transactions.json?t=${Date.now()}`)]);if(!currentRes.ok)throw new Error("sheet");const current=await currentRes.json();if(current.status&&current.status!=="success")throw new Error(current.message||"sheet");let rounds=normalizeUsageRounds(roundRes.ok?(await roundRes.json()||{}):{}),transactions=transactionRes.ok?(await transactionRes.json()||{}):{},sourceTimestamp=current.countSubmittedAt||current.sourceTimestamp||current.fetchedAt||new Date().toISOString(),currentItems=Array.isArray(current.items)?current.items:[],existing=rounds.find(r=>String(usageRoundTime(r))===String(sourceTimestamp));const items={};currentItems.forEach(item=>{const id=String(item.id||item.code||"");if(!id)return;items[id]={name:item.name||id,unit:usageUnit({...item,id}),daily:item.dailyMissing?null:finiteNumber(item.daily),dailyMissing:Boolean(item.dailyMissing),store:finiteNumber(item.store),total:item.dailyMissing?null:finiteNumber(item.total)}});const user=activeEmployee(),payload={createdAt:existing?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString(),createdBy:existing?.createdBy||user?.nick||"",createdById:existing?.createdById||user?.id||"",sourceTimestamp,countSubmittedAt:current.countSubmittedAt||sourceTimestamp,items},key=existing?.key||usageRoundKey(sourceTimestamp);await fetch(`${CONFIG.firebaseDatabaseUrl}/usage_rounds/${encodeURIComponent(key)}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});rounds=normalizeUsageRounds({...Object.fromEntries(rounds.map(r=>[r.key,r])),[key]:payload});await cleanupOldUsageRounds(rounds);rounds=rounds.filter(r=>{const t=new Date(usageRoundTime(r)||0).getTime();return !Number.isFinite(t)||t>=Date.now()-3*24*60*60*1000});const currentRound=rounds.find(r=>r.key===key)||{key,...payload},previous=rounds.filter(r=>r.key!==key&&new Date(usageRoundTime(r)||0)<new Date(sourceTimestamp)).sort((a,b)=>new Date(usageRoundTime(b)||0)-new Date(usageRoundTime(a)||0))[0]||null,rows=buildUsageRows(currentItems,previous,transactions,sourceTimestamp);state.usageRounds=rounds;state.usage={loadedAt:new Date().toISOString(),sourceTimestamp,rows,previous,currentRound,currentRaw:current};if(previous&&!existing){await consumeExpiryFrontFromUsage(rows,user);await fetch(`${CONFIG.firebaseDatabaseUrl}/usage_rounds/${encodeURIComponent(key)}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({expiryReconciled:true,expiryReconciledAt:new Date().toISOString()})}).catch(()=>null)}toast(previous?(existing?"ดึงรอบเดิมแล้ว · ไม่สร้างข้อมูลซ้ำ":"ดึงรอบใหม่แล้ว · คำนวณส่วนต่างให้แล้ว"):"บันทึกรอบแรกแล้ว · รอบถัดไปจะเริ่มคำนวณส่วนต่าง")}catch(error){toast("ดึงรอบการนับไม่สำเร็จ กรุณาตรวจ Apps Script และอินเทอร์เน็ต")}finally{state.usageLoading=false;if(state.view==="usage")render()}}
 async function saveUsageSnapshot(){return loadUsage()}
@@ -1124,7 +1790,7 @@ function renderUsage(){
   const newLabel=current?usageRoundLabel(current):"—";
   const desktopRows=rows.map(row=>`<tr>
     <td class="code">${esc(row.id)}</td>
-    <td class="usage-product-cell"><b>${esc(row.name)}</b><small>คงเหลือรอบล่าสุด = หน้าร้าน ${usageNumber(row.daily,row.unit)} + สโตร์ ${usageNumber(row.store,row.unit)}</small></td>
+    <td class="usage-product-cell"><b>${esc(row.name)}</b><small>หน้าร้านรอบล่าสุด = หน้าร้าน ${usageNumber(row.daily,row.unit)} + สโตร์ ${usageNumber(row.store,row.unit)}</small></td>
     <td><strong>${usageNumber(row.previous,row.unit)}</strong></td>
     <td><strong>${usageNumber(row.received,row.unit)}</strong></td>
     <td>${row.dailyMissing?`<span class="usage-incomplete">ยังไม่ได้นับ</span>`:`<strong class="usage-latest">${usageNumber(row.total,row.unit)}</strong>`}</td>
@@ -1133,20 +1799,20 @@ function renderUsage(){
   const mobileRows=rows.map(row=>`<article class="usage-mobile-card">
     <div class="usage-mobile-head"><span><b>${esc(row.name)}</b><small>${esc(row.id)}</small></span>${row.dailyMissing?`<span class="usage-incomplete">ยังไม่ได้นับ</span>`:""}</div>
     <div class="usage-mobile-grid">
-      <div class="usage-mobile-metric"><span>คงเหลือรอบก่อน</span><b>${usageNumber(row.previous,row.unit)}</b></div>
-      <div class="usage-mobile-metric"><span>ของเข้าร้านใหม่</span><b>${usageNumber(row.received,row.unit)}</b></div>
-      <div class="usage-mobile-metric"><span>คงเหลือรอบล่าสุด</span><b>${usageNumber(row.total,row.unit)}</b></div>
+      <div class="usage-mobile-metric"><span>หน้าร้านรอบก่อน</span><b>${usageNumber(row.previous,row.unit)}</b></div>
+      <div class="usage-mobile-metric"><span>เบิกจากสโตร์</span><b>${usageNumber(row.received,row.unit)}</b></div>
+      <div class="usage-mobile-metric"><span>หน้าร้านรอบล่าสุด</span><b>${usageNumber(row.total,row.unit)}</b></div>
       <div class="usage-mobile-metric used"><span>ใช้จริง</span><b>${usageNumber(row.used,row.unit)}</b></div>
     </div>
-    <div class="usage-current-breakdown">รอบล่าสุด: หน้าร้าน ${usageNumber(row.daily,row.unit)} + สโตร์ ${usageNumber(row.store,row.unit)} = รวม ${usageNumber(row.total,row.unit)}<br>การเบิกจากสโตร์ไปหน้าร้านเป็นการย้ายของภายในร้าน จึงไม่บวกซ้ำเป็น “ใช้จริง”</div>
+    <div class="usage-current-breakdown">รอบล่าสุด: หน้าร้าน ${usageNumber(row.daily,row.unit)} · สโตร์คงเหลือ ${usageNumber(row.store,row.unit)} (ไม่รวมในสูตร)<br>ใช้จริง = หน้าร้านรอบก่อน + เบิกจากสโตร์ระหว่างรอบ − หน้าร้านรอบล่าสุด</div>
   </article>`).join("");
   return `${header(true,"การใช้วันนี้")}<main class="shell">
     <section class="usage-hero"><div class="eyebrow">COUNT ROUND · DAILY! + สโตร์</div><h1>การใช้ระหว่างรอบนับ</h1><p>เปรียบเทียบยอดรวมทั้งร้านจากรอบนับเก่าไปยังรอบนับใหม่</p></section>
-    <section class="usage-explain"><b>“ใช้จริง” คือของที่หายไปจากยอดรวมทั้งร้าน</b><p>ไม่ใช่ยอดคงเหลือ และไม่ใช่ยอดเบิกจากสโตร์ไปหน้าร้าน</p><div class="usage-formula">คงเหลือรอบก่อน + ของเข้าร้านใหม่ − คงเหลือรอบล่าสุด = ใช้จริง</div></section>
+    <section class="usage-explain"><b>“ใช้จริง” คือของที่หายไปจากยอดรวมทั้งร้าน</b><p>คำนวณจากยอดหน้าร้านเท่านั้น · ยอดสโตร์ใช้เป็นข้อมูลประกอบ ไม่ถูกรวมเป็นยอดหน้าร้าน</p><div class="usage-formula">หน้าร้านรอบก่อน + เบิกจากสโตร์ − หน้าร้านรอบล่าสุด = ใช้จริง</div></section>
     <div class="sync-panel"><div class="sync-status"><b>${state.usageLoading?'กำลังดึงรอบล่าสุด…':current?`รอบล่าสุด ${newLabel}`:'ยังไม่ได้ดึงรอบ'}</b><small>${previous?`เทียบ ${oldLabel} → ${newLabel}`:'รอบแรกจะแสดงเป็นยอดตั้งต้น ยังไม่มี “ใช้จริง” ให้คำนวณ'}</small></div><button class="sync-btn save" ${state.usageLoading?'disabled':''} onclick="loadUsage()">↓ ดึงรอบล่าสุด</button>${rounds.length?`<button class="sync-btn" onclick="state.usageShowHistory=!state.usageShowHistory;render()">${state.usageShowHistory?'ซ่อนย้อนหลัง':'ดูย้อนหลัง 3 วัน'}</button>`:""}</div>
     ${!data?`<section class="baseline"><h3>กด “ดึงรอบล่าสุด” เพื่อเริ่ม</h3><p>ระบบจะจำรอบนับและใช้สองรอบล่าสุดคำนวณการใช้จริง</p></section>`:
     `<div class="usage-round-head"><div><div class="eyebrow">${previous?`รอบเก่า ${oldLabel} → รอบใหม่ ${newLabel}`:`รอบแรก ${newLabel}`}</div><h2 class="page-title">${rows.length} รายการ</h2></div></div>
-    <div class="table-wrap usage-round-table-wrap"><table class="usage-round-table"><thead><tr><th>รหัส</th><th>สินค้า</th><th>คงเหลือรอบก่อน</th><th>ของเข้าร้านใหม่</th><th>คงเหลือรอบล่าสุด</th><th>ใช้จริง</th></tr></thead><tbody>${desktopRows||`<tr><td colspan="6" class="empty">ไม่พบข้อมูล</td></tr>`}</tbody></table></div>
+    <div class="table-wrap usage-round-table-wrap"><table class="usage-round-table"><thead><tr><th>รหัส</th><th>สินค้า</th><th>หน้าร้านรอบก่อน</th><th>เบิกจากสโตร์</th><th>หน้าร้านรอบล่าสุด</th><th>ใช้จริง</th></tr></thead><tbody>${desktopRows||`<tr><td colspan="6" class="empty">ไม่พบข้อมูล</td></tr>`}</tbody></table></div>
     <section class="usage-mobile-list">${mobileRows||`<div class="empty panel">ไม่พบข้อมูล</div>`}</section>
     ${state.usageShowHistory?`<section class="tool-panel" style="margin-top:18px"><h3>รอบย้อนหลังที่เก็บไว้</h3><div class="usage-history-list">${rounds.map((r,i)=>`<div class="usage-history-item"><span><b>${i===0?'ล่าสุด · ':''}${usageRoundLabel(r)}</b><small>${Object.keys(r.items||{}).length} รายการ · ${esc(r.createdBy||"ระบบ")}</small></span><span class="badge">${i===0?'รอบใหม่':`ย้อนหลัง ${i}`}</span></div>`).join("")}</div></section>`:""}`}</main>`
 }
@@ -1172,6 +1838,23 @@ function renderMemo(){if(!state.memoLoaded&&!state.memoLoading)setTimeout(loadMe
 function firebaseSafeKey(value){return String(value||"").replace(/[.#$\[\]\/]/g,"_")}
 function daysBetween(a,b){const x=startOfDay(a),y=startOfDay(b);return Math.ceil((y-x)/86400000)}
 function prettyDateKey(key){if(!key)return "—";return new Intl.DateTimeFormat("th-TH",{day:"numeric",month:"short",year:"numeric"}).format(new Date(key+"T00:00:00"))}
+
+let ageCatalogLoading={expiry:false,openmemo:false};
+
+async function ensureAgePageData(kind){
+  if(ageCatalogLoading[kind])return;
+  ageCatalogLoading[kind]=true;
+  try{
+    // Age tools must use the exact same catalog/source as Store.
+    if(!state.catalogLoaded||!products.length)await syncStoreCatalog();
+    if(kind==="expiry"&&!state.expiryLoaded)await loadExpiryData(true);
+    if(kind==="openmemo"&&!state.openLoaded)await loadOpenData(true);
+  }finally{
+    ageCatalogLoading[kind]=false;
+    if(state.view===kind)render();
+  }
+}
+
 function productByAnyId(id){return products.find(p=>String(p.id)===String(id)||String(p.code)===String(id))}
 
 async function ensureExpiryRulesLoaded(){
@@ -1182,7 +1865,7 @@ async function loadExpiryData(silent=false){
   if(state.expiryLoading)return;state.expiryLoading=true;if(state.view==="expiry"&&!silent)render();
   try{const [rr,lr]=await Promise.all([fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules.json`),fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots.json`)]);state.expiryRules=rr.ok?(await rr.json()||{}):{};const raw=lr.ok?(await lr.json()||{}):{};state.expiryLots=Object.entries(raw).map(([id,x])=>({id,...x}));state.expiryLoaded=true}catch(e){if(!silent)toast("ดึงข้อมูลวันหมดอายุไม่สำเร็จ")}finally{state.expiryLoading=false;if(state.view==="expiry"&&!silent)render()}
 }
-function expiryRuleFor(p){return state.expiryRules?.[firebaseSafeKey(p.id)]||state.expiryRules?.[firebaseSafeKey(p.code)]||null}
+function expiryRuleFor(p){return state.expiryRules?.[firebaseSafeKey(p.id)]||state.expiryRules?.[firebaseSafeKey(p.code)]||Object.values(state.expiryRules||{}).find(x=>String(x?.productId)===String(p.id)||String(x?.code)===String(p.code))||null}
 function trackedExpiryProducts(){return products.filter(p=>productCategory(p)==="chill"&&!expiryRuleFor(p))}
 async function saveExpiryRule(event){event.preventDefault();const f=new FormData(event.currentTarget),id=String(f.get("product")||""),days=Math.floor(Number(f.get("days")||0)),p=productByAnyId(id);if(!p){toast("กรุณาเลือกสินค้า");return}const key=firebaseSafeKey(p.id);if(!Number.isFinite(days)||days<1){toast("จำนวนวันต้องอย่างน้อย 1 วัน");return}try{const check=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json?t=${Date.now()}`,{cache:"no-store"}),existing=check.ok?await check.json():null;if(existing){state.expiryRules[key]=existing;render();toast("สินค้านี้ตั้งค่าติดตามอายุไว้แล้ว หากต้องการแก้ให้ลบรายการเดิมก่อน");return}const payload={productId:p.id,code:p.code,easy:p.easy,days,updatedAt:new Date().toISOString(),updatedBy:activeEmployee()?.nick||""};const saved=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!saved.ok)throw new Error("firebase");state.expiryRules[key]=payload;render();toast(`ตั้งเตือน ${p.easy} หลังรับเข้า ${days} วันแล้ว`)}catch(e){toast("บันทึกการตั้งค่าไม่สำเร็จ")}}
 async function removeExpiryRule(id){const p=productByAnyId(id);if(!p)return;if(!confirm(`หยุดติดตามวันหมดอายุของ ${p.easy} หรือไม่?\nล็อตเดิมที่สร้างไว้จะยังคงอยู่จนกดรับทราบ`))return;const key=firebaseSafeKey(p.id);try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_rules/${key}.json`,{method:"DELETE"});delete state.expiryRules[key];render();toast("หยุดติดตามสินค้านี้แล้ว")}catch(e){toast("แก้การตั้งค่าไม่สำเร็จ")}}
@@ -1190,9 +1873,9 @@ function expiryRisk(lot){const d=daysBetween(new Date(),new Date(lot.reviewDate+
 async function acknowledgeExpiry(id){const lot=state.expiryLots.find(x=>x.id===id),user=activeEmployee();if(!lot||!user)return;if(!confirm(`ตรวจ ${lot.easy||lot.code} แล้ว และนำรายการนี้ออกจากหน้าเตือนใช่หรือไม่?`))return;const patch={acknowledged:true,acknowledgedAt:new Date().toISOString(),acknowledgedBy:user.nick,acknowledgedById:user.id};try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots/${id}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(patch)});Object.assign(lot,patch);render();toast(`รับทราบแล้ว · ${user.nick}`)}catch(e){toast("กดรับทราบไม่สำเร็จ")}}
 function expiryCounts(lots){return {overdue:lots.filter(x=>expiryRisk(x).days<0).length,today:lots.filter(x=>expiryRisk(x).days===0).length,three:lots.filter(x=>{const d=expiryRisk(x).days;return d>0&&d<=3}).length,seven:lots.filter(x=>{const d=expiryRisk(x).days;return d>3&&d<=7}).length}}
 function renderExpiry(){
-  if(!state.expiryLoaded){
-    if(!state.expiryLoading)setTimeout(()=>loadExpiryData(),0);
-    return `${header(true,"ติดตามอายุสินค้า")}<main class="shell"><div class="page-head"><div class="head-text"><div class="eyebrow">STORE AGE WATCH</div><h1 class="page-title">ติดตามอายุสินค้า</h1></div></div><div class="age-loading">กำลังโหลดข้อมูลอายุสินค้า…</div></main>`;
+  if(!state.catalogLoaded||!products.length||!state.expiryLoaded){
+    if(!ageCatalogLoading.expiry)setTimeout(()=>ensureAgePageData("expiry"),0);
+    return `${header(true,"ติดตามอายุสินค้า")}<main class="shell"><div class="page-head"><div class="head-text"><div class="eyebrow">STORE AGE WATCH</div><h1 class="page-title">ติดตามอายุสินค้า</h1></div></div><div class="age-loading">กำลังดึงรายการสินค้าจากสโตร์และข้อมูลอายุ…</div></main>`;
   }
   const active=state.expiryLots.filter(x=>state.expiryShowAck?x.acknowledged:!x.acknowledged).sort((a,b)=>{const ra=expiryRisk(a),rb=expiryRisk(b);return ra.rank-rb.rank||String(a.reviewDate||"").localeCompare(String(b.reviewDate||""))}),
         c=expiryCounts(state.expiryLots.filter(x=>!x.acknowledged)),
@@ -1205,7 +1888,7 @@ function renderExpiry(){
     <section class="age-manage">
       <div class="age-manage-head"><div><h3>⚙ จัดการสินค้าที่ติดตาม</h3><p>เพิ่มสินค้า หยุดติดตาม และดูค่าที่ตั้งไว้ทั้งหมดจากด้านบนนี้</p></div><span class="age-manage-count">${configured.length} รายการ</span></div>
       <form class="form-grid" onsubmit="saveExpiryRule(event)">
-        <div class="field"><label>สินค้า</label><select name="product" required><option value="">${chill.length?"เลือกสินค้า Chill":"ตั้งค่าครบแล้ว"}</option>${chill.map(p=>`<option value="${esc(p.id)}">${esc(p.easy)} · ${esc(p.code)}</option>`).join("")}</select>${!chill.length?`<div class="config-empty-note">สินค้าที่ตั้งค่าแล้วจะไม่แสดงซ้ำ หากตั้งผิดให้ลบรายการเดิมก่อน</div>`:""}</div>
+        <div class="field"><label>สินค้า</label><select name="product" required><option value="">${chill.length?"เลือกสินค้า Chill":(products.length?"ไม่มีสินค้า Chill ที่ยังไม่ได้ตั้งค่า":"ยังไม่มีรายการสินค้าสตอ​ร์")}</option>${chill.map(p=>`<option value="${esc(p.id)}">${esc(p.easy)} · ${esc(p.code)}</option>`).join("")}</select>${!chill.length?`<div class="config-empty-note">${products.length?"สินค้า Chill ที่มีในสโตร์ถูกตั้งค่าครบ หรือไม่มีสินค้า Chill ที่ยังว่าง":"ยังโหลดรายการสินค้าสตอ​ร์ไม่ได้"}</div>`:""}</div>
         <div class="field"><label>หลังรับเข้า ให้เตือนใน</label><input name="days" type="number" min="1" step="1" inputmode="numeric" placeholder="เช่น 7" required></div>
         <div class="wide inline-actions"><button class="primary-btn" type="submit">บันทึกวันเตือน</button><span class="helper">รับเข้าแต่ละครั้งจะสร้างล็อตให้อัตโนมัติ</span></div>
       </form>
@@ -1219,7 +1902,7 @@ function renderExpiry(){
 }
 
 async function loadOpenData(silent=false){if(state.openLoading)return;state.openLoading=true;if(state.view==="openmemo"&&!silent)render();try{const [rr,mr]=await Promise.all([fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules.json`),fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_memos.json`)]);state.openRules=rr.ok?(await rr.json()||{}):{};const raw=mr.ok?(await mr.json()||{}):{};state.openMemos=Object.entries(raw).map(([id,x])=>({id,...x})).sort((a,b)=>String(a.expiryAt||a.expiryDate||"").localeCompare(String(b.expiryAt||b.expiryDate||"")));state.openLoaded=true}catch(e){if(!silent)toast("ดึงข้อมูลอายุหลังเปิดใช้ไม่สำเร็จ")}finally{state.openLoading=false;if(state.view==="openmemo"&&!silent)render()}}
-function openRuleFor(p){const r=state.openRules?.[firebaseSafeKey(p.id)]||{};return {openAmount:Number(r.openAmount??r.bagDays??0)||0,openUnit:r.openUnit||"day",transferAmount:Number(r.transferAmount??r.jarDays??0)||0,transferUnit:r.transferUnit||"day",...r}}
+function openRuleFor(p){const r=state.openRules?.[firebaseSafeKey(p.id)]||state.openRules?.[firebaseSafeKey(p.code)]||Object.values(state.openRules||{}).find(x=>String(x?.productId)===String(p.id)||String(x?.code)===String(p.code))||{};return {openAmount:Number(r.openAmount??r.bagDays??0)||0,openUnit:r.openUnit||"day",transferAmount:Number(r.transferAmount??r.jarDays??0)||0,transferUnit:r.transferUnit||"day",...r}}
 function ruleText(amount,unit){if(!amount)return "";return unit==="hour"?`${amount} ชม.`:`${amount} วัน`}
 async function saveOpenRule(event){event.preventDefault();const f=new FormData(event.currentTarget),p=productByAnyId(String(f.get("product")||""));if(!p){toast("กรุณาเลือกสินค้า");return}const openAmount=Math.max(0,Number(f.get("openAmount")||0)),transferAmount=Math.max(0,Number(f.get("transferAmount")||0)),openUnit=String(f.get("openUnit")||"day"),transferUnit=String(f.get("transferUnit")||"day");if(!openAmount&&!transferAmount){toast("ใส่อย่างน้อย 1 แบบ");return}const key=firebaseSafeKey(p.id);try{const check=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json?t=${Date.now()}`,{cache:"no-store"}),existing=check.ok?await check.json():null;if(existing){state.openRules[key]=existing;render();toast("สินค้านี้ตั้งค่าอายุไว้แล้ว หากตั้งผิดให้ลบรายการเดิมก่อน");return}const payload={productId:p.id,code:p.code,easy:p.easy,openAmount,openUnit,transferAmount,transferUnit,updatedAt:new Date().toISOString(),updatedBy:activeEmployee()?.nick||""};const saved=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!saved.ok)throw new Error("firebase");state.openRules[key]=payload;render();toast("บันทึกอายุหลังเปิดใช้แล้ว")}catch(e){toast("บันทึกไม่สำเร็จ")}}
 async function removeOpenRule(id){const p=productByAnyId(id);if(!p)return;if(!confirm(`ลบการตั้งค่าอายุของ ${p.easy} หรือไม่?`))return;const key=firebaseSafeKey(p.id);try{await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_open_rules/${key}.json`,{method:"DELETE"});delete state.openRules[key];render();toast("ลบการตั้งค่าแล้ว")}catch(e){toast("ลบไม่สำเร็จ")}}
@@ -1246,9 +1929,9 @@ function openLifeRuleCard(p){
 }
 function filterOpenLife(){const q=(document.getElementById("openLifeSearch")?.value||"").trim().toLowerCase();document.querySelectorAll("[data-openlife]").forEach(el=>{el.style.display=!q||el.dataset.openlife.includes(q)?"":"none"})}
 function renderOpenMemo(){
-  if(!state.openLoaded){
-    if(!state.openLoading)setTimeout(()=>loadOpenData(),0);
-    return `${header(true,"อายุใช้งานสินค้า")}<main class="shell"><section class="openlife-hero"><div class="eyebrow">OPEN-USE GUIDE</div><h1>อายุใช้งานสินค้า</h1></section><div class="age-loading">กำลังโหลดข้อมูลอายุใช้งาน…</div></main>`;
+  if(!state.catalogLoaded||!products.length||!state.openLoaded){
+    if(!ageCatalogLoading.openmemo)setTimeout(()=>ensureAgePageData("openmemo"),0);
+    return `${header(true,"อายุใช้งานสินค้า")}<main class="shell"><section class="openlife-hero"><div class="eyebrow">OPEN-USE GUIDE</div><h1>อายุใช้งานสินค้า</h1></section><div class="age-loading">กำลังดึงรายการสินค้าจากสโตร์และข้อมูลอายุ…</div></main>`;
   }
 
   const rules=products.filter(p=>{const r=openRuleFor(p);return r.openAmount||r.transferAmount}),
@@ -1260,7 +1943,7 @@ function renderOpenMemo(){
     <section class="age-manage">
       <div class="age-manage-head"><div><h3>⚙ จัดการอายุสินค้า</h3><p>เพิ่มสินค้า ลบค่าที่ตั้งผิด และดูค่าทั้งหมดจากด้านบนนี้</p></div><span class="age-manage-count">${rules.length} รายการ</span></div>
       <form class="form-grid" onsubmit="saveOpenRule(event)">
-        <div class="field wide"><label>สินค้า</label><select name="product" required><option value="">${availableProducts.length?"เลือกสินค้า":"ตั้งค่าครบแล้ว"}</option>${availableProducts.map(p=>`<option value="${esc(p.id)}">${esc(p.easy)} · ${esc(p.code)}</option>`).join("")}</select>${!availableProducts.length?`<div class="config-empty-note">สินค้าที่ตั้งค่าแล้วจะไม่แสดงซ้ำ หากตั้งผิดให้ลบรายการเดิมก่อน</div>`:""}</div>
+        <div class="field wide"><label>สินค้า</label><select name="product" required><option value="">${availableProducts.length?"เลือกสินค้าจากสโตร์":(products.length?"สินค้าสตอ​ร์ถูกตั้งค่าครบแล้ว":"ยังไม่มีรายการสินค้าสตอ​ร์")}</option>${availableProducts.map(p=>`<option value="${esc(p.id)}">${esc(p.easy)} · ${esc(p.code)}</option>`).join("")}</select>${!availableProducts.length?`<div class="config-empty-note">${products.length?"สินค้าที่ตั้งค่าแล้วจะไม่แสดงซ้ำ หากตั้งผิดให้ลบรายการเดิมก่อน":"ยังโหลดรายการสินค้าสตอ​ร์ไม่ได้"}</div>`:""}</div>
         <div class="field"><label>เปิดบรรจุภัณฑ์</label><input name="openAmount" type="number" min="0" step="1" inputmode="numeric" placeholder="จำนวน"></div>
         <div class="field"><label>หน่วย</label><select name="openUnit"><option value="day">วัน</option><option value="hour">ชั่วโมง</option></select></div>
         <div class="field"><label>ย้ายบรรจุภัณฑ์</label><input name="transferAmount" type="number" min="0" step="1" inputmode="numeric" placeholder="จำนวน"></div>
@@ -1432,8 +2115,23 @@ async function createExpiryLotsForReceive(lines,now,user){await ensureExpiryRule
 
 let lastRenderedView=state.view;
 
-function render(){const views={who:renderWho,home:renderHome,schedule:()=>renderSchedule(false),day:()=>renderSchedule(true),person:renderPerson,store:renderStore,history:renderHistory,counting:renderCounting,usage:renderUsage,memo:renderMemo,openmemo:renderOpenMemo,expiry:renderExpiry,qr:renderQr,scanner:renderScanner,leave:renderLeave};const sameView=lastRenderedView===state.view,keepY=sameView?window.scrollY:0;document.body.classList.toggle("home-body",state.view==="home");document.body.dataset.view=state.view;const content=(views[state.view]||renderHome)();document.getElementById("app").innerHTML=content+(state.view!=="who"?bottomNav():"");lastRenderedView=state.view;ensureGlobalUx();if(sameView&&keepY>0)requestAnimationFrame(()=>window.scrollTo({top:keepY,left:0,behavior:'instant'}))}
-window.addEventListener("popstate",event=>{if(state.modal){closeModal(true);return}if(state.scheduleEditor){closeScheduleEditor(true);return}if(state.rosterModal){closeRosterModal(true);return}if(state.memoModal){closeMemoModal(true);return}if(state.pdfViewer){closePdfViewer(true);return}const target=event.state?.view||location.hash.replace("#","")||"home";state.view=target;render();window.scrollTo(0,0)});
+function render(){
+  const views={who:renderWho,home:renderHome,schedule:()=>renderSchedule(false),day:()=>renderSchedule(true),person:renderPerson,store:renderStore,history:renderHistory,counting:renderCounting,usage:renderUsage,memo:renderMemo,openmemo:renderOpenMemo,expiry:renderExpiry,qr:renderQr,scanner:renderScanner,leave:renderLeave},
+        sameView=lastRenderedView===state.view,keepY=sameView?window.scrollY:0;
+  document.body.classList.toggle("home-body",state.view==="home");document.body.dataset.view=state.view;
+  const content=(views[state.view]||renderHome)();
+  document.getElementById("app").innerHTML=content+(state.view!=="who"?bottomNav():"")+renderUpdateChip()+renderUpdateCenter();
+  lastRenderedView=state.view;ensureGlobalUx();
+  if(!updateCenter.modal&&viewNeedsUpdate(state.view))setTimeout(()=>openUpdateCenter(state.view),0);
+  if(sameView&&keepY>0)requestAnimationFrame(()=>window.scrollTo({top:keepY,left:0,behavior:'instant'}))
+}
+window.addEventListener("popstate",event=>{
+  if(updateCenter.modal){if(!updateCenter.gateView){updateCenter.modal=false;updateCenter.gateView=null;render()}return}
+  if(state.modal){closeModal(true);return}if(state.scheduleEditor){closeScheduleEditor(true);return}if(state.rosterModal){closeRosterModal(true);return}if(state.memoModal){closeMemoModal(true);return}if(state.pdfViewer){closePdfViewer(true);return}
+  const target=event.state?.view||location.hash.replace("#","")||"home";
+  if(viewNeedsUpdate(target)){openUpdateCenter(target);return}
+  state.view=target;render();window.scrollTo(0,0)
+});
 const initialHash=location.hash.replace("#","");if(initialHash&&["who","home","schedule","day","person","store","history","counting","usage","memo","openmemo","expiry","qr","scanner","leave"].includes(initialHash))state.view=initialHash;window.history.replaceState({view:state.view},"",`#${state.view}`);
 seedScheduleFromSourceImage();
 render();
@@ -1443,6 +2141,7 @@ loadExpiryData(true);
 loadOpenData(true);
 loadLeaveData(true);
 startStoreRealtime();
+setTimeout(()=>checkForUpdates(false),1800);
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 </script>
 </body>
