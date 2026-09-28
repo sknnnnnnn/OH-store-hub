@@ -10,7 +10,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon-192.png">
   <title>OH Store Hub</title>
-  <script id="oh-update-manifest" type="application/json">{"version":"8.6.30","label":"V8.6.30","level":"recommended","requiredFeatures":[],"changes":["แก้อัปโหลดรูปตารางที่ขึ้น getFullYear จากวันที่ว่าง/ไม่ถูกต้อง","เพิ่มตัวป้องกันวันที่ของรอบตาราง 21 → 20 ก่อนสร้างตาราง","ถ้าหารอบถัดไปไม่ได้ ระบบใช้รอบที่เหมาะสมจากวันที่ปัจจุบันแทนการ Error","ข้อความผิดพลาดการอัปโหลดรูปอ่านง่ายขึ้น"],"releases":[{"version":"8.6.26","features":[{"id":"postit","introduced":"8.6.24","titleNew":"เพิ่ม Post-it","titleUpdate":"ปรับปรุง Post-it","descriptionNew":"แปะโน้ต ลากย้าย ย่อเก็บ เปลี่ยนสี ปักหมุด ทำเสร็จ ตั้งเตือน และเลือกให้แสดงทุกหน้าหรือเฉพาะหน้าได้","descriptionUpdate":"ลากลื่นขึ้น แปะอยู่กับพื้นที่หน้าเว็บและเลื่อนไปพร้อมหน้า แก้ปุ่มแก้ไข/ลบ และให้ใบที่แตะล่าสุดอยู่ด้านบน"},{"id":"home_shortcuts","introduced":"8.6.26","titleNew":"เพิ่มทางลัดบนหน้าหลัก","titleUpdate":"ปรับทางลัดบนหน้าหลัก","descriptionNew":"เข้า 16-Oh-stock, สั่งของ, MyHR และบันทึกอุณหภูมิตู้เย็นได้จากหน้าแรกทันที","descriptionUpdate":"ปรับทางลัดงานประจำบนหน้าหลักให้เข้าถึงง่ายขึ้น"},{"id":"usage","introduced":"8.6.12","titleNew":"เพิ่มการใช้วันนี้","titleUpdate":"ปรับการใช้วันนี้ให้อ่านเร็วขึ้น","descriptionNew":"ดูการใช้จริงจากหน้าร้านรอบก่อน + เบิกจากสโตร์ − หน้าร้านรอบล่าสุด","descriptionUpdate":"ย่อแต่ละสินค้าเป็นบรรทัดตัวเลข เช่น 2 → +0 → 1 = ใช้ 1 ถุง ลดข้อความซ้ำในรายการยาว"},{"id":"incoming","introduced":"8.6.23","titleNew":"เพิ่มของเข้าวันนี้","titleUpdate":"ปรับของเข้าวันนี้","descriptionNew":"ดึงใบของเข้าจาก Inventory และรับเข้า Store จากใน Hub ได้","descriptionUpdate":"เพิ่มพื้นที่ท้ายรายการเพื่อไม่ให้แถบรับเข้าบังสินค้าและเมนูด้านล่าง"}]},{"version":"8.6.27","features":[{"id":"update_alert","introduced":"8.6.21","titleNew":"เพิ่มระบบแจ้งอัปเดต","titleUpdate":"ปรับการแจ้งอัปเดตให้เห็นชัด","descriptionNew":"เมื่อมีเวอร์ชันใหม่ เครื่องจะแจ้งให้เห็นพร้อมสรุปว่ามีอะไรเพิ่มเข้ามา","descriptionUpdate":"เมื่อเครื่องตรวจพบเวอร์ชันใหม่ จะเปิดรายละเอียดอัปเดตให้เห็นชัด ไม่ต้องรอสังเกตปุ่มเล็ก ๆ เอง"},{"id":"incoming_manual_ack","introduced":"8.6.27","titleNew":"เพิ่ม ‘รับเข้าเองแล้ว’","titleUpdate":"ปรับการจัดการของเข้าวันนี้","descriptionNew":"ถ้าพนักงานเพิ่มของเข้า Store ด้วยมือไปแล้ว สามารถปิดใบโดยไม่บวกยอดซ้ำ และทุกเครื่องจะเห็นสถานะเดียวกัน","descriptionUpdate":"เพิ่มทางปิดใบที่รับเข้าด้วยมือ โดยไม่เพิ่มยอด Store ซ้ำ"},{"id":"incoming_duplicate_guard","introduced":"8.6.27","titleNew":"เพิ่มการกันรับของซ้ำ","titleUpdate":"เพิ่มการป้องกันรับของซ้ำ","descriptionNew":"ก่อนรับเข้าระบบจะตรวจสถานะส่วนกลางอีกครั้ง ถ้าใบถูกจัดการจากเครื่องอื่นแล้วจะไม่รับซ้ำ","descriptionUpdate":"ตรวจสถานะใบจากส่วนกลางอีกครั้งก่อนเพิ่มยอด Store เพื่อลดการรับซ้ำข้ามเครื่อง"}]},{"version":"8.6.28","features":[{"id":"incoming_tomorrow","introduced":"8.6.28","titleNew":"เพิ่มดูของเข้าพรุ่งนี้","titleUpdate":"เพิ่มการเตรียมรับของล่วงหน้า","descriptionNew":"หน้า ‘ของเข้า’ ดูได้ทั้งวันนี้และพรุ่งนี้ เพื่อเช็กว่ามีกี่ใบ สินค้าอะไร จำนวนเท่าไร และมาจากคลังไหน","descriptionUpdate":"เพิ่มแท็บพรุ่งนี้ในหน้าของเข้า โดยพรุ่งนี้ดูได้อย่างเดียวและยังรับเข้า Store ไม่ได้"}]},{"version":"8.6.29","features":[{"id":"ui_polish_final","introduced":"8.6.29","titleNew":"ปรับหน้าตาและการใช้งานทั้งระบบ","titleUpdate":"ปรับ UX/UI ทั้งระบบ","descriptionNew":"จัดรูปแบบปุ่ม การ์ด หน้าต่างแจ้งเตือน เมนูล่าง และหน้ารายการให้สวย อ่านง่าย และกดสะดวกบนทุกขนาดจอ","descriptionUpdate":"เก็บรายละเอียด UX/UI และแก้จุดเล็ก ๆ ที่อาจรบกวนการใช้งานบนมือถือ iPad และคอม"},{"id":"backend_compat_check","introduced":"8.6.29","titleNew":"ตรวจ Apps Script แบบเข้ากันได้","titleUpdate":"แก้แจ้ง Apps Script เวอร์ชันเก่าซ้ำ","descriptionNew":"ระบบตรวจว่าฝั่ง Apps Script รองรับงานที่ต้องใช้จริง โดยไม่บังคับให้เลขเวอร์ชันตรงกันเป๊ะ","descriptionUpdate":"Backend ที่ใหม่กว่าจะไม่ถูกแจ้งว่าเก่าอีก และข้อความเตือนจะขึ้นเฉพาะเมื่อใช้งานความสามารถที่จำเป็นไม่ได้จริง"},{"id":"update_wakeup","introduced":"8.6.29","titleNew":"แจ้งอัปเดตเมื่อกลับเข้าแอป","titleUpdate":"ทำ Update Center ให้ตรวจอัปเดตสม่ำเสมอขึ้น","descriptionNew":"เมื่อกลับเข้าเว็บหรือเปิดทิ้งไว้ ระบบจะตรวจเวอร์ชันใหม่เป็นระยะเพื่อให้พนักงานเห็นอัปเดตเร็วขึ้น","descriptionUpdate":"เพิ่มการตรวจตอนกลับเข้าแอปและตรวจซ้ำเบื้องหลัง ลดโอกาสเครื่องพนักงานค้างเวอร์ชันเก่า"}]},{"version":"8.6.30","features":[{"id":"schedule_image_date_guard","introduced":"8.6.30","titleNew":"อัปโหลดรูปตารางได้เสถียรขึ้น","titleUpdate":"แก้ปัญหาอัปโหลดรูปตาราง","descriptionNew":"ระบบตรวจและสร้างรอบตาราง 21 → 20 ให้ครบก่อนอ่านรูป ลดปัญหาวันที่ว่างทำให้การอัปโหลดหยุด","descriptionUpdate":"แก้ Error getFullYear จากวันที่ไม่พร้อม และเพิ่ม fallback รอบตารางอัตโนมัติ"}]}]}</script>
+  <script id="oh-update-manifest" type="application/json">{"version":"8.6.31","label":"V8.6.31","level":"recommended","requiredFeatures":[],"changes":["จัด UX/UI ทั้งเว็บให้ใช้ภาษาออกแบบเดียวกัน","จัดหน้าหลักใหม่ให้เห็นลำดับ งานหลัก → งานประจำ → ทางลัด → เครื่องมือ","ปรับสี การ์ด ปุ่ม ช่องกรอก Modal และแถบเมนูให้สม่ำเสมอ","ลดสีที่กระจัดกระจายและเพิ่มพื้นที่หายใจบนมือถือ"],"releases":[{"version":"8.6.26","features":[{"id":"postit","introduced":"8.6.24","titleNew":"เพิ่ม Post-it","titleUpdate":"ปรับปรุง Post-it","descriptionNew":"แปะโน้ต ลากย้าย ย่อเก็บ เปลี่ยนสี ปักหมุด ทำเสร็จ ตั้งเตือน และเลือกให้แสดงทุกหน้าหรือเฉพาะหน้าได้","descriptionUpdate":"ลากลื่นขึ้น แปะอยู่กับพื้นที่หน้าเว็บและเลื่อนไปพร้อมหน้า แก้ปุ่มแก้ไข/ลบ และให้ใบที่แตะล่าสุดอยู่ด้านบน"},{"id":"home_shortcuts","introduced":"8.6.26","titleNew":"เพิ่มทางลัดบนหน้าหลัก","titleUpdate":"ปรับทางลัดบนหน้าหลัก","descriptionNew":"เข้า 16-Oh-stock, สั่งของ, MyHR และบันทึกอุณหภูมิตู้เย็นได้จากหน้าแรกทันที","descriptionUpdate":"ปรับทางลัดงานประจำบนหน้าหลักให้เข้าถึงง่ายขึ้น"},{"id":"usage","introduced":"8.6.12","titleNew":"เพิ่มการใช้วันนี้","titleUpdate":"ปรับการใช้วันนี้ให้อ่านเร็วขึ้น","descriptionNew":"ดูการใช้จริงจากหน้าร้านรอบก่อน + เบิกจากสโตร์ − หน้าร้านรอบล่าสุด","descriptionUpdate":"ย่อแต่ละสินค้าเป็นบรรทัดตัวเลข เช่น 2 → +0 → 1 = ใช้ 1 ถุง ลดข้อความซ้ำในรายการยาว"},{"id":"incoming","introduced":"8.6.23","titleNew":"เพิ่มของเข้าวันนี้","titleUpdate":"ปรับของเข้าวันนี้","descriptionNew":"ดึงใบของเข้าจาก Inventory และรับเข้า Store จากใน Hub ได้","descriptionUpdate":"เพิ่มพื้นที่ท้ายรายการเพื่อไม่ให้แถบรับเข้าบังสินค้าและเมนูด้านล่าง"}]},{"version":"8.6.27","features":[{"id":"update_alert","introduced":"8.6.21","titleNew":"เพิ่มระบบแจ้งอัปเดต","titleUpdate":"ปรับการแจ้งอัปเดตให้เห็นชัด","descriptionNew":"เมื่อมีเวอร์ชันใหม่ เครื่องจะแจ้งให้เห็นพร้อมสรุปว่ามีอะไรเพิ่มเข้ามา","descriptionUpdate":"เมื่อเครื่องตรวจพบเวอร์ชันใหม่ จะเปิดรายละเอียดอัปเดตให้เห็นชัด ไม่ต้องรอสังเกตปุ่มเล็ก ๆ เอง"},{"id":"incoming_manual_ack","introduced":"8.6.27","titleNew":"เพิ่ม ‘รับเข้าเองแล้ว’","titleUpdate":"ปรับการจัดการของเข้าวันนี้","descriptionNew":"ถ้าพนักงานเพิ่มของเข้า Store ด้วยมือไปแล้ว สามารถปิดใบโดยไม่บวกยอดซ้ำ และทุกเครื่องจะเห็นสถานะเดียวกัน","descriptionUpdate":"เพิ่มทางปิดใบที่รับเข้าด้วยมือ โดยไม่เพิ่มยอด Store ซ้ำ"},{"id":"incoming_duplicate_guard","introduced":"8.6.27","titleNew":"เพิ่มการกันรับของซ้ำ","titleUpdate":"เพิ่มการป้องกันรับของซ้ำ","descriptionNew":"ก่อนรับเข้าระบบจะตรวจสถานะส่วนกลางอีกครั้ง ถ้าใบถูกจัดการจากเครื่องอื่นแล้วจะไม่รับซ้ำ","descriptionUpdate":"ตรวจสถานะใบจากส่วนกลางอีกครั้งก่อนเพิ่มยอด Store เพื่อลดการรับซ้ำข้ามเครื่อง"}]},{"version":"8.6.28","features":[{"id":"incoming_tomorrow","introduced":"8.6.28","titleNew":"เพิ่มดูของเข้าพรุ่งนี้","titleUpdate":"เพิ่มการเตรียมรับของล่วงหน้า","descriptionNew":"หน้า ‘ของเข้า’ ดูได้ทั้งวันนี้และพรุ่งนี้ เพื่อเช็กว่ามีกี่ใบ สินค้าอะไร จำนวนเท่าไร และมาจากคลังไหน","descriptionUpdate":"เพิ่มแท็บพรุ่งนี้ในหน้าของเข้า โดยพรุ่งนี้ดูได้อย่างเดียวและยังรับเข้า Store ไม่ได้"}]},{"version":"8.6.29","features":[{"id":"ui_polish_final","introduced":"8.6.29","titleNew":"ปรับหน้าตาและการใช้งานทั้งระบบ","titleUpdate":"ปรับ UX/UI ทั้งระบบ","descriptionNew":"จัดรูปแบบปุ่ม การ์ด หน้าต่างแจ้งเตือน เมนูล่าง และหน้ารายการให้สวย อ่านง่าย และกดสะดวกบนทุกขนาดจอ","descriptionUpdate":"เก็บรายละเอียด UX/UI และแก้จุดเล็ก ๆ ที่อาจรบกวนการใช้งานบนมือถือ iPad และคอม"},{"id":"backend_compat_check","introduced":"8.6.29","titleNew":"ตรวจ Apps Script แบบเข้ากันได้","titleUpdate":"แก้แจ้ง Apps Script เวอร์ชันเก่าซ้ำ","descriptionNew":"ระบบตรวจว่าฝั่ง Apps Script รองรับงานที่ต้องใช้จริง โดยไม่บังคับให้เลขเวอร์ชันตรงกันเป๊ะ","descriptionUpdate":"Backend ที่ใหม่กว่าจะไม่ถูกแจ้งว่าเก่าอีก และข้อความเตือนจะขึ้นเฉพาะเมื่อใช้งานความสามารถที่จำเป็นไม่ได้จริง"},{"id":"update_wakeup","introduced":"8.6.29","titleNew":"แจ้งอัปเดตเมื่อกลับเข้าแอป","titleUpdate":"ทำ Update Center ให้ตรวจอัปเดตสม่ำเสมอขึ้น","descriptionNew":"เมื่อกลับเข้าเว็บหรือเปิดทิ้งไว้ ระบบจะตรวจเวอร์ชันใหม่เป็นระยะเพื่อให้พนักงานเห็นอัปเดตเร็วขึ้น","descriptionUpdate":"เพิ่มการตรวจตอนกลับเข้าแอปและตรวจซ้ำเบื้องหลัง ลดโอกาสเครื่องพนักงานค้างเวอร์ชันเก่า"}]},{"version":"8.6.30","features":[{"id":"schedule_image_date_guard","introduced":"8.6.30","titleNew":"อัปโหลดรูปตารางได้เสถียรขึ้น","titleUpdate":"แก้ปัญหาอัปโหลดรูปตาราง","descriptionNew":"ระบบตรวจและสร้างรอบตาราง 21 → 20 ให้ครบก่อนอ่านรูป ลดปัญหาวันที่ว่างทำให้การอัปโหลดหยุด","descriptionUpdate":"แก้ Error getFullYear จากวันที่ไม่พร้อม และเพิ่ม fallback รอบตารางอัตโนมัติ"}]},{"version":"8.6.31","features":[{"id":"unified_ui_system","introduced":"8.6.31","titleNew":"ปรับดีไซน์ OH Store Hub ให้เป็นระบบเดียวกัน","titleUpdate":"เก็บ UX/UI ทั้งเว็บให้เป็นอันหนึ่งอันเดียวกัน","descriptionNew":"จัดสี ขนาด การ์ด ปุ่ม ฟอร์ม Modal และหน้าหลักให้ใช้ภาษาภาพเดียวกันและอ่านง่ายขึ้นบนมือถือ","descriptionUpdate":"ลดความกระจัดกระจายของหน้าหลัก จัดลำดับกลุ่มงานใหม่ และปรับองค์ประกอบทั่วเว็บให้สม่ำเสมอ"}]}]}</script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Itim&family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap');
     :root{--ink:#162033;--muted:#667085;--line:#e7eaf0;--paper:#fff;--bg:#f4f6f9;--navy:#101828;--green:#16875b;--green-soft:#eaf8f1;--orange:#d76d18;--orange-soft:#fff3e8;--blue:#2774d8;--blue-soft:#eaf2ff;--red:#d92d20;--shadow:0 14px 38px rgba(16,24,40,.09);--radius:22px}
@@ -427,6 +427,155 @@
       *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
     }
 
+
+/* V8.6.31 · UNIFIED OH STORE HUB DESIGN SYSTEM */
+:root{
+  --oh-bg:#f5f6f3;--oh-surface:#ffffff;--oh-surface-2:#f8faf8;
+  --oh-ink:#202925;--oh-muted:#74807a;--oh-line:#e2e7e3;
+  --oh-green:#2f765d;--oh-green-soft:#eaf4ef;
+  --oh-orange:#d9772f;--oh-orange-soft:#fff1e6;
+  --oh-blue:#4775b8;--oh-blue-soft:#edf3fb;
+  --oh-red:#b95048;--oh-red-soft:#fbeceb;
+  --oh-radius:18px;--oh-radius-lg:24px;
+  --oh-shadow-soft:0 5px 18px rgba(31,45,38,.045);
+  --oh-shadow:0 12px 34px rgba(31,45,38,.075);
+}
+html{background:var(--oh-bg)}
+body{background:var(--oh-bg);color:var(--oh-ink);letter-spacing:0}
+body,button,input,select,textarea,table{font-family:"Itim","Noto Sans Thai",sans-serif}
+.shell{max-width:1120px}
+main:not(.home-space){padding-top:24px}
+.page-head{margin-bottom:20px}
+.page-title{color:var(--oh-ink);font-size:30px}
+.page-sub,.helper{color:var(--oh-muted)}
+.topbar{background:rgba(255,255,255,.92);border-bottom:1px solid var(--oh-line);backdrop-filter:blur(14px)}
+.topbar-inner{max-width:1120px}
+.brand-mark{background:var(--oh-green);box-shadow:none}
+.bottom-nav{background:rgba(255,255,255,.94)!important;border-top:1px solid var(--oh-line)!important;backdrop-filter:blur(16px)}
+.bottom-nav button{color:#7a8580}
+.bottom-nav button.active{color:var(--oh-green)}
+.bottom-nav button.active:before{background:var(--oh-green)!important}
+
+/* one card language everywhere */
+.module-card,.utility-card,.summary,.person-card,.stock-card,.usage-mobile-card,.incoming-doc,
+.tool-panel,.memo-card,.leave-card,.openlife-card,.expiry-card,.home-shortcut{
+  border:1px solid var(--oh-line)!important;
+  border-radius:var(--oh-radius)!important;
+  box-shadow:var(--oh-shadow-soft)!important;
+  background:var(--oh-surface);
+}
+.module-card:hover,.utility-card:hover,.person-card:hover,.home-shortcut:hover{box-shadow:var(--oh-shadow)!important}
+button,.action-btn,.ghost-btn,.primary-btn,.tiny-btn,.danger-btn{border-radius:13px}
+input,select,textarea,.search input{border-color:var(--oh-line)!important;border-radius:13px!important;background:#fff}
+input:focus,select:focus,textarea:focus,.search input:focus{border-color:#8ab3a2!important;box-shadow:0 0 0 3px rgba(47,118,93,.10)!important;outline:none}
+.modal-card,.modal-panel,.schedule-modal{border-radius:24px!important;box-shadow:0 24px 70px rgba(25,38,31,.16)!important}
+.badge,.pill,.tag{border-radius:999px}
+
+/* home hierarchy */
+.home-body,.home-space{background:var(--oh-bg)!important}
+.home-space{padding-top:22px!important;background:
+ radial-gradient(circle at 5% 0%,rgba(217,119,47,.08),transparent 26%),
+ radial-gradient(circle at 100% 30%,rgba(47,118,93,.07),transparent 28%),
+ var(--oh-bg)!important}
+.home-nav{margin-bottom:34px!important}
+.wordmark{color:var(--oh-ink);font-size:17px}
+.wordmark span{color:var(--oh-orange)}
+.current-user{background:#fff!important;border:1px solid var(--oh-line)!important;box-shadow:none!important}
+.home-layout{grid-template-columns:minmax(220px,.58fr) minmax(520px,1.42fr)!important;gap:38px!important}
+.home-intro{padding-top:16px!important;position:sticky;top:86px}
+.home-label{color:var(--oh-orange)!important;margin-bottom:12px!important}
+.home-intro h1{font-size:clamp(38px,4.5vw,56px)!important;color:var(--oh-ink)}
+.home-intro p{color:var(--oh-muted)!important;margin-top:14px!important}
+.home-date-line{margin-top:20px!important;color:#56625c!important}
+.home-profile-btn{background:#fff!important;border:1px solid var(--oh-line)!important;color:#5f6c65!important}
+.home-panel{background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;padding:0!important}
+
+/* hero + main modules */
+.feature-button{min-height:205px!important;border-radius:var(--oh-radius-lg)!important;
+ background:linear-gradient(135deg,#263c33 0%,#315746 100%)!important;
+ box-shadow:0 12px 30px rgba(39,75,59,.14)}
+.feature-button:before{background:#e89a56!important;opacity:.60!important}
+.feature-button h2{margin-top:22px!important}
+.feature-bottom{margin-top:27px!important}
+.quick-modules{gap:10px!important}
+.quick-module{min-height:132px!important;border-radius:var(--oh-radius)!important;padding:17px!important;box-shadow:none!important}
+.quick-module.schedule{background:var(--oh-blue-soft)!important;border-color:#dce6f5!important}
+.quick-module.count{background:var(--oh-green-soft)!important;border-color:#d9e9e1!important}
+.quick-module.store{background:var(--oh-orange-soft)!important;border-color:#f0dfd1!important}
+.quick-module h3{left:17px!important;bottom:34px!important;font-size:16px!important}
+.quick-module p{left:17px!important;bottom:14px!important}
+
+/* clear sections instead of one long pile */
+.home-section-label{display:flex;align-items:baseline;gap:9px;margin:22px 2px 9px;color:var(--oh-ink)}
+.home-section-label b{font-size:15px;font-weight:400}
+.home-section-label span{font-size:10px;color:var(--oh-muted)}
+.home-section-label.compact{margin-top:18px}
+.module-grid{gap:9px!important;margin-top:0!important}
+.module-card{min-height:105px!important;padding:15px!important}
+.module-card .module-icon{margin-bottom:10px!important}
+.module-card h3{font-size:15px!important}
+.module-card p{font-size:10px!important;color:var(--oh-muted)!important}
+.home-shortcuts{margin-top:0!important;gap:8px!important}
+.home-shortcut{min-height:58px!important;padding:10px!important;background:#fff!important}
+.home-shortcut-icon{width:36px!important;height:36px!important;background:var(--oh-surface-2)!important;font-size:18px!important}
+.home-shortcut b{font-size:13px!important;font-weight:400}
+.home-shortcut small{color:var(--oh-muted)!important}
+.home-tool-grid{margin:0 0 20px!important;gap:8px!important}
+.home-tool-grid .utility-card{min-height:76px!important;padding:12px!important;background:#fff!important}
+.home-tool-grid .utility-card b{font-size:13px!important;font-weight:400}
+.home-tool-grid .utility-card small{font-size:10px!important;color:var(--oh-muted)!important}
+.u-icon{background:var(--oh-surface-2)!important;border:1px solid var(--oh-line)!important}
+.home-footnote{color:#9aa39f!important;margin-top:18px!important}
+
+/* calmer status colors */
+.alert-high{border-color:#e8bbb7!important;background:#fffafa!important}
+.alert-watch{border-color:#eed8b8!important;background:#fffdf8!important}
+.tool-badge{box-shadow:none!important}
+
+/* mobile: compact, consistent, breathable */
+@media(max-width:760px){
+  .shell{padding-left:14px!important;padding-right:14px!important}
+  main:not(.home-space){padding-top:16px}
+  .page-title{font-size:27px}
+  .home-space{padding-top:14px!important;padding-bottom:92px!important}
+  .home-nav{margin-bottom:22px!important}
+  .home-layout{display:block!important}
+  .home-intro{position:static!important;padding:0 2px!important}
+  .home-label{font-size:10px!important;margin-bottom:7px!important}
+  .home-intro h1{font-size:34px!important}
+  .home-intro p{margin-top:8px!important}
+  .home-date-line{margin-top:13px!important}
+  .home-profile-btn{min-height:34px!important;margin-top:9px!important}
+  .home-panel{margin-top:18px!important;padding:0!important}
+  .feature-button{min-height:174px!important;padding:17px!important;border-radius:20px!important}
+  .feature-button h2{margin-top:15px!important;font-size:22px!important}
+  .feature-bottom{margin-top:19px!important}
+  .quick-modules{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important;margin-top:7px!important}
+  .quick-module{min-height:108px!important;padding:12px!important;display:block!important;border-radius:16px!important}
+  .quick-module .quick-icon{width:34px!important;height:34px!important}
+  .quick-module h3{position:static!important;margin:11px 0 2px!important;font-size:14px!important;white-space:nowrap}
+  .quick-module p{position:static!important;font-size:9px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .quick-module .corner-arrow{top:12px!important;right:12px!important;transform:none!important}
+  .home-section-label{margin:18px 2px 7px!important}
+  .home-section-label b{font-size:14px}
+  .module-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+  .module-card{min-height:102px!important;padding:11px!important;border-radius:16px!important}
+  .module-card h3{font-size:13px!important;line-height:1.2!important}
+  .module-card p{font-size:9px!important;line-height:1.25!important}
+  .home-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .home-shortcut{min-height:56px!important;border-radius:15px!important}
+  .home-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  .home-tool-grid .utility-card,.home-tool-grid .utility-card:nth-child(1),.home-tool-grid .utility-card:nth-child(2){min-height:72px!important;border-radius:15px!important}
+  .home-tool-grid .utility-card:nth-child(5),.home-tool-grid .utility-card.wide{grid-column:span 2}
+  .modal-card,.modal-panel,.schedule-modal{border-radius:20px!important}
+}
+@media(max-width:370px){
+  .quick-modules{grid-template-columns:1fr!important}
+  .quick-module{min-height:72px!important;padding:11px 48px 11px 11px!important;display:flex!important;align-items:center!important;gap:10px!important}
+  .quick-module h3{margin:0!important}
+  .quick-module p{margin-top:2px!important}
+}
+
 </style>
 </head>
 <body>
@@ -824,9 +973,9 @@ function renderHome(){
     <button class="feature-button" onclick="state.selectedEmployee='${user.id}';state.personMode='week';go('person')"><span class="feature-top"><span class="feature-tag">MY SCHEDULE</span><span class="feature-arrow">›</span></span><h2>ตารางของฉัน</h2><p>${esc(user.nick)} · ${myShift.label}</p><span class="feature-bottom"><span class="feature-count"><b>7</b><span>วันข้างหน้า</span></span><span class="home-avatars home-user-art">${avatarArt(user)}</span></span></button>
     <div class="quick-modules"><button class="quick-module schedule" onclick="go('schedule',{selectedDate:startOfDay(new Date())})"><span class="quick-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M8 3v4M16 3v4M3 10h18"></path></svg></span><span class="corner-arrow">›</span><h3>ตารางวันนี้</h3><p>${today.working} คนเข้างาน</p></button><button class="quick-module count" onclick="openCounting()"><span class="quick-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span><span class="corner-arrow">↗</span><h3>นับของ</h3><p>เปิดระบบที่ใช้งานอยู่</p></button>
     <button class="quick-module store" onclick="go('store')"><span class="quick-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"></path><path d="M8 21v-8h8v8M3 9h18"></path></svg></span><span class="corner-arrow">›</span><h3>สโตร์</h3><p>${storeSummary().low} รายการใกล้หมด</p></button></div>
-    <div class="module-grid"><button class="module-card incoming" onclick="go('incoming')"><span class="module-icon">🚚</span><h3>ของเข้า</h3><p>วันนี้ · พรุ่งนี้ จาก OKJ Inventory</p></button><button class="module-card usage" onclick="go('usage')"><span class="module-icon">↘</span><h3>การใช้วันนี้</h3><p>DAILY! + สโตร์</p></button><button class="module-card memo" onclick="go('memo')"><span class="module-icon">PDF</span><h3>Memo & Promotion</h3><p>ประกาศและโปรโมชั่น</p></button></div>
-    <div class="home-shortcuts"><a class="home-shortcut" href="https://docs.google.com/spreadsheets/d/1OyoRne2_qryU0K9k3fXo8sUufWS_wQmpGBSwPhUjlB0/edit" target="_blank" rel="noopener"><span class="home-shortcut-icon">📊</span><span><b>16-Oh-stock</b><small>Google Sheet</small></span></a><a class="home-shortcut" href="https://inventory.ohkajhu.com/login" target="_blank" rel="noopener"><span class="home-shortcut-icon">📦</span><span><b>สั่งของ</b><small>OH Inventory</small></span></a><a class="home-shortcut" href="https://myhr.ohkajhu.com/#/login" target="_blank" rel="noopener"><span class="home-shortcut-icon">👤</span><span><b>MyHR</b><small>ระบบพนักงาน</small></span></a><a class="home-shortcut" href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=KxlWgj4h0ku1WYRX2gP-V6gXwvd25vZCo_58lKPZI4xURDk4NFUzVklZWUJaRzBPVk9KUkVFVDNFMC4u&origin=QRCode" target="_blank" rel="noopener"><span class="home-shortcut-icon">🌡️</span><span><b>อุณหภูมิตู้เย็น</b><small>บันทึกอุณหภูมิ</small></span></a></div>
-    <div class="home-tool-grid"><button class="utility-card tool-expiry ${alerts.expiryClass}" onclick="go('expiry')"><span class="u-icon">◷</span><span class="u-chev">›</span><b>ติดตามอายุสินค้า</b><small>${alerts.expiryCount?`มี ${alerts.expiryCount} รายการต้องเช็ก`:'ล็อตในสโตร์'}</small>${alerts.expiryCount?`<span class="tool-badge ${alerts.expiryClass==='alert-watch'?'orange':''}">${alerts.expiryCount}</span>`:''}</button><button class="utility-card tool-openlife" onclick="go('openmemo')"><span class="u-icon">⏱</span><span class="u-chev">›</span><b>อายุใช้งานสินค้า</b><small>ดู Throwing จากวันนี้</small></button><button class="utility-card tool-leave ${alerts.leaveClass}" onclick="go('leave')"><span class="u-icon">✎</span><span class="u-chev">›</span><b>ลา / แจ้งเรื่อง</b><small>${alerts.leaveCount?`มีเรื่องใหม่ ${alerts.leaveCount}`:'บันทึกเรื่องตามวัน'}</small>${alerts.leaveCount?`<span class="tool-badge orange">${alerts.leaveCount}</span>`:''}</button><button class="utility-card tool-qr" onclick="go('qr')"><span class="u-icon">QR</span><span class="u-chev">›</span><b>QR ด่วน</b><small>เลข → QR</small></button><button class="utility-card wide tool-scan" onclick="go('scanner')"><span class="u-icon">▣</span><span class="u-chev">›</span><b>สแกนเป็น PDF</b><small>ถ่ายหลายหน้า → PDF → แชร์ LINE</small></button><button class="utility-card postit-toolbar-card" onclick="openPostitComposer()"><span class="u-icon">📝</span><span class="u-chev">＋</span><b>Post-it</b><small>แปะโน้ตบนหน้าจอ</small></button></div><div class="home-footnote">OH STORE · INTERNAL WORKSPACE</div>
+    <div class="home-section-label"><b>งานประจำร้าน</b><span>งานที่ใช้ระหว่างวัน</span></div><div class="module-grid"><button class="module-card incoming" onclick="go('incoming')"><span class="module-icon">🚚</span><h3>ของเข้า</h3><p>วันนี้ · พรุ่งนี้ จาก OKJ Inventory</p></button><button class="module-card usage" onclick="go('usage')"><span class="module-icon">↘</span><h3>การใช้วันนี้</h3><p>DAILY! + สโตร์</p></button><button class="module-card memo" onclick="go('memo')"><span class="module-icon">PDF</span><h3>Memo & Promotion</h3><p>ประกาศและโปรโมชั่น</p></button></div>
+    <div class="home-section-label compact"><b>ทางลัด</b><span>ระบบภายนอก</span></div><div class="home-shortcuts"><a class="home-shortcut" href="https://docs.google.com/spreadsheets/d/1OyoRne2_qryU0K9k3fXo8sUufWS_wQmpGBSwPhUjlB0/edit" target="_blank" rel="noopener"><span class="home-shortcut-icon">📊</span><span><b>16-Oh-stock</b><small>Google Sheet</small></span></a><a class="home-shortcut" href="https://inventory.ohkajhu.com/login" target="_blank" rel="noopener"><span class="home-shortcut-icon">📦</span><span><b>สั่งของ</b><small>OH Inventory</small></span></a><a class="home-shortcut" href="https://myhr.ohkajhu.com/#/login" target="_blank" rel="noopener"><span class="home-shortcut-icon">👤</span><span><b>MyHR</b><small>ระบบพนักงาน</small></span></a><a class="home-shortcut" href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=KxlWgj4h0ku1WYRX2gP-V6gXwvd25vZCo_58lKPZI4xURDk4NFUzVklZWUJaRzBPVk9KUkVFVDNFMC4u&origin=QRCode" target="_blank" rel="noopener"><span class="home-shortcut-icon">🌡️</span><span><b>อุณหภูมิตู้เย็น</b><small>บันทึกอุณหภูมิ</small></span></a></div>
+    <div class="home-section-label compact"><b>เครื่องมือ</b><span>ใช้เมื่อจำเป็น</span></div><div class="home-tool-grid"><button class="utility-card tool-expiry ${alerts.expiryClass}" onclick="go('expiry')"><span class="u-icon">◷</span><span class="u-chev">›</span><b>ติดตามอายุสินค้า</b><small>${alerts.expiryCount?`มี ${alerts.expiryCount} รายการต้องเช็ก`:'ล็อตในสโตร์'}</small>${alerts.expiryCount?`<span class="tool-badge ${alerts.expiryClass==='alert-watch'?'orange':''}">${alerts.expiryCount}</span>`:''}</button><button class="utility-card tool-openlife" onclick="go('openmemo')"><span class="u-icon">⏱</span><span class="u-chev">›</span><b>อายุใช้งานสินค้า</b><small>ดู Throwing จากวันนี้</small></button><button class="utility-card tool-leave ${alerts.leaveClass}" onclick="go('leave')"><span class="u-icon">✎</span><span class="u-chev">›</span><b>ลา / แจ้งเรื่อง</b><small>${alerts.leaveCount?`มีเรื่องใหม่ ${alerts.leaveCount}`:'บันทึกเรื่องตามวัน'}</small>${alerts.leaveCount?`<span class="tool-badge orange">${alerts.leaveCount}</span>`:''}</button><button class="utility-card tool-qr" onclick="go('qr')"><span class="u-icon">QR</span><span class="u-chev">›</span><b>QR ด่วน</b><small>เลข → QR</small></button><button class="utility-card wide tool-scan" onclick="go('scanner')"><span class="u-icon">▣</span><span class="u-chev">›</span><b>สแกนเป็น PDF</b><small>ถ่ายหลายหน้า → PDF → แชร์ LINE</small></button><button class="utility-card postit-toolbar-card" onclick="openPostitComposer()"><span class="u-icon">📝</span><span class="u-chev">＋</span><b>Post-it</b><small>แปะโน้ตบนหน้าจอ</small></button></div><div class="home-footnote">OH STORE · INTERNAL WORKSPACE</div>
   </section></div></div></main>`
 }
 function inventoryDocKey(id){return String(id||"").replace(/[^a-zA-Z0-9_-]/g,"_")}
