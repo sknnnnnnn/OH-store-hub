@@ -1921,14 +1921,10 @@ function startStoreRealtime(){
 
 
 function storeSheetItems(){
-  return products.map(p=>({
-    id:p.code,
-    name:p.real,
-    unit:p.unit,
-    stock:Number(storeSheetCentralSnapshot[p.id].stock),
-    updatedAt:storeSheetCentralSnapshot[p.id].last?.time||"",
-    updatedBy:p.last?.operator||""
-  }));
+  return Object.entries(storeSheetCentralSnapshot).map(([id,row])=>{
+    const p=productByAnyId(id);
+    return {id,name:p?.real||row.easy||id,unit:p?.unit||row.unit||'',stock:Number(row.stock),updatedAt:row.last?.time||'',updatedBy:row.last?.operator||''};
+  });
 }
 function cancelStoreSheetAutoSync(){
   if(storeSheetAutoTimer)clearTimeout(storeSheetAutoTimer);
@@ -1961,15 +1957,15 @@ async function writeStoreSheet(automatic=false){
     // ก่อนส่งชีต ดึงยอดกลางล่าสุดอีกครั้ง เพื่อรวมรายการจากเครื่องอื่นด้วย
     if(!await fetchCentralInventory(false))throw new Error("central_unavailable");
     if(storeTransport.pending())throw new Error("pending_transaction");
-    if(products.some(p=>!Object.prototype.hasOwnProperty.call(storeSheetCentralSnapshot,String(p.id))))throw new Error("missing_central_stock");
-    const operator=user?.nick||"Auto Sync";
+    if(!Object.keys(storeSheetCentralSnapshot).length)throw new Error("missing_central_stock");
+    const operator=user?.nick||"Auto Sync",items=storeSheetItems();
     const result=assertHubResponse(await sheetPost({
       mode:"storeSave",
       operator,
       operatorId:user?.id||"",
-      items:storeSheetItems()
+      items
     }),"storeSave");
-    if(result.count!==products.length)throw new Error("count_mismatch");
+    if(result.count!==items.length)throw new Error("count_mismatch");
     const syncedAt=new Date().toISOString();
     setStoreDirty(false);
     state.storeLastSync=syncedAt;

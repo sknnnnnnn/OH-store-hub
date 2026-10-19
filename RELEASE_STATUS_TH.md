@@ -16,8 +16,8 @@ Branch งาน: `work/final-stabilization-r3`. โค้ดหน้านี�
 | หน้า incoming ใช้ข้อมูลจริง | PASS เฉพาะการอ่าน | Browser เห็นเอกสารและรายการสินค้า; ไม่กดรับหรือเคลียร์; ปุ่มสองรายการถูกพักไว้ |
 | ทำซ้ำ Failed to fetch | BLOCKED: ทำซ้ำไม่ได้ในรอบนี้ | ไม่พบ error จากแอปใน log ที่บันทึก; พบ error ของ chrome-extension แยกต่างหาก จึงห้ามสรุปว่าต้นเหตุเดิมเป็น CORS หรือแก้หายถาวรแล้ว |
 | Firebase inventory GET | PASS เฉพาะสิทธิ์อ่าน | HTTP 200; พบ 205 child records ใน snapshot ที่ตรวจ ไม่มีการส่งธุรกรรมทดสอบไป Production |
-| ความครบถ้วนยอดกลาง | FAIL | `042-01-010-D` และ `042-01-011-D` มีเฉพาะ `easy`, `unit` ไม่มี `stock`; ยังไม่ทราบยอดที่ถูกต้อง ห้ามเดาเป็นศูนย์ |
-| ตรรกะ Store / Undo / ล็อต / คำตอบหาย / offline | PASS เฉพาะชุดทดสอบจำลอง | 23 tests, 0 failures; `evidence/all-tests.tap`; Node test runner และ VM เรียก handler จริง ไม่ใช่ Browser QA หรือ Firebase Emulator |
+| ความครบถ้วนยอดกลาง | FAIL | `042-01-010-D` และ `042-01-011-D` มีเฉพาะ `easy`, `unit` ไม่มี `stock`; ยังไม่ทราบยอดที่ถูกต้อง ห้ามเดาเป็นศูนย์; ตรวจประวัติกลาง 1,294 ธุรกรรมแล้วไม่พบ transaction lines ของสองรหัสนี้ จึงยังใช้ประวัติกู้ยอดไม่ได้ |
+| ตรรกะ Store / Undo / ล็อต / คำตอบหาย / offline | PASS เฉพาะชุดทดสอบจำลอง | 24 tests, 0 failures; `evidence/all-tests.tap`; Node test runner และ VM เรียก handler จริง ไม่ใช่ Browser QA หรือ Firebase Emulator |
 | Browser โค้ดใหม่ | BLOCKED | เบราว์เซอร์ปฏิเสธ file:// fixture ตาม URL policy; หยุดเส้นทางนี้ ไม่พยายามเลี่ยงข้อจำกัด |
 | Firebase staging จริง / security rules | BLOCKED | ไม่มี endpoint/ข้อมูลทดสอบที่แยกและ rules ให้ตรวจ; ไม่ใช้ production เพื่อทดสอบ PATCH |
 | Sheets POST / สำรอง / sync ครบวงจร | BLOCKED | ไม่มี Apps Script deployment และ spreadsheet สำหรับทดสอบแยก; ไม่ส่งยอดทดสอบทับชีตร้าน |
@@ -69,7 +69,7 @@ Branch งาน: `work/final-stabilization-r3`. โค้ดหน้านี�
 - `node --test --test-reporter=tap tests/*.test.cjs`
 - `node --check store-core.js`, `node --check store-transport.js`, `node --check sw.js` และ syntax check inline script ผ่าน.
 - `git diff --check` ผ่าน.
-- `evidence/all-tests.tap`: 23 tests PASS. ใช้ข้อมูลสังเคราะห์ทั้งหมด ไม่มีการเรียก production จาก tests.
+- `evidence/all-tests.tap`: 24 tests PASS. ใช้ข้อมูลสังเคราะห์ทั้งหมด ไม่มีการเรียก production จาก tests.
 - `tests/build-browser-fixture.py`: สร้างหน้า fixture แยกสำหรับทดสอบภายหลัง; ยังไม่ผ่าน Browser QA. ไม่มีการส่งต่อ fetch ไป Production.
 - ภาพ `evidence/live-update-gate.jpg`, DOM `evidence/live-snapshot.txt` และ console `evidence/live-console.json` เป็นหลักฐาน local ของ main เวอร์ชันเดิม ไม่เผยแพร่ข้อมูลร้านใน repository สาธารณะ.
 
