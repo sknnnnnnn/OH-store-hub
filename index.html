@@ -1050,7 +1050,7 @@ function getIncomingCache(day){const x=readIncomingCache()[incomingCacheSlot(day
 async function responseJsonSafe(r){const text=await r.text();try{return JSON.parse(text)}catch(e){const html=/^\s*</.test(text);throw new Error(html?"Apps Script ตอบกลับเป็นหน้าเว็บแทนข้อมูล — ต้อง Deploy Web app เวอร์ชันล่าสุด":"ข้อมูลจาก Apps Script ไม่ใช่ JSON")}}
 async function loadIncomingToday(silent=false,day=state.incomingDay||0){
   day=Number(day)||0;if(state.incomingLoading)return;state.incomingDay=day;
-  const cached=getIncomingCache(day);if(!state.incoming&&cached){state.incoming=cached;state.incomingSelected={}}
+  const cached=getIncomingCache(day);if(!state.incoming&&cached){state.incoming={...cached,stale:true};state.incomingSelected={}}
   state.incomingLoading=true;if(!silent&&state.view==="incoming"&&!state.incoming)render();
   try{
     const mode=day===0?"inventoryToday":"inventoryIncoming";
@@ -1064,7 +1064,7 @@ async function loadIncomingToday(silent=false,day=state.incomingDay||0){
     if(!silent&&!keep)toast(`ดึงของเข้า${day===1?"พรุ่งนี้":"วันนี้"}ไม่สำเร็จ · ยังไม่มีข้อมูลล่าสุดในเครื่อง`)
   }finally{state.incomingLoading=false;if(state.view==="incoming"&&state.incomingDay===day&&!state.incomingReceiving)render()}
 }
-function setIncomingDay(day){day=Number(day)||0;if(state.incomingDay===day&&state.incoming){loadIncomingToday(true,day);return}state.incomingDay=day;state.incoming=getIncomingCache(day);state.incomingSelected={};render();loadIncomingToday(true,day)}
+function setIncomingDay(day){day=Number(day)||0;if(state.incomingDay===day&&state.incoming){loadIncomingToday(true,day);return}state.incomingDay=day;const dayCache=getIncomingCache(day);state.incoming=dayCache?{...dayCache,stale:true}:null;state.incomingSelected={};render();loadIncomingToday(true,day)}
 function toggleIncomingDoc(id,checked){state.incomingSelected[id]=Boolean(checked);render()}
 function incomingTotals(){const docs=state.incoming?.documents||[],active=docs.filter(d=>!d.received),items=active.reduce((n,d)=>n+(d.items||[]).length,0),qty=active.reduce((n,d)=>n+(d.items||[]).reduce((a,x)=>a+Number(x.request_qty||0),0),0);return {docs:active.length,items,qty}}
 function incomingLineKey(d,i){return inventoryDocKey(d.id)+"_"+i}
@@ -1967,7 +1967,8 @@ async function writeStoreSheet(automatic=false){
   if(state.view==="store")render();
   try{
     // ก่อนส่งชีต ดึงยอดกลางล่าสุดอีกครั้ง เพื่อรวมรายการจากเครื่องอื่นด้วย
-    await fetchCentralInventory(false);
+    const centralSnapshot=await fetchCentralInventory(false);
+    if(centralSnapshot===null)throw new Error('central_inventory_unavailable');
     const operator=user?.nick||"Auto Sync";
     const result=assertHubResponse(await sheetPost({
       mode:"storeSave",
@@ -2000,7 +2001,7 @@ async function writeStoreSheet(automatic=false){
       storeSheetAutoTimer=setTimeout(()=>autoSaveStoreToSheet(),30000);
       if(state.view==="store")render();
     }
-    toast(error.message==="wrong_deployment"?"หยุดบันทึก: Apps Script ยังเป็นเวอร์ชันเก่า":"ยังบันทึกลงชีตไม่สำเร็จ ข้อมูลใน Firebase ยังอยู่");
+    toast(error.message==="wrong_deployment"?"หยุดบันทึก: Apps Script ยังเป็นเวอร์ชันเก่า":error.message==="central_inventory_unavailable"?"หยุดส่งชีต: อ่านยอด Firebase ล่าสุดไม่ได้ เพื่อป้องกันยอดเก่าทับยอดใหม่":"ยังบันทึกลงชีตไม่สำเร็จ ข้อมูลใน Firebase ยังอยู่");
     return false;
   }finally{
     state.storeSyncing=false;
