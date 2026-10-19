@@ -1,5 +1,5 @@
-const CACHE_NAME = "oh-store-hub-v17";
-const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
+const CACHE_NAME = "oh-store-hub-v18";
+const APP_SHELL = ["./", "./index.html", "./store-core.js", "./store-transport.js", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
@@ -16,7 +16,7 @@ self.addEventListener("fetch", event => {
   if (request.mode === "navigate") {
     event.respondWith(fetch(request).then(response => {
       const copy = response.clone();
-      caches.open(CACHE_NAME).then(cache => cache.put("./index.html", copy));
+      caches.open(CACHE_NAME).then(cache => cache.put("./index.html", "./store-core.js", "./store-transport.js", copy));
       return response;
     }).catch(() => caches.match("./index.html")));
     return;
