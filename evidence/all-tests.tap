@@ -1,0 +1,148 @@
+TAP version 13
+# Subtest: actual app handler publishes only after atomic acknowledgement and Undo restores stock
+ok 1 - actual app handler publishes only after atomic acknowledgement and Undo restores stock
+  ---
+  duration_ms: 10.196928
+  type: 'test'
+  ...
+# Subtest: actual app offline leaves local stock and history unchanged
+ok 2 - actual app offline leaves local stock and history unchanged
+  ---
+  duration_ms: 1.79926
+  type: 'test'
+  ...
+# Subtest: actual app denied leaves local stock and history unchanged
+ok 3 - actual app denied leaves local stock and history unchanged
+  ---
+  duration_ms: 2.374663
+  type: 'test'
+  ...
+# Subtest: catalog update is read-only toward Firebase and ignores Sheet stock
+ok 4 - catalog update is read-only toward Firebase and ignores Sheet stock
+  ---
+  duration_ms: 1.919308
+  type: 'test'
+  ...
+# Subtest: Sheet restore is paused and sends no requests
+ok 5 - Sheet restore is paused and sends no requests
+  ---
+  duration_ms: 1.378756
+  type: 'test'
+  ...
+# Subtest: Sheet backup refuses unavailable central stock
+ok 6 - Sheet backup refuses unavailable central stock
+  ---
+  duration_ms: 1.519324
+  type: 'test'
+  ...
+# Subtest: Sheet backup rejects a central row with missing stock instead of exporting zero
+ok 7 - Sheet backup rejects a central row with missing stock instead of exporting zero
+  ---
+  duration_ms: 1.434358
+  type: 'test'
+  ...
+# Subtest: receive {} atomically plans stock/history/lots and Undo
+ok 8 - receive {} atomically plans stock/history/lots and Undo
+  ---
+  duration_ms: 2.888896
+  type: 'test'
+  ...
+# Subtest: issue {} atomically plans stock/history/lots and Undo
+ok 9 - issue {} atomically plans stock/history/lots and Undo
+  ---
+  duration_ms: 0.97724
+  type: 'test'
+  ...
+# Subtest: adjust {"target":6,"reason":"waste"} atomically plans stock/history/lots and Undo
+ok 10 - adjust {"target":6,"reason":"waste"} atomically plans stock/history/lots and Undo
+  ---
+  duration_ms: 0.24993
+  type: 'test'
+  ...
+# Subtest: adjust {"target":6,"reason":"forgot_issue"} atomically plans stock/history/lots and Undo
+ok 11 - adjust {"target":6,"reason":"forgot_issue"} atomically plans stock/history/lots and Undo
+  ---
+  duration_ms: 0.216641
+  type: 'test'
+  ...
+# Subtest: adjust {"target":14} atomically plans stock/history/lots and Undo
+ok 12 - adjust {"target":14} atomically plans stock/history/lots and Undo
+  ---
+  duration_ms: 0.362959
+  type: 'test'
+  ...
+# Subtest: fractional stock and FIFO lot allocation
+ok 13 - fractional stock and FIFO lot allocation
+  ---
+  duration_ms: 7.353239
+  type: 'test'
+  ...
+# Subtest: reject stale, missing, negative, invalid and duplicate stock before writes
+ok 14 - reject stale, missing, negative, invalid and duplicate stock before writes
+  ---
+  duration_ms: 0.677775
+  type: 'test'
+  ...
+# Subtest: Undo rejects changed inventory marker, value or lot without mutation
+ok 15 - Undo rejects changed inventory marker, value or lot without mutation
+  ---
+  duration_ms: 0.444399
+  type: 'test'
+  ...
+# Subtest: stale Sheet and cache cannot replace or drop any central balances
+ok 16 - stale Sheet and cache cannot replace or drop any central balances
+  ---
+  duration_ms: 0.45836
+  type: 'test'
+  ...
+# Subtest: single root PATCH commits every path once
+ok 17 - single root PATCH commits every path once
+  ---
+  duration_ms: 1.101654
+  type: 'test'
+  ...
+# Subtest: lost acknowledgement reconciles transaction id without second increment
+ok 18 - lost acknowledgement reconciles transaction id without second increment
+  ---
+  duration_ms: 1.556299
+  type: 'test'
+  ...
+# Subtest: offline before send preserves balances and journal, blocking duplicates
+ok 19 - offline before send preserves balances and journal, blocking duplicates
+  ---
+  duration_ms: 0.405902
+  type: 'test'
+  ...
+# Subtest: response lost then reload and reconnection recover committed operation
+ok 20 - response lost then reload and reconnection recover committed operation
+  ---
+  duration_ms: 0.521404
+  type: 'test'
+  ...
+# Subtest: Firebase rejects atomic write: stock, lots and history unchanged
+ok 21 - Firebase rejects atomic write: stock, lots and history unchanged
+  ---
+  duration_ms: 0.325994
+  type: 'test'
+  ...
+# Subtest: journal cannot be saved: no request is sent
+ok 22 - journal cannot be saved: no request is sent
+  ---
+  duration_ms: 0.234618
+  type: 'test'
+  ...
+# Subtest: multiple products are included in one atomic patch without dropping other balances
+ok 23 - multiple products are included in one atomic patch without dropping other balances
+  ---
+  duration_ms: 0.271372
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 106.957032

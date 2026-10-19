@@ -1,0 +1,5 @@
+# Generated fixture and private live data/screenshots are not published.
+tests/browser-fixture.html
+evidence/live-*
+evidence/store-tests.tap
+evidence/app-tests.tap

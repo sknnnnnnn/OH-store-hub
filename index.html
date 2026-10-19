@@ -10,7 +10,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon-192.png">
   <title>OH Store Hub</title>
-  <script id="oh-update-manifest" type="application/json">{"version":"8.6.42","label":"V8.6.42","level":"recommended","requiredFeatures":[],"changes":["รับสินค้าเข้าสโตร์แบบเลือกทีละรายการและเคลียร์ที่เหลือ","ลดการกระพริบจาก Firebase โดยอัปเดตยอดสินค้าเฉพาะจุด","ป้องกันการโหลดเบื้องหลังทำให้หน้านับของรีเซ็ต","แก้ข้อมูลของเข้าวันนี้และพรุ่งนี้สลับทับกัน"],"releases":[{"version":"8.6.26","features":[{"id":"postit","introduced":"8.6.24","titleNew":"เพิ่ม Post-it","titleUpdate":"ปรับปรุง Post-it","descriptionNew":"แปะโน้ต ลากย้าย ย่อเก็บ เปลี่ยนสี ปักหมุด ทำเสร็จ ตั้งเตือน และเลือกให้แสดงทุกหน้าหรือเฉพาะหน้าได้","descriptionUpdate":"ลากลื่นขึ้น แปะอยู่กับพื้นที่หน้าเว็บและเลื่อนไปพร้อมหน้า แก้ปุ่มแก้ไข/ลบ และให้ใบที่แตะล่าสุดอยู่ด้านบน"},{"id":"home_shortcuts","introduced":"8.6.26","titleNew":"เพิ่มทางลัดบนหน้าหลัก","titleUpdate":"ปรับทางลัดบนหน้าหลัก","descriptionNew":"เข้า 16-Oh-stock, สั่งของ, MyHR และบันทึกอุณหภูมิตู้เย็นได้จากหน้าแรกทันที","descriptionUpdate":"ปรับทางลัดงานประจำบนหน้าหลักให้เข้าถึงง่ายขึ้น"},{"id":"usage","introduced":"8.6.12","titleNew":"เพิ่มการใช้วันนี้","titleUpdate":"ปรับการใช้วันนี้ให้อ่านเร็วขึ้น","descriptionNew":"ดูการใช้จริงจากหน้าร้านรอบก่อน + เบิกจากสโตร์ − หน้าร้านรอบล่าสุด","descriptionUpdate":"ย่อแต่ละสินค้าเป็นบรรทัดตัวเลข เช่น 2 → +0 → 1 = ใช้ 1 ถุง ลดข้อความซ้ำในรายการยาว"},{"id":"incoming","introduced":"8.6.23","titleNew":"เพิ่มของเข้าวันนี้","titleUpdate":"ปรับของเข้าวันนี้","descriptionNew":"ดึงใบของเข้าจาก Inventory และรับเข้า Store จากใน Hub ได้","descriptionUpdate":"เพิ่มพื้นที่ท้ายรายการเพื่อไม่ให้แถบรับเข้าบังสินค้าและเมนูด้านล่าง"}]},{"version":"8.6.27","features":[{"id":"update_alert","introduced":"8.6.21","titleNew":"เพิ่มระบบแจ้งอัปเดต","titleUpdate":"ปรับการแจ้งอัปเดตให้เห็นชัด","descriptionNew":"เมื่อมีเวอร์ชันใหม่ เครื่องจะแจ้งให้เห็นพร้อมสรุปว่ามีอะไรเพิ่มเข้ามา","descriptionUpdate":"เมื่อเครื่องตรวจพบเวอร์ชันใหม่ จะเปิดรายละเอียดอัปเดตให้เห็นชัด ไม่ต้องรอสังเกตปุ่มเล็ก ๆ เอง"},{"id":"incoming_manual_ack","introduced":"8.6.27","titleNew":"เพิ่ม ‘รับเข้าเองแล้ว’","titleUpdate":"ปรับการจัดการของเข้าวันนี้","descriptionNew":"ถ้าพนักงานเพิ่มของเข้า Store ด้วยมือไปแล้ว สามารถปิดใบโดยไม่บวกยอดซ้ำ และทุกเครื่องจะเห็นสถานะเดียวกัน","descriptionUpdate":"เพิ่มทางปิดใบที่รับเข้าด้วยมือ โดยไม่เพิ่มยอด Store ซ้ำ"},{"id":"incoming_duplicate_guard","introduced":"8.6.27","titleNew":"เพิ่มการกันรับของซ้ำ","titleUpdate":"เพิ่มการป้องกันรับของซ้ำ","descriptionNew":"ก่อนรับเข้าระบบจะตรวจสถานะส่วนกลางอีกครั้ง ถ้าใบถูกจัดการจากเครื่องอื่นแล้วจะไม่รับซ้ำ","descriptionUpdate":"ตรวจสถานะใบจากส่วนกลางอีกครั้งก่อนเพิ่มยอด Store เพื่อลดการรับซ้ำข้ามเครื่อง"}]},{"version":"8.6.28","features":[{"id":"incoming_tomorrow","introduced":"8.6.28","titleNew":"เพิ่มดูของเข้าพรุ่งนี้","titleUpdate":"เพิ่มการเตรียมรับของล่วงหน้า","descriptionNew":"หน้า ‘ของเข้า’ ดูได้ทั้งวันนี้และพรุ่งนี้ เพื่อเช็กว่ามีกี่ใบ สินค้าอะไร จำนวนเท่าไร และมาจากคลังไหน","descriptionUpdate":"เพิ่มแท็บพรุ่งนี้ในหน้าของเข้า โดยพรุ่งนี้ดูได้อย่างเดียวและยังรับเข้า Store ไม่ได้"}]},{"version":"8.6.29","features":[{"id":"ui_polish_final","introduced":"8.6.29","titleNew":"ปรับหน้าตาและการใช้งานทั้งระบบ","titleUpdate":"ปรับ UX/UI ทั้งระบบ","descriptionNew":"จัดรูปแบบปุ่ม การ์ด หน้าต่างแจ้งเตือน เมนูล่าง และหน้ารายการให้สวย อ่านง่าย และกดสะดวกบนทุกขนาดจอ","descriptionUpdate":"เก็บรายละเอียด UX/UI และแก้จุดเล็ก ๆ ที่อาจรบกวนการใช้งานบนมือถือ iPad และคอม"},{"id":"backend_compat_check","introduced":"8.6.29","titleNew":"ตรวจ Apps Script แบบเข้ากันได้","titleUpdate":"แก้แจ้ง Apps Script เวอร์ชันเก่าซ้ำ","descriptionNew":"ระบบตรวจว่าฝั่ง Apps Script รองรับงานที่ต้องใช้จริง โดยไม่บังคับให้เลขเวอร์ชันตรงกันเป๊ะ","descriptionUpdate":"Backend ที่ใหม่กว่าจะไม่ถูกแจ้งว่าเก่าอีก และข้อความเตือนจะขึ้นเฉพาะเมื่อใช้งานความสามารถที่จำเป็นไม่ได้จริง"},{"id":"update_wakeup","introduced":"8.6.29","titleNew":"แจ้งอัปเดตเมื่อกลับเข้าแอป","titleUpdate":"ทำ Update Center ให้ตรวจอัปเดตสม่ำเสมอขึ้น","descriptionNew":"เมื่อกลับเข้าเว็บหรือเปิดทิ้งไว้ ระบบจะตรวจเวอร์ชันใหม่เป็นระยะเพื่อให้พนักงานเห็นอัปเดตเร็วขึ้น","descriptionUpdate":"เพิ่มการตรวจตอนกลับเข้าแอปและตรวจซ้ำเบื้องหลัง ลดโอกาสเครื่องพนักงานค้างเวอร์ชันเก่า"}]},{"version":"8.6.30","features":[{"id":"schedule_image_date_guard","introduced":"8.6.30","titleNew":"อัปโหลดรูปตารางได้เสถียรขึ้น","titleUpdate":"แก้ปัญหาอัปโหลดรูปตาราง","descriptionNew":"ระบบตรวจและสร้างรอบตาราง 21 → 20 ให้ครบก่อนอ่านรูป ลดปัญหาวันที่ว่างทำให้การอัปโหลดหยุด","descriptionUpdate":"แก้ Error getFullYear จากวันที่ไม่พร้อม และเพิ่ม fallback รอบตารางอัตโนมัติ"}]},{"version":"8.6.31","features":[{"id":"unified_ui_system","introduced":"8.6.31","titleNew":"ปรับดีไซน์ OH Store Hub ให้เป็นระบบเดียวกัน","titleUpdate":"เก็บ UX/UI ทั้งเว็บให้เป็นอันหนึ่งอันเดียวกัน","descriptionNew":"จัดสี ขนาด การ์ด ปุ่ม ฟอร์ม Modal และหน้าหลักให้ใช้ภาษาภาพเดียวกันและอ่านง่ายขึ้นบนมือถือ","descriptionUpdate":"ลดความกระจัดกระจายของหน้าหลัก จัดลำดับกลุ่มงานใหม่ และปรับองค์ประกอบทั่วเว็บให้สม่ำเสมอ"}]},{"version":"8.6.32","features":[{"id":"schedule_image_preserve_existing","introduced":"8.6.32","titleNew":"ป้องกันตารางหายตอนอ่านรูป","titleUpdate":"แก้ตารางกลายเป็นไม่มีกะหลังอัปโหลดรูป","descriptionNew":"ช่องที่ระบบอ่านจากรูปไม่ได้จะไม่ทับกะเดิมเป็น NONE อีกต่อไป","descriptionUpdate":"รักษาข้อมูลเดิมในโหมดอัปเดต และกู้รอบตารางต้นฉบับเมื่อพบว่าทั้งรอบถูกล้าง"}]},{"version":"8.6.33","features":[{"id":"schedule_import_v2","introduced":"8.6.33","titleNew":"Schedule Import V2","titleUpdate":"ปรับระบบนำเข้าตารางจากรูป","descriptionNew":"อ่านรูปเป็น Draft แยกจากตารางจริง มี Preview ช่องต้องตรวจ และ Publish หลังตรวจเท่านั้น","descriptionUpdate":"การอ่านรูปจะไม่แตะ Firebase จนกด Publish และช่องไม่มั่นใจจะคงข้อมูลเดิม"},{"id":"schedule_snapshot","introduced":"8.6.33","titleNew":"สำรองตารางก่อน Publish","titleUpdate":"เพิ่มความปลอดภัยให้การแก้ตาราง","descriptionNew":"เก็บ Snapshot ตารางเดิมก่อน Publish เพื่อย้อนกลับได้","descriptionUpdate":"ทุกการ Publish เก็บสำเนารอบก่อนหน้าไว้ในเครื่อง"}]}]}</script>
+  <script id="oh-update-manifest" type="application/json">{"version":"8.6.43","label":"V8.6.43","level":"recommended","requiredFeatures":["store","history","usage"],"changes":["รักษายอด Firebase ขณะอัปเดตรายการสินค้า","บันทึกยอด ประวัติ และล็อตพร้อมกัน","ตรวจสอบธุรกรรมหลังเน็ตหลุดก่อนทำรายการซ้ำ","พักนำยอดชีตเก่ากลับมาเขียนทับ"],"releases":[{"version":"8.6.26","features":[{"id":"postit","introduced":"8.6.24","titleNew":"เพิ่ม Post-it","titleUpdate":"ปรับปรุง Post-it","descriptionNew":"แปะโน้ต ลากย้าย ย่อเก็บ เปลี่ยนสี ปักหมุด ทำเสร็จ ตั้งเตือน และเลือกให้แสดงทุกหน้าหรือเฉพาะหน้าได้","descriptionUpdate":"ลากลื่นขึ้น แปะอยู่กับพื้นที่หน้าเว็บและเลื่อนไปพร้อมหน้า แก้ปุ่มแก้ไข/ลบ และให้ใบที่แตะล่าสุดอยู่ด้านบน"},{"id":"home_shortcuts","introduced":"8.6.26","titleNew":"เพิ่มทางลัดบนหน้าหลัก","titleUpdate":"ปรับทางลัดบนหน้าหลัก","descriptionNew":"เข้า 16-Oh-stock, สั่งของ, MyHR และบันทึกอุณหภูมิตู้เย็นได้จากหน้าแรกทันที","descriptionUpdate":"ปรับทางลัดงานประจำบนหน้าหลักให้เข้าถึงง่ายขึ้น"},{"id":"usage","introduced":"8.6.12","titleNew":"เพิ่มการใช้วันนี้","titleUpdate":"ปรับการใช้วันนี้ให้อ่านเร็วขึ้น","descriptionNew":"ดูการใช้จริงจากหน้าร้านรอบก่อน + เบิกจากสโตร์ − หน้าร้านรอบล่าสุด","descriptionUpdate":"ย่อแต่ละสินค้าเป็นบรรทัดตัวเลข เช่น 2 → +0 → 1 = ใช้ 1 ถุง ลดข้อความซ้ำในรายการยาว"},{"id":"incoming","introduced":"8.6.23","titleNew":"เพิ่มของเข้าวันนี้","titleUpdate":"ปรับของเข้าวันนี้","descriptionNew":"ดึงใบของเข้าจาก Inventory และรับเข้า Store จากใน Hub ได้","descriptionUpdate":"เพิ่มพื้นที่ท้ายรายการเพื่อไม่ให้แถบรับเข้าบังสินค้าและเมนูด้านล่าง"}]},{"version":"8.6.27","features":[{"id":"update_alert","introduced":"8.6.21","titleNew":"เพิ่มระบบแจ้งอัปเดต","titleUpdate":"ปรับการแจ้งอัปเดตให้เห็นชัด","descriptionNew":"เมื่อมีเวอร์ชันใหม่ เครื่องจะแจ้งให้เห็นพร้อมสรุปว่ามีอะไรเพิ่มเข้ามา","descriptionUpdate":"เมื่อเครื่องตรวจพบเวอร์ชันใหม่ จะเปิดรายละเอียดอัปเดตให้เห็นชัด ไม่ต้องรอสังเกตปุ่มเล็ก ๆ เอง"},{"id":"incoming_manual_ack","introduced":"8.6.27","titleNew":"เพิ่ม ‘รับเข้าเองแล้ว’","titleUpdate":"ปรับการจัดการของเข้าวันนี้","descriptionNew":"ถ้าพนักงานเพิ่มของเข้า Store ด้วยมือไปแล้ว สามารถปิดใบโดยไม่บวกยอดซ้ำ และทุกเครื่องจะเห็นสถานะเดียวกัน","descriptionUpdate":"เพิ่มทางปิดใบที่รับเข้าด้วยมือ โดยไม่เพิ่มยอด Store ซ้ำ"},{"id":"incoming_duplicate_guard","introduced":"8.6.27","titleNew":"เพิ่มการกันรับของซ้ำ","titleUpdate":"เพิ่มการป้องกันรับของซ้ำ","descriptionNew":"ก่อนรับเข้าระบบจะตรวจสถานะส่วนกลางอีกครั้ง ถ้าใบถูกจัดการจากเครื่องอื่นแล้วจะไม่รับซ้ำ","descriptionUpdate":"ตรวจสถานะใบจากส่วนกลางอีกครั้งก่อนเพิ่มยอด Store เพื่อลดการรับซ้ำข้ามเครื่อง"}]},{"version":"8.6.28","features":[{"id":"incoming_tomorrow","introduced":"8.6.28","titleNew":"เพิ่มดูของเข้าพรุ่งนี้","titleUpdate":"เพิ่มการเตรียมรับของล่วงหน้า","descriptionNew":"หน้า ‘ของเข้า’ ดูได้ทั้งวันนี้และพรุ่งนี้ เพื่อเช็กว่ามีกี่ใบ สินค้าอะไร จำนวนเท่าไร และมาจากคลังไหน","descriptionUpdate":"เพิ่มแท็บพรุ่งนี้ในหน้าของเข้า โดยพรุ่งนี้ดูได้อย่างเดียวและยังรับเข้า Store ไม่ได้"}]},{"version":"8.6.29","features":[{"id":"ui_polish_final","introduced":"8.6.29","titleNew":"ปรับหน้าตาและการใช้งานทั้งระบบ","titleUpdate":"ปรับ UX/UI ทั้งระบบ","descriptionNew":"จัดรูปแบบปุ่ม การ์ด หน้าต่างแจ้งเตือน เมนูล่าง และหน้ารายการให้สวย อ่านง่าย และกดสะดวกบนทุกขนาดจอ","descriptionUpdate":"เก็บรายละเอียด UX/UI และแก้จุดเล็ก ๆ ที่อาจรบกวนการใช้งานบนมือถือ iPad และคอม"},{"id":"backend_compat_check","introduced":"8.6.29","titleNew":"ตรวจ Apps Script แบบเข้ากันได้","titleUpdate":"แก้แจ้ง Apps Script เวอร์ชันเก่าซ้ำ","descriptionNew":"ระบบตรวจว่าฝั่ง Apps Script รองรับงานที่ต้องใช้จริง โดยไม่บังคับให้เลขเวอร์ชันตรงกันเป๊ะ","descriptionUpdate":"Backend ที่ใหม่กว่าจะไม่ถูกแจ้งว่าเก่าอีก และข้อความเตือนจะขึ้นเฉพาะเมื่อใช้งานความสามารถที่จำเป็นไม่ได้จริง"},{"id":"update_wakeup","introduced":"8.6.29","titleNew":"แจ้งอัปเดตเมื่อกลับเข้าแอป","titleUpdate":"ทำ Update Center ให้ตรวจอัปเดตสม่ำเสมอขึ้น","descriptionNew":"เมื่อกลับเข้าเว็บหรือเปิดทิ้งไว้ ระบบจะตรวจเวอร์ชันใหม่เป็นระยะเพื่อให้พนักงานเห็นอัปเดตเร็วขึ้น","descriptionUpdate":"เพิ่มการตรวจตอนกลับเข้าแอปและตรวจซ้ำเบื้องหลัง ลดโอกาสเครื่องพนักงานค้างเวอร์ชันเก่า"}]},{"version":"8.6.30","features":[{"id":"schedule_image_date_guard","introduced":"8.6.30","titleNew":"อัปโหลดรูปตารางได้เสถียรขึ้น","titleUpdate":"แก้ปัญหาอัปโหลดรูปตาราง","descriptionNew":"ระบบตรวจและสร้างรอบตาราง 21 → 20 ให้ครบก่อนอ่านรูป ลดปัญหาวันที่ว่างทำให้การอัปโหลดหยุด","descriptionUpdate":"แก้ Error getFullYear จากวันที่ไม่พร้อม และเพิ่ม fallback รอบตารางอัตโนมัติ"}]},{"version":"8.6.31","features":[{"id":"unified_ui_system","introduced":"8.6.31","titleNew":"ปรับดีไซน์ OH Store Hub ให้เป็นระบบเดียวกัน","titleUpdate":"เก็บ UX/UI ทั้งเว็บให้เป็นอันหนึ่งอันเดียวกัน","descriptionNew":"จัดสี ขนาด การ์ด ปุ่ม ฟอร์ม Modal และหน้าหลักให้ใช้ภาษาภาพเดียวกันและอ่านง่ายขึ้นบนมือถือ","descriptionUpdate":"ลดความกระจัดกระจายของหน้าหลัก จัดลำดับกลุ่มงานใหม่ และปรับองค์ประกอบทั่วเว็บให้สม่ำเสมอ"}]},{"version":"8.6.32","features":[{"id":"schedule_image_preserve_existing","introduced":"8.6.32","titleNew":"ป้องกันตารางหายตอนอ่านรูป","titleUpdate":"แก้ตารางกลายเป็นไม่มีกะหลังอัปโหลดรูป","descriptionNew":"ช่องที่ระบบอ่านจากรูปไม่ได้จะไม่ทับกะเดิมเป็น NONE อีกต่อไป","descriptionUpdate":"รักษาข้อมูลเดิมในโหมดอัปเดต และกู้รอบตารางต้นฉบับเมื่อพบว่าทั้งรอบถูกล้าง"}]},{"version":"8.6.33","features":[{"id":"schedule_import_v2","introduced":"8.6.33","titleNew":"Schedule Import V2","titleUpdate":"ปรับระบบนำเข้าตารางจากรูป","descriptionNew":"อ่านรูปเป็น Draft แยกจากตารางจริง มี Preview ช่องต้องตรวจ และ Publish หลังตรวจเท่านั้น","descriptionUpdate":"การอ่านรูปจะไม่แตะ Firebase จนกด Publish และช่องไม่มั่นใจจะคงข้อมูลเดิม"},{"id":"schedule_snapshot","introduced":"8.6.33","titleNew":"สำรองตารางก่อน Publish","titleUpdate":"เพิ่มความปลอดภัยให้การแก้ตาราง","descriptionNew":"เก็บ Snapshot ตารางเดิมก่อน Publish เพื่อย้อนกลับได้","descriptionUpdate":"ทุกการ Publish เก็บสำเนารอบก่อนหน้าไว้ในเครื่อง"}]}]}</script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Itim&family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap');
     :root{--ink:#162033;--muted:#667085;--line:#e7eaf0;--paper:#fff;--bg:#f4f6f9;--navy:#101828;--green:#16875b;--green-soft:#eaf8f1;--orange:#d76d18;--orange-soft:#fff3e8;--blue:#2774d8;--blue-soft:#eaf2ff;--red:#d92d20;--shadow:0 14px 38px rgba(16,24,40,.09);--radius:22px}
@@ -641,6 +641,8 @@ body[data-view="incoming"] main:has(.incoming-actions){padding-bottom:230px!impo
 </head>
 <body>
 <div id="app" class="app"></div>
+<script src="./store-core.js"></script>
+<script src="./store-transport.js"></script>
 <script>
 window.addEventListener("error",function(e){
   var app=document.getElementById("app");
@@ -828,7 +830,7 @@ function catalogDiff(sheetItems){
   return {added,changed,removed,total:sheet.size}
 }
 async function fetchStoreSheetCatalog(){
-  const r=await fetch(`${CONFIG.sheetsWebAppUrl}?mode=store&t=${Date.now()}`,{cache:"no-store"});
+  const r=await sheetRequest(`${CONFIG.sheetsWebAppUrl}?mode=store&t=${Date.now()}`,{cache:"no-store"});
   if(!r.ok)throw new Error("sheet");
   const data=assertHubResponse(await r.json(),"store");
   return Array.isArray(data.items)?data.items:[]
@@ -859,6 +861,7 @@ async function checkCatalogUpdate(){
     updateCenter.catalogItems=items;
     if(updateCatalogSignature(items)!==localCatalogSignature()){
       const diff=catalogDiff(items);
+      if(localStorage.getItem("oh_catalog_sheet_signature")===updateCatalogSignature(items)){updateCenter.catalog=null;return;}
       if(diff.added||diff.changed||diff.removed)updateCenter.catalog=diff;
       else updateCenter.catalog=null
     }else updateCenter.catalog=null
@@ -917,61 +920,24 @@ async function performAppUpdate(){
   }
 }
 async function applyCatalogUpdate(){
-  if(updateCenter.applying)return;
+  if(updateCenter.applying||state.transactionBusy)return;
   updateCenter.applying=true;render();
   try{
-    const [items,invRes]=await Promise.all([
+    const [items,central]=await Promise.all([
       updateCenter.catalogItems?.length?Promise.resolve(updateCenter.catalogItems):fetchStoreSheetCatalog(),
-      fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory.json?t=${Date.now()}`,{cache:"no-store"})
+      storeTransport.read('store_hub_inventory')
     ]);
-    const central=invRes.ok?(await invRes.json()||{}):{},
-          old=new Map(products.map(p=>[String(p.code),p])),
-          next=[],newWrites={};
-    for(const row of items){
-      const id=String(row.id||row.code||"").trim();
-      if(!id)continue;
-      const prev=old.get(id)||{},saved=central[id]||{},
-            isNew=!old.has(id);
-      const item={
-        id,code:id,
-        easy:saved.easy||prev.easy||easyCatalogName(row.name||row.real||id),
-        real:String(row.name||row.real||prev.real||""),
-        category:prev.category||row.category||"ทั่วไป",
-        stock:Number(saved.stock??prev.stock??row.stock??row.balance??0)||0,
-        unit:String(row.unit||prev.unit||saved.unit||"หน่วย"),
-        min:Number(saved.min??prev.min??0)||0,
-        last:saved.last||prev.last||null
-      };
-      next.push(item);
-      // Existing central stock is never overwritten by Sheet catalog sync.
-      if(isNew&&!central[id]){
-        newWrites[id]={easy:item.easy,stock:item.stock,unit:item.unit,last:item.last}
-      }else if(central[id]){
-        newWrites[id]={easy:item.easy,unit:item.unit}
-      }
-    }
-    products=next;
-    state.catalogLoaded=true;
-    saveData();
-    if(Object.keys(newWrites).length){
-      await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory.json`,{
-        method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(newWrites)
-      }).catch(()=>null)
-    }
-    const diff=updateCenter.catalog;
+    products=OHStoreCore.catalog(items,products,central);
+    state.catalogLoaded=true;saveData();
+    localStorage.setItem('oh_catalog_sheet_signature',updateCatalogSignature(items));
     updateCenter.catalog=null;updateCenter.catalogItems=null;
-    localStorage.setItem("oh_update_last_check",String(Date.now()));
     updateCenter.applying=false;
     if(updateCenter.gateView&&!viewNeedsUpdate(updateCenter.gateView)){
       const target=updateCenter.gateView;updateCenter.modal=false;updateCenter.gateView=null;
-      state.view=target;window.history.pushState({view:target},"",`#${target}`);render();window.scrollTo(0,0)
-    }else render();
-    toast(`อัปเดตรายการสินค้าแล้ว${diff?.added?` · เพิ่ม ${diff.added}`:""}${diff?.changed?` · แก้ ${diff.changed}`:""}`)
-  }catch(e){
-    updateCenter.applying=false;
-    toast("อัปเดตรายการสินค้าจากชีตไม่สำเร็จ");
-    render()
-  }
+      state.view=target;window.history.pushState({view:target},'',`#${target}`)
+    }
+    render();toast('อัปเดตรายการสินค้าแล้ว · รักษายอด Firebase เดิม');
+  }catch(e){updateCenter.applying=false;toast('อัปเดตรายการไม่สำเร็จ: '+e.message);render()}
 }
 function updateChangesForCurrent(app){
   const current=CURRENT_UPDATE_MANIFEST.version||"0",releases=Array.isArray(app?.releases)?app.releases:[];
@@ -1014,7 +980,11 @@ function toast(msg){const old=document.querySelector(".toast");if(old)old.remove
 // V8.6.39: network requests no longer block navigation with a global loader.
 // Each module keeps its own small sync state while cached data stays visible.
 const _ohNativeFetch=window.fetch.bind(window);
-window.fetch=(...args)=>_ohNativeFetch(...args);
+window.fetch=async(...args)=>{
+  const response=await _ohNativeFetch(...args),url=String(args[0]),method=String(args[1]?.method||'GET').toUpperCase();
+  if(url.startsWith(CONFIG.firebaseDatabaseUrl+'/')&&method!=='GET'&&!response.ok){const error=new Error('Firebase HTTP '+response.status);error.status=response.status;throw error}
+  return response;
+};
 let _ohScrollBound=false;function ensureGlobalUx(){let btn=document.getElementById("backTop");if(!btn){btn=document.createElement("button");btn.id="backTop";btn.className="back-top";btn.type="button";btn.setAttribute("aria-label","กลับขึ้นด้านบน");btn.textContent="↑";btn.onclick=()=>window.scrollTo({top:0,behavior:"smooth"});document.body.appendChild(btn)}const sync=()=>btn.classList.toggle("show",window.scrollY>650);sync();if(!_ohScrollBound){window.addEventListener("scroll",sync,{passive:true});_ohScrollBound=true}document.querySelectorAll("button:not([type])").forEach(b=>b.type="button");document.querySelectorAll("button,[href],input,select,textarea,[contenteditable=true]").forEach(el=>{if(!el.hasAttribute("tabindex")&&!el.disabled)el.tabIndex=0})}
 function pushOverlay(name){window.history.pushState({view:state.view,overlay:name},"",location.hash)}
 function consumeOverlay(){window.history.replaceState({view:state.view},"",location.hash)}
@@ -1054,7 +1024,7 @@ async function loadIncomingToday(silent=false,day=state.incomingDay||0){
   state.incomingLoading=true;if(!silent&&state.view==="incoming"&&!state.incoming)render();
   try{
     const mode=day===0?"inventoryToday":"inventoryIncoming";
-    const r=await fetch(`${CONFIG.sheetsWebAppUrl}?mode=${mode}&offset=${day}&t=${Date.now()}`,{cache:"no-store"});
+    const r=await sheetRequest(`${CONFIG.sheetsWebAppUrl}?mode=${mode}&offset=${day}&t=${Date.now()}`,{cache:"no-store"});
     const data=await responseJsonSafe(r);if(!r.ok||data.status!=="success")throw new Error(data.message||"Inventory ไม่พร้อมใช้งาน");
     let receipts={};try{const rr=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory_receipts.json?t=${Date.now()}`,{cache:"no-store"});receipts=rr.ok?(await rr.json()||{}):{}}catch(_e){}
     data.documents=(data.documents||[]).map(d=>({...d,received:receipts[inventoryDocKey(d.id)]?.status==="handled"||Boolean(receipts[inventoryDocKey(d.id)]&&!receipts[inventoryDocKey(d.id)].items),receipt:receipts[inventoryDocKey(d.id)]||null}));data.syncedAt=new Date().toISOString();delete data.error;delete data._cachedAt;
@@ -1787,7 +1757,7 @@ async function recoverEmbeddedScheduleIfEmpty(){
   });
   if(!restored)return false;
   saveData();
-  try{await Promise.all([...touched].map(mk=>fetch(`${CONFIG.firebaseDatabaseUrl}/work_schedules/${mk}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(scheduleMonths[mk])})))}catch(e){}
+  // Embedded recovery is local only. Saving remotely requires the schedule editor.
   if(state.view==="schedule"||state.view==="day"||state.view==="person"||state.view==="home")render();
   toast(`กู้ตารางเดิมกลับมาแล้ว ${restored} ช่อง`);
   return true
@@ -1848,12 +1818,29 @@ function productLastBadge(p){if(!p.last)return `<span class="badge">ยังไ
 function productTableRow(p){const c=categoryInfo(p),level=p.stock<=0?"empty":isLowStock(p)?"low":"ok";return `<tr class="${state.flashId===p.id?'flash':''}"><td><b>${esc(p.easy)}</b><span class="category-badge ${productCategory(p)}">${c.label}</span></td><td class="code">${esc(p.code)}</td><td>${esc(p.real)}</td><td><span class="balance balance-${level}">${p.stock.toLocaleString('th-TH')} ${esc(p.unit)}</span></td><td>${esc(p.unit)}</td><td>${productLastBadge(p)}</td><td><button class="ghost-btn" onclick="openStockModal('receive','${p.id}')">ทำรายการ</button></td></tr>`}
 function productCard(p){const c=categoryInfo(p),level=p.stock<=0?"empty":isLowStock(p)?"low":"ok";return `<button class="stock-card ${state.flashId===p.id?'flash':''}" onclick="openStockModal('receive','${p.id}')"><div class="stock-card-top"><div class="stock-card-main"><span class="category-badge ${productCategory(p)}">${c.icon} ${c.label}</span><h3>${esc(p.easy)}</h3><div class="stock-code">รหัส ${esc(p.code)}</div><p class="stock-real">${esc(p.real)}</p></div><div class="stock-balance balance-${level}"><small>คงเหลือ</small><b>${p.stock.toLocaleString('th-TH')}</b><span>${esc(p.unit)}</span></div></div><div class="stock-card-bottom">${productLastBadge(p)}<span class="badge">แตะเพื่อทำรายการ ›</span></div></button>`}
 function easyCatalogName(name){return String(name||"").replace(/\([^)]*\)/g,"").replace(/^(สำเร็จรูป|ผลไม้แช่แข็ง|ผลไม้|วัตถุดิบต้ม|HQผักล้างแปรรูป|HQ|ผักTopping|นมเปรี้ยวโยเกิร์ต|น้ำผลไม้)\s*/i,"").trim().slice(0,42)||String(name||"")}
-async function syncStoreCatalog(){if(state.catalogLoading)return;state.catalogLoading=true;try{const [dailyRes,weeklyRes,inventoryRes]=await Promise.all([fetch(`${CONFIG.sheetsWebAppUrl}?mode=daily`),fetch(`${CONFIG.sheetsWebAppUrl}?mode=weekly`),fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory.json`)]);if(!dailyRes.ok||!weeklyRes.ok)throw new Error("catalog");const daily=await dailyRes.json(),weekly=await weeklyRes.json(),catalog=[...new Map([...daily,...weekly].map(item=>[String(item.id),item])).values()],central=inventoryRes.ok?(await inventoryRes.json()||{}):{},old=new Map(products.map(p=>[p.code,p]));products=catalog.map(item=>{const prev=old.get(String(item.id))||{},saved=central[String(item.id)]||{};return {id:String(item.id),easy:saved.easy||prev.easy||easyCatalogName(item.name),code:String(item.id),real:item.name||"",category:item.category||"ทั่วไป",stock:Number(saved.stock??prev.stock??0),unit:item.unit||"หน่วย",min:Number(saved.min??prev.min??0),last:saved.last||prev.last||null}});state.catalogLoaded=true;saveData()}catch(e){toast("ยังดึงรายการจากระบบนับของไม่ได้ จะแสดงข้อมูลที่บันทึกไว้ก่อน")}finally{state.catalogLoading=false;if(state.view==="store"&&!document.activeElement?.matches("input,textarea,select"))render()}}
-async function sheetPost(payload){const r=await fetch(CONFIG.sheetsWebAppUrl,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow"});if(!r.ok)throw new Error("sheet");const data=await r.json();if(data.status&&data.status!=="success")throw new Error(data.message||"sheet");return data}
+async function syncStoreCatalog(){
+  if(state.catalogLoading||state.transactionBusy)return;state.catalogLoading=true;
+  try{
+    const [daily,weekly,central]=await Promise.all([sheetGet('daily'),sheetGet('weekly'),storeTransport.read('store_hub_inventory')]);
+    if(!Array.isArray(daily)||!Array.isArray(weekly))throw new Error('รูปแบบรายการสินค้าไม่ถูกต้อง');
+    products=OHStoreCore.catalog([...new Map([...daily,...weekly].map(x=>[String(x.id),x])).values()],products,central);
+    state.catalogLoaded=true;saveData();
+  }catch(e){toast('ยังดึงรายการไม่ได้ · ใช้ข้อมูลในเครื่องเพื่อดูเท่านั้น: '+e.message)}
+  finally{state.catalogLoading=false;if(state.view==='store'&&!document.activeElement?.matches('input,textarea,select'))render()}
+}
+async function sheetRequest(url,options={}){
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),25000);
+  try{const r=await fetch(url,{cache:'no-store',...options,signal:controller.signal});if(!r.ok)throw new Error('Apps Script HTTP '+r.status);return r}
+  catch(e){console.warn('Sheets request failed',{method:options.method||'GET',message:String(e.message||e)});throw new Error(e.name==='AbortError'?'Apps Script ตอบช้า กรุณาลองโหลดใหม่':'เชื่อม Apps Script ไม่สำเร็จ กรุณาตรวจเน็ตและสิทธิ์ Web app')}
+  finally{clearTimeout(timer)}
+}
+async function sheetGet(mode){const r=await sheetRequest(`${CONFIG.sheetsWebAppUrl}?mode=${encodeURIComponent(mode)}&t=${Date.now()}`);const data=await responseJsonSafe(r);if(data?.status==='error')throw new Error(data.message||'Apps Script error');return data}
+async function sheetPost(payload){const r=await sheetRequest(CONFIG.sheetsWebAppUrl,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow"});if(!r.ok)throw new Error("sheet");const data=await responseJsonSafe(r);if(data.status&&data.status!=="success")throw new Error(data.message||"sheet");return data}
 function setStoreDirty(value){state.storeDirty=Boolean(value);localStorage.setItem("oh_store_dirty",state.storeDirty?"1":"0")}
 function hubApiCompatible(v){const s=String(v||"").toUpperCase();return s==="OH_STORE_HUB_V8"||s.startsWith("OH_STORE_HUB_V8_")}
 function assertHubResponse(data,mode){if(!data||data.status!=="success"||!hubApiCompatible(data.apiVersion)||data.mode!==mode||data.spreadsheetId!==CONFIG.storeSpreadsheetId||((mode==="store"||mode==="storeSave")&&data.sheetName!=="สโตร์"))throw new Error("wrong_deployment");return data}
 
+let storeSheetCentralSnapshot={};
 let storeRealtimeSource=null,storeRealtimePoll=null,storeRealtimeConnected=false,storeRealtimeFetchTimer=null;
 let storeSheetAutoTimer=null,storeSheetAutoPending=false,storeSheetAutoDueAt=0;
 
@@ -1893,10 +1880,15 @@ function applyCentralInventory(raw,renderNow=true){
   return changed;
 }
 async function fetchCentralInventory(renderNow=true){
+  if(state.transactionBusy)return null;
   try{
+    if(storeTransport.pending())await reconcilePendingStore();
     const r=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory.json?t=${Date.now()}`,{cache:"no-store"});
     if(!r.ok)throw new Error("firebase");
-    const raw=await r.json()||{};
+    const raw=await r.json();
+    if(!raw||typeof raw!=="object"||Array.isArray(raw))throw new Error("central_missing");
+    for(const [id,row]of Object.entries(raw))if(!row||row.stock==null||row.stock===''||!Number.isFinite(Number(row.stock))||Number(row.stock)<0)throw new Error('ยอดกลางไม่มี stock ที่ถูกต้อง: '+id);
+    storeSheetCentralSnapshot=raw;
     storeRealtimeConnected=true;
     applyCentralInventory(raw,renderNow);
     return raw;
@@ -1933,8 +1925,8 @@ function storeSheetItems(){
     id:p.code,
     name:p.real,
     unit:p.unit,
-    stock:Number(p.stock)||0,
-    updatedAt:p.last?.time||"",
+    stock:Number(storeSheetCentralSnapshot[p.id].stock),
+    updatedAt:storeSheetCentralSnapshot[p.id].last?.time||"",
     updatedBy:p.last?.operator||""
   }));
 }
@@ -1961,13 +1953,15 @@ async function markStoreChanged(time,operator){
   }catch(e){}
 }
 async function writeStoreSheet(automatic=false){
-  if(state.storeSyncing)return false;
+  if(state.storeSyncing||state.transactionBusy)return false;
   const user=activeEmployee();
   state.storeSyncing=true;
   if(state.view==="store")render();
   try{
     // ก่อนส่งชีต ดึงยอดกลางล่าสุดอีกครั้ง เพื่อรวมรายการจากเครื่องอื่นด้วย
-    await fetchCentralInventory(false);
+    if(!await fetchCentralInventory(false))throw new Error("central_unavailable");
+    if(storeTransport.pending())throw new Error("pending_transaction");
+    if(products.some(p=>!Object.prototype.hasOwnProperty.call(storeSheetCentralSnapshot,String(p.id))))throw new Error("missing_central_stock");
     const operator=user?.nick||"Auto Sync";
     const result=assertHubResponse(await sheetPost({
       mode:"storeSave",
@@ -2028,62 +2022,7 @@ async function autoSaveStoreToSheet(){
   await writeStoreSheet(true);
 }
 
-async function pullStoreFromSheet(){
-  if(state.storeSyncing)return;
-  const user=activeEmployee();
-  if(!user){toast("กรุณาเลือกชื่อผู้ใช้งานก่อน");return}
-  if(!confirm("ใช้ยอดจากชีตเป็นยอดกลางของสโตร์หรือไม่?\n\nควรให้คนเดียวทำเมื่อจำเป็น เพราะยอดนี้จะเขียนทับ Firebase และทุกเครื่องจะเห็นตามทันที"))return;
-  state.storeSyncing=true;render();
-  try{
-    const r=await fetch(`${CONFIG.sheetsWebAppUrl}?mode=store&t=${Date.now()}`,{cache:"no-store"});
-    if(!r.ok)throw new Error("sheet");
-    const data=assertHubResponse(await r.json(),"store"),
-          items=Array.isArray(data.items)?data.items:[];
-    if(!items.length){toast("ชีตสโตร์ยังไม่มีข้อมูล");return}
-    const now=await centralNowIso(), updates={};
-    items.forEach(row=>{
-      const id=String(row.id||row.code||"").trim();
-      if(!id)return;
-      updates[id]={
-        easy:String(row.easy||row.name||id),
-        stock:Number(row.stock??row.balance??0)||0,
-        unit:String(row.unit||""),
-        last:{
-          type:"sync",
-          qty:0,
-          time:row.updatedAt||now,
-          operator:row.updatedBy||user.nick,
-          operatorId:user.id,
-          source:"sheet_seed"
-        }
-      };
-    });
-    const wr=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory.json`,{
-      method:"PATCH",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(updates)
-    });
-    if(!wr.ok)throw new Error("firebase");
-    await fetchCentralInventory(true);
-    cancelStoreSheetAutoSync();
-    try{
-      await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_meta.json`,{
-        method:"PATCH",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({lastChangedAt:now,lastSheetSyncAt:now,lastSheetSyncBy:user.nick,lastChangedBy:user.nick})
-      });
-    }catch(e){}
-    setStoreDirty(false);
-    state.storeLastSync=new Date().toISOString();
-    localStorage.setItem("oh_store_last_sync",state.storeLastSync);
-    render();
-    toast(`ตั้งยอดกลางจากชีตแล้ว ${items.length} รายการ · ทุกเครื่องจะอัปเดตตาม`);
-  }catch(error){
-    toast(error.message==="wrong_deployment"?"Apps Script ยังไม่ตรงเวอร์ชัน":"ตั้งยอดกลางจากชีตไม่สำเร็จ");
-  }finally{
-    state.storeSyncing=false;
-    if(state.view==="store")render();
-  }
-}
+async function pullStoreFromSheet(){toast('พักนำยอดจากชีตกลับมา: ร้านปรับยอด Manual แล้ว เพื่อรักษายอด Firebase ปัจจุบัน')}
 async function saveStoreToSheet(){
   if(state.storeSyncing)return;
   const user=activeEmployee();
@@ -2096,11 +2035,11 @@ function renderStore(){
   setTimeout(startStoreRealtime,0);
   const s=storeSummary(),user=activeEmployee(),found=filteredProducts(),rows=found.map(productTableRow).join(""),cards=found.map(productCard).join("");
   const syncText=storeRealtimeConnected?"ยอดกลางเชื่อมต่อแบบเรียลไทม์":"กำลังเชื่อมยอดกลาง…",autoText=storeSheetAutoPending?" · มีข้อมูลรอส่งชีตอัตโนมัติ":" · ชีตสำรองพร้อม";
-  return `${header(true,"สโตร์")}<main class="shell"><section class="store-hero"><div class="store-hero-copy"><div class="eyebrow">OH STORE INVENTORY</div><h1>สโตร์หลังร้าน</h1><p>${state.catalogLoading?'กำลังดึงรายการสินค้าล่าสุด…':'ยอดสโตร์ใช้ Firebase เป็นค่ากลาง ทุกเครื่องจะเห็นการเปลี่ยนแปลงเดียวกันอัตโนมัติ'}</p></div>${user?`<div class="store-user">${avatarArt(user)}<span><small>ผู้ทำรายการ</small><b>${esc(user.nick)}</b></span></div>`:""}</section><div class="sync-panel"><div class="sync-status"><b><span class="live-dot ${storeRealtimeConnected?'':'connecting'}"></span>${syncText}</b><small>${state.storeLastSync?`อัปเดตยอดกลางล่าสุด ${new Intl.DateTimeFormat('th-TH',{timeStyle:'short'}).format(new Date(state.storeLastSync))}`:'กำลังอ่านยอดล่าสุดจาก Firebase'}${autoText}</small></div><button class="sync-btn" onclick="fetchCentralInventory(true)">↻ รีเฟรชยอดกลาง</button><button class="sync-btn" disabled>✓ ซิงก์อัตโนมัติ</button></div><details class="store-backup-tools"><summary>เครื่องมือกู้ข้อมูล / ชีต · ให้คนเดียวใช้เมื่อจำเป็น</summary><div class="inline-actions"><button class="ghost-btn" ${state.storeSyncing?'disabled':''} onclick="pullStoreFromSheet()">↓ ตั้งยอดกลางจากชีต</button><button class="ghost-btn" ${state.storeSyncing?'disabled':''} onclick="saveStoreToSheet()">↑ สำรองยอดกลางลงชีต</button><span class="helper">งานประจำวันไม่ต้องกดสองปุ่มนี้ · Firebase ซิงก์ยอดทุกเครื่องอัตโนมัติ</span></div></details>${renderUndoBanner()}<div class="summary-row store-summary-row"><div class="summary"><b>${s.items}</b><span>รายการสินค้า</span></div><div class="summary red"><b>${s.low}</b><span>ใกล้หมด</span></div><div class="summary orange"><b>${s.today}</b><span>เคลื่อนไหววันนี้</span></div></div>${storeCategoryTabs()}<div class="toolbar"><label class="search"><input value="${esc(state.storeQuery)}" oninput="state.storeQuery=this.value;localStorage.setItem('oh_store_query',this.value);renderStoreRows()" placeholder="ค้นหาชื่อ รหัส หรือชื่อจริง"></label><div class="store-actions"><button class="ghost-btn" onclick="go('history')">ประวัติ</button><button class="action-btn receive" onclick="openStockModal('receive')">＋ ทำรายการ</button></div></div><div class="table-wrap desktop-stock"><table class="store-table"><thead><tr><th>ชื่อค้นหาง่าย</th><th>รหัส</th><th>ชื่อจริง</th><th>คงเหลือ</th><th>หน่วย</th><th>รายการล่าสุด</th><th>ทำรายการ</th></tr></thead><tbody id="storeRows">${rows||`<tr><td colspan="7" class="empty">${state.catalogLoading?'กำลังโหลดรายการ…':'ไม่พบสินค้าที่ค้นหา'}</td></tr>`}</tbody></table></div><section id="storeCards" class="mobile-stock">${cards||`<div class="empty panel">${state.catalogLoading?'กำลังโหลดรายการ…':'ไม่พบสินค้าที่ค้นหา'}</div>`}</section></main>${state.modal?renderStockModal():""}`
+  return `${header(true,"สโตร์")}<main class="shell"><section class="store-hero"><div class="store-hero-copy"><div class="eyebrow">OH STORE INVENTORY</div><h1>สโตร์หลังร้าน</h1><p>${state.catalogLoading?'กำลังดึงรายการสินค้าล่าสุด…':'ยอดสโตร์ใช้ Firebase เป็นค่ากลาง ทุกเครื่องจะเห็นการเปลี่ยนแปลงเดียวกันอัตโนมัติ'}</p></div>${user?`<div class="store-user">${avatarArt(user)}<span><small>ผู้ทำรายการ</small><b>${esc(user.nick)}</b></span></div>`:""}</section><div class="sync-panel"><div class="sync-status"><b><span class="live-dot ${storeRealtimeConnected?'':'connecting'}"></span>${syncText}</b><small>${state.storeLastSync?`อัปเดตยอดกลางล่าสุด ${new Intl.DateTimeFormat('th-TH',{timeStyle:'short'}).format(new Date(state.storeLastSync))}`:'กำลังอ่านยอดล่าสุดจาก Firebase'}${autoText}</small></div><button class="sync-btn" onclick="fetchCentralInventory(true)">↻ รีเฟรชยอดกลาง</button><button class="sync-btn" disabled>✓ ซิงก์อัตโนมัติ</button></div><details class="store-backup-tools"><summary>เครื่องมือกู้ข้อมูล / ชีต · ให้คนเดียวใช้เมื่อจำเป็น</summary><div class="inline-actions"><button class="ghost-btn" ${state.storeSyncing?'disabled':''} disabled onclick="pullStoreFromSheet()">↓ ตั้งยอดกลางจากชีต</button><button class="ghost-btn" ${state.storeSyncing?'disabled':''} onclick="saveStoreToSheet()">↑ สำรองยอดกลางลงชีต</button><span class="helper">งานประจำวันไม่ต้องกดสองปุ่มนี้ · Firebase ซิงก์ยอดทุกเครื่องอัตโนมัติ</span></div></details>${renderUndoBanner()}<div class="summary-row store-summary-row"><div class="summary"><b>${s.items}</b><span>รายการสินค้า</span></div><div class="summary red"><b>${s.low}</b><span>ใกล้หมด</span></div><div class="summary orange"><b>${s.today}</b><span>เคลื่อนไหววันนี้</span></div></div>${storeCategoryTabs()}<div class="toolbar"><label class="search"><input value="${esc(state.storeQuery)}" oninput="state.storeQuery=this.value;localStorage.setItem('oh_store_query',this.value);renderStoreRows()" placeholder="ค้นหาชื่อ รหัส หรือชื่อจริง"></label><div class="store-actions"><button class="ghost-btn" onclick="go('history')">ประวัติ</button><button class="action-btn receive" onclick="openStockModal('receive')">＋ ทำรายการ</button></div></div><div class="table-wrap desktop-stock"><table class="store-table"><thead><tr><th>ชื่อค้นหาง่าย</th><th>รหัส</th><th>ชื่อจริง</th><th>คงเหลือ</th><th>หน่วย</th><th>รายการล่าสุด</th><th>ทำรายการ</th></tr></thead><tbody id="storeRows">${rows||`<tr><td colspan="7" class="empty">${state.catalogLoading?'กำลังโหลดรายการ…':'ไม่พบสินค้าที่ค้นหา'}</td></tr>`}</tbody></table></div><section id="storeCards" class="mobile-stock">${cards||`<div class="empty panel">${state.catalogLoading?'กำลังโหลดรายการ…':'ไม่พบสินค้าที่ค้นหา'}</div>`}</section></main>${state.modal?renderStockModal():""}`
 }
 function openStockModal(type,productId=null){state.modal=type;state.cart=[];state.productQuery="";state.modalQty=1;state.adjustReason="forgot_issue";state.selectedProduct=productId;if(type==="adjust"&&productId){const p=products.find(x=>x.id===productId);if(p)state.modalQty=Number(p.stock)||0}pushOverlay("stock");render()}
-function switchStockMode(type){if(state.modal===type)return;state.modal=type;state.cart=[];state.adjustReason="forgot_issue";const p=products.find(x=>x.id===state.selectedProduct);state.modalQty=type==="adjust"&&p?Number(p.stock)||0:1;render()}
-function closeModal(fromHistory=false){if(!fromHistory&&window.history.state?.overlay==="stock"){window.history.back();return}state.modal=null;state.cart=[];state.selectedProduct=null;state.transactionBusy=false;render()}
+function switchStockMode(type){if(state.transactionBusy)return;if(state.modal===type)return;state.modal=type;state.cart=[];state.adjustReason="forgot_issue";const p=products.find(x=>x.id===state.selectedProduct);state.modalQty=type==="adjust"&&p?Number(p.stock)||0:1;render()}
+function closeModal(fromHistory=false){if(state.transactionBusy)return;if(!fromHistory&&window.history.state?.overlay==="stock"){window.history.back();return}state.modal=null;state.cart=[];state.selectedProduct=null;state.transactionBusy=false;render()}
 function modalResults(){const q=state.productQuery.trim().toLowerCase();if(!q)return "";const found=products.filter(p=>[p.easy,p.code,p.real].some(v=>v.toLowerCase().includes(q))).slice(0,6);return `<div class="results">${found.length?found.map(p=>`<button class="result" onclick="selectProduct('${p.id}')"><span><b>${esc(p.easy)}</b><small>${esc(p.code)} · ${esc(p.real)}</small></span><span class="stock">${p.stock} ${esc(p.unit)}</span></button>`).join(""):`<div class="empty">ไม่พบสินค้า</div>`}</div>`}
 function selectProduct(id){state.selectedProduct=id;state.productQuery="";const p=products.find(x=>x.id===id);state.modalQty=state.modal==="adjust"&&p?Number(p.stock)||0:1;render()}
 function renderStockModal(){const p=products.find(x=>x.id===state.selectedProduct),isIn=state.modal==="receive",isAdjust=state.modal==="adjust";return `<div class="modal-backdrop" onclick="if(event.target===this&&!state.transactionBusy)closeModal()"><section class="modal ${isIn?'receive-mode':isAdjust?'adjust-mode':'issue-mode'}"><div class="modal-title"><h2>${p?esc(p.easy):'เลือกสินค้า'}</h2><button class="icon-btn close" ${state.transactionBusy?'disabled':''} onclick="closeModal()">×</button></div><div class="mode-switch three"><button class="receive ${state.modal==='receive'?'active':''}" onclick="switchStockMode('receive')">＋ รับเข้า</button><button class="adjust ${isAdjust?'active':''}" onclick="switchStockMode('adjust')">± ปรับยอด</button><button class="issue ${state.modal==='issue'?'active':''}" onclick="switchStockMode('issue')">− เบิกออก</button></div>${p?`<button class="change-product" ${state.transactionBusy?'disabled':''} onclick="state.selectedProduct=null;render()">← เปลี่ยนสินค้า</button>${renderSelectedProduct(p)}`:`<label class="search"><input id="modalSearch" value="${esc(state.productQuery)}" oninput="state.productQuery=this.value;updateModalResults()" placeholder="พิมพ์ชื่อ รหัส หรือชื่อจริง" autocomplete="off" autofocus></label><div id="modalResults">${modalResults()}</div>`}</section></div>`}
@@ -2149,9 +2088,48 @@ async function addToOldestExpiryLot(lines,now,user){
 }
 async function removeExpiryLotsFromStore(lines,reason,now,user){await ensureExpiryLotsLoaded();const changes=[];for(const line of lines){const p=productByAnyId(line.productId);if(!p)continue;let left=Math.max(0,Number(line.qty)||0);const lots=state.expiryLots.filter(l=>!l.acknowledged&&(String(l.productId)===String(p.id)||String(l.code)===String(p.code))&&lotStoreQty(l)>0).sort((a,b)=>String(a.reviewDate||a.receivedAt||"").localeCompare(String(b.reviewDate||b.receivedAt||"")));for(const lot of lots){if(left<=0)break;const take=Math.min(left,lotStoreQty(lot));lot.storeQty=lotStoreQty(lot)-take;left-=take;changes.push({kind:"lot_remove",lotId:lot.id,qty:take});await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots/${lot.id}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({storeQty:lot.storeQty,lastAdjustedAt:now,lastAdjustedBy:user.nick,lastAdjustmentReason:reason})})}}return changes}
 async function reverseAdjustmentLotChanges(changes){if(!Array.isArray(changes))return;await ensureExpiryLotsLoaded();for(const c of changes.slice().reverse()){const lot=state.expiryLots.find(x=>x.id===c.lotId);if(c.kind==="lot_create"){await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots/${c.lotId}.json`,{method:"DELETE"}).catch(()=>null);state.expiryLots=state.expiryLots.filter(x=>x.id!==c.lotId)}else if(lot&&c.kind==="lot_add"){lot.storeQty=Math.max(0,lotStoreQty(lot)-Number(c.qty||0));await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots/${lot.id}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({storeQty:lot.storeQty})}).catch(()=>null)}else if(lot&&c.kind==="lot_remove"){lot.storeQty=lotStoreQty(lot)+Number(c.qty||0);await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots/${lot.id}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({storeQty:lot.storeQty})}).catch(()=>null)}}}
-async function confirmTransaction(){if(state.transactionBusy)return;const user=activeEmployee();if(!user){toast("กรุณาเลือกชื่อผู้ใช้งานก่อนทำรายการ");state.modal=null;state.view="who";consumeOverlay();render();return}const type=state.modal,lines=state.cart.map(x=>({...x}));if(!lines.length)return;state.transactionBusy=true;render();try{for(const line of lines){const p=products.find(x=>x.id===line.id),central=await getCentralStock(p);if(central!==null&&Math.abs(central-Number(line.before??p.stock))>.0001){p.stock=central;saveData();toast(`ยอด ${p.easy} ถูกแก้จากอีกเครื่องแล้ว · อัปเดตเป็น ${central} ${p.unit} กรุณาทำรายการใหม่`);state.transactionBusy=false;state.cart=[];render();return}}const operator=user.nick,operatorId=user.id,now=await centralNowIso(),centralLines=[],undoLines=[];for(const line of lines){const p=products.find(x=>x.id===line.id),before=Number(p.stock)||0,previousLast=p.last||null,target=type==="adjust"?Number(line.target):type==="receive"?before+Number(line.qty):before-Number(line.qty),qty=Math.abs(target-before),reason=type==="adjust"?line.reason||"count_plus":"";p.stock=target;p.last={type,qty,time:now,operator,operatorId,reason,before,after:target};const historyId=`tx-${Date.now()}-${p.id}`;history.unshift({id:historyId,type,reason,productId:p.id,easy:p.easy,code:p.code,qty,unit:p.unit,operator,operatorId,time:now,before,balance:target});undoLines.push({productId:p.id,before,previousLast,historyId});centralLines.push({productId:p.id,easy:p.easy,code:p.code,qty,unit:p.unit,before,balance:target,reason,last:p.last})}state.lastUndo={type,operator,createdAt:Date.now(),expiresAt:Date.now()+30000,lines:undoLines};saveData();setStoreDirty(true);state.flashId=lines[0]?.id||null;await Promise.all(centralLines.map(x=>fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory/${x.productId}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({easy:x.easy,stock:x.balance,unit:x.unit,last:x.last})})));const txRes=await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_transactions.json`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type,operator,operatorId,time:now,lines:centralLines})});if(!txRes.ok)throw new Error("transaction");if(type==="receive"){const expiryLotIds=await createExpiryLotsForReceive(centralLines,now,user);if(state.lastUndo)state.lastUndo.expiryLotIds=expiryLotIds}else if(type==="issue"){const expiryMoves=await moveExpiryLotsToFront(centralLines);if(state.lastUndo)state.lastUndo.expiryMoves=expiryMoves}else if(type==="adjust"){const plus=centralLines.filter(x=>x.balance>x.before).map(x=>({...x,qty:x.balance-x.before})),forgot=centralLines.filter(x=>x.balance<x.before&&x.reason==="forgot_issue").map(x=>({...x,qty:x.before-x.balance})),special=centralLines.filter(x=>x.balance<x.before&&x.reason!=="forgot_issue").map(x=>({...x,qty:x.before-x.balance}));const changes=[];if(plus.length)changes.push(...await addToOldestExpiryLot(plus,now,user));if(forgot.length){const expiryMoves=await moveExpiryLotsToFront(forgot);if(state.lastUndo)state.lastUndo.expiryMoves=expiryMoves}if(special.length)changes.push(...await removeExpiryLotsFromStore(special,special[0]?.reason||"adjust",now,user));if(state.lastUndo)state.lastUndo.adjustmentLotChanges=changes}await markStoreChanged(now,operator);queueStoreSheetAutoSync(12000);state.modal=null;state.cart=[];state.selectedProduct=null;consumeOverlay();toast(`${type==="receive"?"รับเข้า":type==="issue"?"เบิกออก":"ปรับยอด"}เรียบร้อย · โดย ${operator}`)}catch(e){toast("รายการยังบันทึกไม่ครบ กรุณาตรวจอินเทอร์เน็ตแล้วลองใหม่");setStoreDirty(true)}finally{state.transactionBusy=false;render();setTimeout(()=>{state.flashId=null;if(state.view==="store")render()},1800);setTimeout(()=>{if(state.lastUndo&&Date.now()>=state.lastUndo.expiresAt){state.lastUndo=null;if(state.view==="store")render()}},30500)}}
+const storeTransport=OHStoreTransport.create({url:CONFIG.firebaseDatabaseUrl,fetch:(...args)=>fetch(...args),storage:localStorage,same:OHStoreCore.same});
+const STORE_UNDO_KEY='oh_store_undo_v1:'+CONFIG.firebaseDatabaseUrl;
+try{const saved=JSON.parse(localStorage.getItem(STORE_UNDO_KEY)||'null');if(saved?.plan&&saved.expiresAt>Date.now())state.lastUndo=saved}catch(e){}
+let storeReconcilePromise=null;
+function applyCommittedStore(plan,recovered=false){
+  for(const line of plan.tx.lines){const p=productByAnyId(line.productId);if(!p)continue;p.stock=line.balance;p.last=plan.patch[`store_hub_inventory/${p.id}/last`]??null}
+  for(const [path,value] of Object.entries(plan.patch))if(path.startsWith('store_hub_expiry_lots/')){const id=path.split('/')[1];state.expiryLots=state.expiryLots.filter(x=>x.id!==id);if(value)state.expiryLots.push({id,...value})}
+  plan.tx.lines.forEach((line,i)=>{const hid=`${plan.id}-${i}`;if(!history.some(x=>x.id===hid))history.unshift({id:hid,...line,type:plan.tx.type,operator:plan.tx.operator,operatorId:plan.tx.operatorId,time:plan.tx.time,balance:line.balance})});
+  if(plan.tx.type==='undo'){state.lastUndo=null;localStorage.removeItem(STORE_UNDO_KEY)}
+  else{state.lastUndo={type:plan.tx.type,operator:plan.tx.operator,createdAt:Date.now(),expiresAt:new Date(plan.tx.time).getTime()+30000,lines:plan.tx.lines,plan};localStorage.setItem(STORE_UNDO_KEY,JSON.stringify(state.lastUndo))}
+  saveData();setStoreDirty(true);storeTransport.acknowledge(plan.id);queueStoreSheetAutoSync();
+}
+async function reconcilePendingStore(){
+  if(storeReconcilePromise)return storeReconcilePromise;
+  storeReconcilePromise=(async()=>{const plan=await storeTransport.recover();if(plan)applyCommittedStore(plan,true);return !!plan})();
+  try{return await storeReconcilePromise}finally{storeReconcilePromise=null}
+}
+async function storeSnapshots(){const [inventory,lots,rules]=await Promise.all(['store_hub_inventory','store_hub_expiry_lots','store_hub_expiry_rules'].map(path=>storeTransport.read(path)));if(!inventory||typeof inventory!=='object')throw new Error('อ่านยอดกลางไม่ได้');return {inventory,lots:lots||{},rules:rules||{}}}
+async function confirmTransaction(){
+  if(state.transactionBusy)return;if(state.storeSyncing){toast('กำลังสำรองชีต กรุณารอให้เสร็จก่อน');return}const user=activeEmployee();if(!user){toast('กรุณาเลือกผู้ใช้งานก่อน');return}
+  if(!['receive','issue','adjust'].includes(state.modal)||!state.cart.length)return;
+  state.transactionBusy=true;render();
+  try{
+    if(await reconcilePendingStore()){state.cart=[];toast('พบรายการเดิมบันทึกสำเร็จแล้ว · รีเฟรชยอดก่อนทำรายการถัดไป');return}
+    const snapshots=await storeSnapshots(),now=new Date().toISOString();
+    const plan=OHStoreCore.plan({id:'tx_'+crypto.randomUUID(),type:state.modal,lines:state.cart.map(x=>({...x})),products,...snapshots,operator:user.nick,operatorId:user.id,time:now,day:dateKey(new Date(now)),reviewDay:days=>dateKey(addDays(new Date(now),days))});
+    await storeTransport.commit(plan);applyCommittedStore(plan);
+    state.modal=null;state.cart=[];state.selectedProduct=null;consumeOverlay();toast('บันทึกยอด ประวัติ และล็อตแล้ว · โดย '+user.nick);
+  }catch(e){toast(String(e.message||e))}finally{state.transactionBusy=false;render()}
+}
 function renderUndoBanner(){const u=state.lastUndo;if(!u||Date.now()>=u.expiresAt)return "";const line=u.lines[0],p=products.find(x=>x.id===line.productId),label=u.type==="receive"?"รับเข้า":u.type==="issue"?"เบิกออก":"ปรับยอด";return `<div class="undo-banner"><span><b>รายการล่าสุด</b><small>${label} ${esc(p?.easy||"สินค้า")} · โดย ${esc(u.operator)}</small></span><button onclick="undoLastTransaction()">↶ ยกเลิก</button></div>`}
-async function undoLastTransaction(){const u=state.lastUndo;if(!u||Date.now()>=u.expiresAt){state.lastUndo=null;render();toast("หมดเวลายกเลิกรายการแล้ว");return}if(state.transactionBusy)return;state.transactionBusy=true;const restored=[];u.lines.forEach(line=>{const p=products.find(x=>x.id===line.productId);if(!p)return;p.stock=line.before;p.last=line.previousLast;history=history.filter(h=>h.id!==line.historyId);restored.push(p)});saveData();setStoreDirty(true);render();try{await Promise.all(restored.map(p=>fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_inventory/${p.id}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({stock:p.stock,last:p.last||null})})));await fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_transactions.json`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"undo",operator:activeEmployee()?.nick||"",time:await centralNowIso(),lines:u.lines,originalType:u.type})});if(Array.isArray(u.expiryLotIds)&&u.expiryLotIds.length){await Promise.all(u.expiryLotIds.map(id=>fetch(`${CONFIG.firebaseDatabaseUrl}/store_hub_expiry_lots/${id}.json`,{method:"DELETE"})));state.expiryLots=state.expiryLots.filter(l=>!u.expiryLotIds.includes(l.id))}if(Array.isArray(u.expiryMoves)&&u.expiryMoves.length)await reverseExpiryMoves(u.expiryMoves);if(Array.isArray(u.adjustmentLotChanges)&&u.adjustmentLotChanges.length)await reverseAdjustmentLotChanges(u.adjustmentLotChanges);state.lastUndo=null;const undoTime=await centralNowIso();await markStoreChanged(undoTime,activeEmployee()?.nick||u.operator||"");queueStoreSheetAutoSync(12000);toast("ยกเลิกรายการและล็อตที่เกี่ยวข้องแล้ว")}catch(e){toast("ยกเลิกในเครื่องแล้ว แต่ส่งขึ้นระบบกลางไม่สำเร็จ")}finally{state.transactionBusy=false;render()}}
+async function undoLastTransaction(){
+  if(state.transactionBusy||state.storeSyncing)return;const u=state.lastUndo;
+  if(!u?.plan||Date.now()>=u.expiresAt){state.lastUndo=null;render();toast('หมดเวลายกเลิกรายการแล้ว');return}
+  state.transactionBusy=true;render();
+  try{
+    if(await reconcilePendingStore()){toast('ตรวจสอบรายการเดิมสำเร็จแล้ว');return}
+    const snapshots=await storeSnapshots(),user=activeEmployee();
+    const plan=OHStoreCore.undo({id:'undo_'+crypto.randomUUID(),original:u.plan,...snapshots,operator:user?.nick||u.operator,operatorId:user?.id||'',time:new Date().toISOString()});
+    await storeTransport.commit(plan);applyCommittedStore(plan);toast('ยกเลิกยอดและล็อตแล้ว · เก็บประวัติไว้ตรวจสอบ');
+  }catch(e){toast(String(e.message||e))}finally{state.transactionBusy=false;render()}
+}
 
 async function loadCentralHistory(silent=false){
   if(centralHistoryLoading)return;
@@ -2235,11 +2213,12 @@ function usageRoundTime(round){return round?.sourceTimestamp||round?.countSubmit
 function usageRoundLabel(round){const t=usageRoundTime(round);if(!t)return "ไม่ทราบเวลา";const d=new Date(t);return Number.isNaN(d.getTime())?String(t):new Intl.DateTimeFormat("th-TH",{dateStyle:"short",timeStyle:"short"}).format(d)}
 function usageRoundKey(timestamp){return `round_${String(timestamp||Date.now()).replace(/[.#$\[\]\/:]/g,"_")}`}
 function normalizeUsageRounds(data){return Object.entries(data||{}).map(([key,value])=>({key,...value})).filter(x=>x&&x.items).sort((a,b)=>new Date(usageRoundTime(b)||0)-new Date(usageRoundTime(a)||0))}
-function transactionAdjustments(transactions,from,to){const received={},neutralIn={},neutralOut={};firebaseValues(transactions).forEach(tx=>{const t=new Date(tx?.time||0);if(!tx?.time||t<=from||t>to||tx.type==="undo")return;(tx.lines||[]).forEach(line=>{const id=String(line.productId||line.code||""),qty=Math.max(0,finiteNumber(line.qty));if(!id||!qty)return;if(tx.type==="receive")received[id]=(received[id]||0)+qty;else if(tx.type==="adjust"){const before=finiteNumber(line.before),after=finiteNumber(line.balance);if(after>before)neutralIn[id]=(neutralIn[id]||0)+(after-before);else if(after<before&&line.reason!=="forgot_issue")neutralOut[id]=(neutralOut[id]||0)+(before-after)}})});return {received,neutralIn,neutralOut}}
+function effectiveStoreTransactions(transactions){const list=firebaseValues(transactions),undone=new Set(list.filter(x=>x.type==='undo'&&x.originalTxId).map(x=>x.originalTxId));return Object.entries(transactions||{}).filter(([id,x])=>x.type!=='undo'&&!undone.has(id)).map(([,x])=>x)}
+function transactionAdjustments(transactions,from,to){const received={},neutralIn={},neutralOut={};effectiveStoreTransactions(transactions).forEach(tx=>{const t=new Date(tx?.time||0);if(!tx?.time||t<=from||t>to||tx.type==="undo")return;(tx.lines||[]).forEach(line=>{const id=String(line.productId||line.code||""),qty=Math.max(0,finiteNumber(line.qty));if(!id||!qty)return;if(tx.type==="receive")received[id]=(received[id]||0)+qty;else if(tx.type==="adjust"){const before=finiteNumber(line.before),after=finiteNumber(line.balance);if(after>before)neutralIn[id]=(neutralIn[id]||0)+(after-before);else if(after<before&&line.reason!=="forgot_issue")neutralOut[id]=(neutralOut[id]||0)+(before-after)}})});return {received,neutralIn,neutralOut}}
 function buildUsageRows(currentItems,previous,transactions,currentTime){
   const from=new Date(usageRoundTime(previous)||0),to=new Date(currentTime||Date.now()),issued={};
   if(previous){
-    firebaseValues(transactions).forEach(tx=>{
+    effectiveStoreTransactions(transactions).forEach(tx=>{
       if(!tx?.time||new Date(tx.time)<=from||new Date(tx.time)>to)return;
       if(tx.type!=="issue"&&!(tx.type==="adjust"&&tx.lines?.some(l=>l.reason==="forgot_issue")))return;
       (tx.lines||[]).forEach(line=>{
@@ -2752,6 +2731,7 @@ startStoreRealtime();
 setTimeout(()=>{loadIncomingToday(true,0);loadIncomingToday(true,1)},450);
 setTimeout(()=>syncStoreCatalog(),900);
 setTimeout(()=>checkForUpdates(false),1200);
+setTimeout(()=>{if(state.storeDirty)queueStoreSheetAutoSync()},15000);
 setInterval(()=>{if(!document.hidden)checkForUpdates(false)},5*60*1000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){localStorage.removeItem("oh_update_last_check");checkForUpdates(false);loadPostits(true);if(state.view==="incoming")loadIncomingToday(true,state.incomingDay)}});
 window.addEventListener("focus",()=>checkForUpdates(false));
