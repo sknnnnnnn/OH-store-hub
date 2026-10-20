@@ -1777,23 +1777,9 @@ function scheduleRangeRealCount(start,days=30){
   return n
 }
 async function recoverEmbeddedScheduleIfEmpty(){
-  const start=new Date(2026,8,21);
-  if(scheduleRangeRealCount(start,30)>0)return false;
-  let restored=0;const touched=new Set();
-  Object.entries(sourceScheduleRows||{}).forEach(([empId,shifts])=>{
-    shifts.forEach((shift,i)=>{
-      if(!shift||shift==="NONE")return;
-      const d=addDays(start,i),mk=monthKey(d),dk=dateKey(d);
-      scheduleMonths[mk]??={};scheduleMonths[mk][empId]??={};
-      scheduleMonths[mk][empId][dk]=shift;touched.add(mk);restored++;
-    })
-  });
-  if(!restored)return false;
-  saveData();
-  try{await Promise.all([...touched].map(mk=>fetch(`${CONFIG.firebaseDatabaseUrl}/work_schedules/${mk}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(scheduleMonths[mk])})))}catch(e){}
-  if(state.view==="schedule"||state.view==="day"||state.view==="person"||state.view==="home")render();
-  toast(`กู้ตารางเดิมกลับมาแล้ว ${restored} ช่อง`);
-  return true
+  // Safety hotfix: never restore old embedded roster into production automatically.
+  // Manual, confirmed, cycle-scoped backups remain available in Schedule Operations.
+  return false;
 }
 async function loadRemoteSchedules(){
   try{
