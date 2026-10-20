@@ -4,7 +4,22 @@
 const VALID=new Set(["6","7","8","11","13","OFF","LEAVE","HOLIDAY","VACATION","EXIT"]);
 const codeMap=()=>oj16EmployeeCodeMap();
 let draft=null, busy=false;
-const PREVIEW_ONLY=true; // Incident recovery: enable reading and review; prohibit Firebase writes.
+const PREVIEW_ONLY=true; // Incident recovery: review only; never write Firebase.
+// The selected cycle (21st through following 20th) is the ONLY allowed write window.
+function assertSelectedCycle(cycle,dates,updates){
+ const expected=cycleDates(cycle);
+ if(JSON.stringify(dates)!==JSON.stringify(expected))throw Error("รอบวันที่ใน Preview ไม่ตรงกับเดือนที่เลือก");
+ if(!Array.isArray(updates)||!updates.length)throw Error("ไม่มีรายการสำหรับนำเข้า");
+ const allowed=new Set(expected),unique=new Set();
+ for(const u of updates){
+   if(!allowed.has(u.date))throw Error("พบวันที่อยู่นอกรอบที่เลือก จึงยกเลิก");
+   if(!/^p\d{2}$/.test(u.id))throw Error("รหัสพนักงานไม่ถูกต้อง");
+   const key=u.id+"|"+u.date;
+   if(unique.has(key))throw Error("พนักงานและวันที่ซ้ำ");
+   unique.add(key);
+ }
+ return {first:expected[0],last:expected[expected.length-1]};
+}
 const cycleDates=start=>{
   const [y,m,d]=start.split("-").map(Number);
   if(d!==21||!Number.isInteger(y)||m<1||m>12)throw Error("รอบต้องเริ่มวันที่ 21");
@@ -91,6 +106,7 @@ async function load(cycle){
    });
   }
   if(!updates.length)throw Error("ไม่พบข้อมูลกะที่นำเข้าได้");
+  assertSelectedCycle(cycle,dates,updates);
   draft={cycle,dates,updates,unmatched,unknown,sheetName:result.sheetName,remoteReadOk,remoteReadError};
   renderPreview();
  }catch(e){modal('<p style="color:#b91c1c">อ่านข้อมูลไม่ได้: '+html(e.message||e)+'</p><div class="editor-actions"><button class="ghost-btn" onclick="openSheetScheduleImport()">กลับไปเลือกรอบ</button></div>')}
@@ -155,7 +171,8 @@ function renderPreview(){
  '</style>';
  const summary='<div class="oh-cal-summary"><span>พนักงาน <b>'+people.length+'</b> คน</span><span>วันที่ <b>'+draft.dates.length+'</b> วัน</span><span>ช่องที่ต่างจากเดิม <b id="oh-cal-changed">0</b></span><span>ต้องตรวจ <b id="oh-cal-review">0</b></span></div>';
  const legend='<div class="oh-cal-legend"><span>6/7/8/11/13 = กะทำงาน</span><span>F = หยุด</span><span>นข = นักขัตฤกษ์</span><span>พร = พักร้อน</span><span>ลา = ลางาน</span><span>ออก = ออกจากงาน</span><span>แถบสีน้ำเงินใต้ช่อง = เปลี่ยนจากเดิม</span></div>';
- const el=modal(style+'<p><b>ตารางปฏิทิน · '+html(draft.cycle)+' ถึง '+html(draft.dates.at(-1))+'</b> · ชีต '+html(draft.sheetName)+'</p>'+summary+warn+legend+
+ const el=modal(style+'<p><b>ตารางปฏิทิน · '+html(draft.cycle)+' ถึง '+html(draft.dates.at(-1))+'</b> · ชีต '+html(draft.sheetName)+'</p>'+
+ '<p style="padding:9px 12px;background:#edf7ef;color:#276447;border-radius:9px;font-size:13px"><b>ช่วงนำเข้าเฉพาะที่เลือก:</b> '+html(draft.cycle)+' ถึง '+html(draft.dates.at(-1))+' · ตารางก่อนและหลังช่วงนี้ต้องคงเดิม</p>'+summary+warn+legend+
  '<p style="color:#95600a;font-size:12px">เลื่อนตารางซ้าย–ขวาเพื่อดูทุกวัน · แตะกะในช่องเพื่อแก้ · ช่องว่างจะไม่ลบกะเดิม</p>'+
  previewWarning+'<div class="oh-cal-wrap" tabindex="0" aria-label="ตารางกะพนักงานแบบปฏิทิน"><table class="oh-cal-grid"><thead><tr><th class="oh-cal-name">พนักงาน</th>'+head+'</tr></thead><tbody>'+rows+'</tbody></table></div>'+
  '<label style="display:flex;gap:9px;align-items:flex-start;margin:14px 0;font-size:13px"><input id="oh-sheet-cycle-confirm" type="checkbox" style="margin-top:3px"> ฉันตรวจแล้วว่าชีตนี้เป็นรอบวันที่ 21–20 ของเดือนที่เลือกจริง</label>'+
@@ -182,6 +199,8 @@ function renderPreview(){
 }
 async function publish(checked){
  if(busy||!draft)return;
+ // Fail closed: reject any date outside the cycle, even if a UI or parser bug leaks one in.
+ try{assertSelectedCycle(draft.cycle,draft.dates,draft.updates)}catch(e){alert(e.message||e);return}
  if(PREVIEW_ONLY||!draft.remoteReadOk){alert('ขณะนี้เปิดให้ตรวจ Preview เท่านั้น ยังไม่อนุญาตให้เขียนข้อมูล Firebase');return}
  if(!checked){alert("กรุณายืนยันว่ารอบ 21–20 ถูกต้อง");return}
  if(draft.updates.some(u=>u.review)||draft.unmatched.length){alert("ยังมีรหัสกะหรือพนักงานที่ต้องตรวจแก้ก่อนบันทึก");return}
@@ -191,7 +210,9 @@ async function publish(checked){
   const patch={},old={};
   const changedCells=draft.updates.filter(cell=>cell.value!==cell.old);
   if(!changedCells.length){document.getElementById("oh-sheet-schedule-overlay")?.remove();draft=null;toast("ตารางตรงกับข้อมูลเดิมแล้ว ไม่มีรายการที่ต้องบันทึก");return}
+  const allowed=new Set(cycleDates(draft.cycle));
   for(const cell of changedCells){
+   if(!allowed.has(cell.date))throw Error("วันที่อยู่นอกรอบที่เลือก: "+cell.date);
    const m=cell.date.slice(0,7);
    const path="work_schedules/"+m+"/"+cell.id+"/"+cell.date;
    if(Object.hasOwn(patch,path))throw Error("ข้อมูลพนักงาน/วันที่ซ้ำ");
