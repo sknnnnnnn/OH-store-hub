@@ -190,9 +190,14 @@ async function publish(checked){
     }
     if(readBack[m]?.[cell.id]?.[cell.date]!==cell.value)throw Error("ข้อมูล Firebase หลังบันทึกไม่ตรงกับตารางที่ยืนยัน");
   }
+  // Firebase read-back passed. Local cache/display errors must not be reported as a failed write.
   for(const cell of changedCells){const m=cell.date.slice(0,7);scheduleMonths[m]??={};scheduleMonths[m][cell.id]??={};scheduleMonths[m][cell.id][cell.date]=cell.value}
-  saveData();draft=null;document.getElementById("oh-sheet-schedule-overlay")?.remove();render();toast("บันทึกตารางจาก Sheets แล้ว (เก็บสำเนาก่อนเปลี่ยน)");
- }catch(e){alert("ยังไม่ยืนยันว่าบันทึกสำเร็จ: "+(e.message||e)+"\nอย่ากดนำเข้าซ้ำจนกว่าจะตรวจข้อมูลกลาง");}
+  let localWarning="";
+  try{saveData()}catch(e){localWarning="สำเร็จใน Firebase แต่สำรองข้อมูลในเบราว์เซอร์ไม่ได้: "+String(e.message||e)}
+  draft=null;document.getElementById("oh-sheet-schedule-overlay")?.remove();
+  try{render()}catch(e){localWarning+=" · หน้าเว็บอัปเดตไม่สำเร็จ กรุณารีโหลด"}
+  alert(localWarning||"บันทึกและตรวจยืนยันข้อมูลตารางงานใน Firebase สำเร็จแล้ว");
+ }catch(e){alert("ยังไม่สามารถยืนยันผลการบันทึกได้: "+(e.message||e)+"\nอย่ากดนำเข้าซ้ำจนกว่าจะตรวจข้อมูลกลาง");}
  finally{busy=false}
 }
 })();
