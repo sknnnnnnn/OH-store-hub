@@ -54,7 +54,8 @@ async function load(cycle){
    row.shifts.forEach((v,i)=>{
      if(v==null||String(v).trim()==="")return; // blanks never clear an existing shift
      const parsed=normalize(v),old=scheduleMonths[monthKey(new Date(dates[i]+"T00:00:00"))]?.[id]?.[dates[i]]||"NONE";
-     const cell={id,name:row.nickname||row.name||id,date:dates[i],raw:String(v),value:parsed||"NONE",old,review:!parsed};
+     const employee=employees.find(e=>e.id===id);
+     const cell={id,name:employee?.nick||row.nickname||row.name||id,date:dates[i],raw:String(v),value:parsed||"NONE",old,review:!parsed};
      updates.push(cell);if(cell.review)unknown.push(cell);
    });
   }
