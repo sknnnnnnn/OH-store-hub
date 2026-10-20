@@ -48,3 +48,48 @@ body:not([data-view="who"]) .panel,body:not([data-view="who"]) .tool-panel,body:
  .v2-highlight{grid-template-columns:1fr;min-height:210px}.v2-highlight-visual{display:none}.v2-highlight h2{font-size:27px}.v2-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.v2-stat-card:first-child{grid-column:1/-1;min-height:140px}.v2-work-grid{grid-template-columns:1fr}.v2-work-tile{min-height:85px;padding:16px}.v2-section-title h2{font-size:20px}.v2-tools-grid button{padding:10px;font-size:11px}.v2-external{padding:15px}.v2-external-head{flex-direction:column}.v2-external-links a{font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){.v2-highlight *, .v2-home *{animation:none!important;transition:none!important}}
+
+
+/* V2 Simplified — one navigation system and a focused homepage */
+.v2-simple-home{padding-top:46px!important}
+.v2-simple-home .v2-main-container{max-width:1000px}
+.v2-simple-header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin:0 0 28px}
+.v2-simple-header h1{font-size:clamp(30px,3.7vw,43px);line-height:1.2;margin:17px 0 7px;letter-spacing:-.7px;font-weight:950}
+.v2-simple-header p{margin:0;font-size:13px;color:#718378}
+.v2-simple-user{background:white;border:1px solid #dde9df;border-radius:13px;padding:11px 15px;font-size:12px;color:#365c47;font-weight:850;white-space:nowrap}
+.v2-simple-user span{font-size:19px;margin-left:7px}
+.v2-simple-focus{padding:32px 35px;min-height:175px;border-radius:22px;background:#20543e;display:flex;justify-content:space-between;gap:25px;align-items:center;color:white}
+.v2-simple-kicker{font-size:11px;font-weight:850;color:#b9dec6}
+.v2-simple-focus h2{font-size:26px;font-weight:950;letter-spacing:-.5px;margin:10px 0 5px}
+.v2-simple-focus p{font-size:12px;margin:0;color:#c5dfcd}
+.v2-simple-cta{background:#f3f8e9;border:0;border-radius:12px;padding:13px 17px;color:#1b5a3e;font-size:14px;font-weight:900;white-space:nowrap}
+.v2-simple-cta span{margin-left:20px}
+.v2-simple-status{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:18px 0 35px}
+.v2-simple-status>div{display:flex;flex-direction:column;gap:9px;align-items:flex-start;background:white;border:1px solid #e6eee7;border-radius:16px;padding:20px 23px}
+.v2-simple-status span{font-size:12px;color:#73867a}.v2-simple-status strong{font-size:31px;font-weight:950;line-height:1.25}.v2-simple-status strong small{font-size:12px;font-weight:750;color:#8b9d8f}
+.v2-simple-more{background:white;border:1px solid #e4ece6;border-radius:17px;overflow:hidden}
+.v2-simple-more summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none;padding:20px 24px;font-weight:900;color:#365b47;font-size:13px}
+.v2-simple-more summary::-webkit-details-marker{display:none}.v2-simple-more summary span{font-size:16px;transition:transform .2s}
+.v2-simple-more[open] summary span{transform:rotate(180deg)}
+.v2-simple-tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;border-top:1px solid #e8f0e9;padding:17px}
+.v2-simple-tools button{display:flex;justify-content:space-between;align-items:center;gap:9px;border:1px solid #e8efe9;border-radius:11px;text-align:left;padding:14px;background:#f9fbf9;color:#3e6150;font-size:12px;font-weight:800}
+.v2-simple-tools button span{color:#89ad91;font-size:16px}
+.v2-simple-external{padding:10px 19px 23px;display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.v2-simple-external>span{font-size:11px;color:#809386;width:100%}
+.v2-simple-external a{font-size:11px;text-decoration:none;color:#3e7359}
+@media(max-width:760px){
+ .v2-simple-home{padding-top:21px!important}
+ .v2-simple-header{margin-bottom:19px;align-items:flex-start}
+ .v2-simple-header h1{font-size:29px;margin-top:12px}
+ .v2-simple-user{font-size:11px;padding:9px;min-height:42px}
+ .v2-simple-focus{padding:22px 20px;border-radius:17px;min-height:0;flex-direction:column;align-items:stretch;gap:21px}
+ .v2-simple-focus h2{font-size:23px}
+ .v2-simple-cta{text-align:center;min-height:47px}
+ .v2-simple-status{gap:8px;margin:12px 0 25px}
+ .v2-simple-status>div{padding:13px 12px;border-radius:13px}
+ .v2-simple-status span{font-size:10px}
+ .v2-simple-status strong{font-size:25px}
+ .v2-simple-status strong small{font-size:9px}
+ .v2-simple-tools{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:380px){.v2-simple-tools{grid-template-columns:1fr}.v2-simple-header h1{font-size:25px}}
