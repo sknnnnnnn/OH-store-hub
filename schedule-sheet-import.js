@@ -1,9 +1,9 @@
 /* OH Store Hub — read-only Sheets schedule preview; no write until explicit confirmation. */
 (function(){
 "use strict";
-const VALID=new Set(["6","7","8","11","13","OFF","LEAVE"]);
+const VALID=new Set(["6","7","8","11","13","OFF","LEAVE","HOLIDAY","VACATION","EXIT"]);
 const codeMap=()=>oj16EmployeeCodeMap();
-let draft=null, busy=false, snapshotHash="";
+let draft=null, busy=false;
 const cycleDates=start=>{
   const [y,m,d]=start.split("-").map(Number);
   if(d!==21||!Number.isInteger(y)||m<1||m>12)throw Error("รอบต้องเริ่มวันที่ 21");
@@ -32,6 +32,9 @@ function normalize(raw){
  const x=String(raw??"").trim().toUpperCase();
  if(["F","OFF","OFFOFF","หยุด"].includes(x))return "OFF";
  if(["ลา","LEAVE"].includes(x))return "LEAVE";
+ if(x==="นข")return "HOLIDAY";
+ if(x==="พร")return "VACATION";
+ if(x==="ออก")return "EXIT";
  return VALID.has(x)?x:null;
 }
 async function load(cycle){
@@ -65,7 +68,8 @@ function renderPreview(){
  if(!draft)return;
  const changed=draft.updates.filter(x=>x.old!==x.value).length;
  const review=draft.updates.filter(x=>x.review);
- const rows=draft.updates.map((u,i)=>'<tr><td>'+html(u.name)+'</td><td>'+html(u.date)+'</td><td>'+html(u.old)+'</td><td>'+html(u.raw)+'</td><td><select data-oh-shift="'+i+'" style="min-width:95px;'+(u.review?'border:2px solid #dc2626':'')+'">'+["NONE","6","7","8","11","13","OFF","LEAVE"].map(c=>'<option value="'+c+'" '+(u.value===c?'selected':'')+'>'+html(c)+'</option>').join("")+'</select></td></tr>').join("");
+ const label=c=>({HOLIDAY:"วันหยุดนักขัตฤกษ์",VACATION:"พักร้อน",EXIT:"ออกจากงาน",OFF:"วันหยุด",LEAVE:"ลางาน",NONE:"ยังไม่กำหนด"})[c]||c;
+ const rows=draft.updates.map((u,i)=>'<tr><td>'+html(u.name)+'</td><td>'+html(u.date)+'</td><td>'+html(label(u.old))+'</td><td>'+html(u.raw)+'</td><td><select data-oh-shift="'+i+'" style="min-width:95px;'+(u.review?'border:2px solid #dc2626':'')+'">'+["NONE","6","7","8","11","13","OFF","LEAVE","HOLIDAY","VACATION","EXIT"].map(c=>'<option value="'+c+'" '+(u.value===c?'selected':'')+'>'+html(label(c))+'</option>').join("")+'</select></td></tr>').join("");
  const warn=draft.unmatched.length?'<p style="color:#b91c1c">รหัสพนักงานที่ยังจับคู่ไม่ได้ (จะไม่บันทึก): '+html(draft.unmatched.join(", "))+'</p>':"";
  const el=modal('<p><b>ชีต: '+html(draft.sheetName)+'</b> · รอบ '+html(draft.cycle)+' ถึง '+html(draft.dates.at(-1))+'</p><p>พบ '+draft.updates.length+' ช่อง · ต่างจากเดิม '+changed+' ช่อง · ต้องแก้รหัสกะ '+review.length+' ช่อง</p>'+warn+'<p style="color:#9a3412">ช่องว่างในชีตจะไม่ลบกะเดิม ตรวจว่ารอบเดือนตรงกับต้นทางก่อนยืนยัน</p><div class="matrix-wrap" style="max-height:55vh"><table class="schedule-matrix"><thead><tr><th>พนักงาน</th><th>วันที่</th><th>เดิม</th><th>ในชีต</th><th>นำเข้าเป็น</th></tr></thead><tbody>'+rows+'</tbody></table></div><label style="display:block;margin:12px 0"><input id="oh-sheet-cycle-confirm" type="checkbox"> ฉันตรวจแล้วว่าเลขวัน 21–20 ในชีตเป็นรอบเดือนที่เลือกจริง</label><div class="editor-actions"><button class="ghost-btn" id="oh-sheet-back">เลือกรอบใหม่</button><button class="save-schedule" id="oh-sheet-publish">ยืนยันบันทึกเฉพาะช่องที่แสดง</button></div>');
  el.querySelector("#oh-sheet-back").onclick=()=>openSheetScheduleImport();
