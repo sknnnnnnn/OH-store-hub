@@ -27,7 +27,17 @@ window.openSheetScheduleImport=function(){
  const options=[-2,-1,0,1,2].map(delta=>{const [y,m]=chosen.split("-").map(Number),date=new Date(y,m-1+delta,21),value=dateKey(date);return '<option value="'+value+'" '+(value===chosen?'selected':'')+'>'+html(fmtDate(date,false))+' – '+html(fmtDate(new Date(date.getFullYear(),date.getMonth()+1,20),false))+'</option>'}).join("");
  const el=modal('<p style="margin:8px 0 12px">ชีตต้นทางไม่มีเดือนและปีในแถววันที่ โปรดเลือกรอบให้ตรงกับชีตจริง</p><div class="field"><label>รอบตาราง (21 ถึง 20)</label><select id="oh-sheet-cycle">'+options+'</select></div><p style="margin:12px 0;color:#9a3412">ระบบจะไม่แตะ Firebase ระหว่างอ่านหรือดูตัวอย่าง</p><div class="editor-actions"><button class="ghost-btn" id="oh-sheet-cancel">ยกเลิก</button><button class="save-schedule" id="oh-sheet-fetch">อ่านข้อมูลและตรวจสอบ</button></div>');
  el.querySelector("#oh-sheet-cancel").onclick=()=>el.remove();
- el.querySelector("#oh-sheet-fetch").onclick=()=>load(el.querySelector("#oh-sheet-cycle").value);
+ el.querySelector("#oh-sheet-fetch").onclick=()=>{
+   if(busy)return;
+   const btn=el.querySelector("#oh-sheet-fetch");
+   btn.disabled=true;btn.textContent="กำลังอ่าน Google Sheets…";
+   let status=el.querySelector("#oh-sheet-progress");
+   if(!status){status=document.createElement("p");status.id="oh-sheet-progress";status.setAttribute("role","status");btn.parentElement.before(status)}
+   status.textContent="กำลังรอ Apps Script ตอบกลับ โปรดรอสักครู่ ไม่ต้องกดซ้ำ";
+   load(el.querySelector("#oh-sheet-cycle").value).finally(()=>{
+     if(btn.isConnected){btn.disabled=false;btn.textContent="อ่านข้อมูลและตรวจสอบ"}
+   });
+ };
 };
 function normalize(raw){
  const x=String(raw??"").trim().toUpperCase();
@@ -51,7 +61,7 @@ async function load(cycle){
   // A failed remote read is visible and never treated as permission to write.
   const remoteMonths={};
   let remoteReadOk=true,remoteReadError="";
-  for(const m of [...new Set(dates.map(d=>d.slice(0,7)))]){
+  for(const m of (PREVIEW_ONLY?[]:[...new Set(dates.map(d=>d.slice(0,7)))])){
     try {
       const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),9000);
       try {
@@ -66,6 +76,7 @@ async function load(cycle){
       break;
     }
   }
+  if(PREVIEW_ONLY){remoteReadOk=false;remoteReadError="โหมดแสดงตารางจาก Google Sheets โดยไม่อ่านข้อมูล Firebase";}
   const map=codeMap(),updates=[],unmatched=[],unknown=[];
   for(const row of result.employees){
    const id=map[String(row.code||"").trim()];
@@ -105,14 +116,14 @@ function renderPreview(){
      if(!entry)return '<td class="oh-cal-empty" title="ช่องว่างในชีต: คงกะเดิม">—</td>';
      const {u,i}=entry;
      const cls=kind(u.value);
-     return '<td class="oh-cal-cell '+(u.review?'oh-cal-review ':'')+(u.old!==u.value?'oh-cal-changed ':'')+'" data-day="'+html(key)+'">'+
+     return '<td class="oh-cal-cell '+(u.review?'oh-cal-review ':'')+(draft.remoteReadOk&&u.old!==u.value?'oh-cal-changed ':'')+'" data-day="'+html(key)+'">'+
      '<select class="oh-cal-select '+cls+'" data-oh-shift="'+i+'" aria-label="'+html(emp.nick+' '+key)+'" title="ในชีต: '+html(u.raw)+' · เดิม: '+html(label(u.old))+'">'+
      options.map(c=>'<option value="'+c+'" '+(u.value===c?'selected':'')+'>'+html(short(c))+'</option>').join("")+
      '</select></td>';
    }).join("");
    return '<tr><th class="oh-cal-name">'+html(emp.nick)+'<small>'+html(emp.id)+'</small></th>'+cells+'</tr>';
  }).join("");
- const previewWarning=(!draft.remoteReadOk?'<p class="oh-cal-warning">⚠ อ่านตารางเดิมจาก Firebase ไม่สำเร็จ ('+html(draft.remoteReadError)+') จึงแสดงกะจากชีตได้ แต่ยังเปรียบเทียบข้อมูลเดิมไม่ได้และปิดการบันทึกไว้</p>':'')+
+ const previewWarning=(!draft.remoteReadOk?'<p class="oh-cal-warning">ℹ ยังไม่ได้เทียบกับข้อมูล Firebase ('+html(draft.remoteReadError)+') จึงแสดงกะจากชีตได้ แต่ยังเปรียบเทียบข้อมูลเดิมไม่ได้และปิดการบันทึกไว้</p>':'')+
   (PREVIEW_ONLY?'<p class="oh-cal-warning">โหมดตรวจสอบอย่างเดียว: ยังไม่เปิดให้บันทึกลง Firebase</p>':'');
  const warn=draft.unmatched.length?'<p class="oh-cal-warning">⚠ พนักงานที่จับคู่รหัสไม่ได้: '+html(draft.unmatched.join(", "))+' (ยังยืนยันไม่ได้)</p>':"";
  const style='<style>'+
@@ -150,9 +161,9 @@ function renderPreview(){
  '<label style="display:flex;gap:9px;align-items:flex-start;margin:14px 0;font-size:13px"><input id="oh-sheet-cycle-confirm" type="checkbox" style="margin-top:3px"> ฉันตรวจแล้วว่าชีตนี้เป็นรอบวันที่ 21–20 ของเดือนที่เลือกจริง</label>'+
  '<div class="editor-actions"><button class="ghost-btn" id="oh-sheet-back">เลือกรอบใหม่</button><button class="save-schedule" id="oh-sheet-publish">ยืนยันบันทึกเฉพาะช่องที่เปลี่ยน</button></div>');
  function refreshSummary(){
-  const changes=draft.updates.filter(x=>x.old!==x.value).length;
+  const changes=draft.remoteReadOk?draft.updates.filter(x=>x.old!==x.value).length:null;
   const reviews=draft.updates.filter(x=>x.review).length;
-  el.querySelector("#oh-cal-changed").textContent=changes;
+  el.querySelector("#oh-cal-changed").textContent=changes===null?"ยังไม่เทียบ":changes;
   el.querySelector("#oh-cal-review").textContent=reviews;
   el.querySelector("#oh-sheet-publish").disabled=Boolean(PREVIEW_ONLY||!draft.remoteReadOk||reviews||draft.unmatched.length);
  }
@@ -162,7 +173,7 @@ function renderPreview(){
    u.value=select.value;u.review=false;
    const td=select.closest("td");
    td.classList.remove("oh-cal-review");
-   td.classList.toggle("oh-cal-changed",u.old!==u.value);
+   td.classList.toggle("oh-cal-changed",draft.remoteReadOk&&u.old!==u.value);
    select.className="oh-cal-select "+kind(u.value);
    refreshSummary();
  });
