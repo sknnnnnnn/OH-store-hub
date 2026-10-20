@@ -86,6 +86,18 @@ async function publish(checked){
    if(Object.hasOwn(patch,path))throw Error("ข้อมูลพนักงาน/วันที่ซ้ำ");
    patch[path]=cell.value;old[path]=cell.old;
   }
+  // Read central state before commit; stop if someone edited any target cell meanwhile.
+  const monthCache={};
+  for(const cell of draft.updates){
+    const m=cell.date.slice(0,7);
+    if(!(m in monthCache)){
+      const r=await fetch(CONFIG.firebaseDatabaseUrl+"/work_schedules/"+m+".json",{cache:"no-store"});
+      if(!r.ok)throw Error("อ่านตารางกลางไม่สำเร็จ: "+r.status);
+      monthCache[m]=await r.json()||{};
+    }
+    const central=monthCache[m]?.[cell.id]?.[cell.date]||"NONE";
+    if(central!==cell.old)throw Error("ตารางกลางถูกแก้ไขแล้ว กรุณาอ่านชีตและตรวจใหม่ก่อน");
+  }
   const key="oh_schedule_sheet_backup_"+draft.cycle+"_"+Date.now();
   localStorage.setItem(key,JSON.stringify({createdAt:new Date().toISOString(),cycle:draft.cycle,previous:old,changes:patch})); // fail-closed
   const response=await fetch(CONFIG.firebaseDatabaseUrl+"/.json",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(patch)});
