@@ -4,6 +4,7 @@
 const VALID=new Set(["6","7","8","11","13","OFF","LEAVE","HOLIDAY","VACATION","EXIT"]);
 const codeMap=()=>oj16EmployeeCodeMap();
 let draft=null, busy=false;
+const PREVIEW_ONLY=true; // Incident recovery: enable reading and review; prohibit Firebase writes.
 const cycleDates=start=>{
   const [y,m,d]=start.split("-").map(Number);
   if(d!==21||!Number.isInteger(y)||m<1||m>12)throw Error("รอบต้องเริ่มวันที่ 21");
@@ -46,12 +47,24 @@ async function load(cycle){
   let result;
   try{const response=await fetch(url,{cache:"no-store",signal:controller.signal});if(!response.ok)throw Error("HTTP "+response.status);result=await response.json()}finally{clearTimeout(timer)}
   if(result.status!=="success"||result.mode!=="scheduleSheetPreview"||result.cycle!==cycle||!Array.isArray(result.dates)||JSON.stringify(result.dates)!==JSON.stringify(dates)||!Array.isArray(result.employees))throw Error("Apps Script ยังไม่รองรับการอ่านตาราง หรือวันที่ในชีตไม่ตรงกับรอบที่เลือก");
-  // Read existing roster directly from Firebase before comparing, never trust stale local data.
+  // Preview must not depend on access to the Firebase schedule.
+  // A failed remote read is visible and never treated as permission to write.
   const remoteMonths={};
+  let remoteReadOk=true,remoteReadError="";
   for(const m of [...new Set(dates.map(d=>d.slice(0,7)))]){
-    const r=await fetch(CONFIG.firebaseDatabaseUrl+"/work_schedules/"+m+".json",{cache:"no-store"});
-    if(!r.ok)throw Error("อ่านตารางกลาง Firebase ไม่สำเร็จ: HTTP "+r.status);
-    remoteMonths[m]=await r.json()||{};
+    try {
+      const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),9000);
+      try {
+        const r=await fetch(CONFIG.firebaseDatabaseUrl+"/work_schedules/"+m+".json",{cache:"no-store",signal:controller.signal});
+        if(!r.ok)throw Error("HTTP "+r.status);
+        const val=await r.json();
+        if(val!==null&&(typeof val!=="object"||Array.isArray(val)))throw Error("Firebase ตอบข้อมูลไม่ถูกต้อง");
+        remoteMonths[m]=val||{};
+      }finally{clearTimeout(timer)}
+    } catch(e){
+      remoteReadOk=false;remoteReadError=String(e.message||e);
+      break;
+    }
   }
   const map=codeMap(),updates=[],unmatched=[],unknown=[];
   for(const row of result.employees){
@@ -60,14 +73,14 @@ async function load(cycle){
    if(!Array.isArray(row.shifts)||row.shifts.length!==dates.length)throw Error("จำนวนช่องตารางงานไม่ตรงกับรอบ");
    row.shifts.forEach((v,i)=>{
      if(v==null||String(v).trim()==="")return; // blanks never clear an existing shift
-     const parsed=normalize(v),old=remoteMonths[dates[i].slice(0,7)]?.[id]?.[dates[i]]||"NONE";
+     const parsed=normalize(v),old=remoteReadOk?(remoteMonths[dates[i].slice(0,7)]?.[id]?.[dates[i]]||"NONE"):"NONE";
      const employee=employees.find(e=>e.id===id);
      const cell={id,name:employee?.nick||row.nickname||row.name||id,date:dates[i],raw:String(v),value:parsed||"NONE",old,review:!parsed};
      updates.push(cell);if(cell.review)unknown.push(cell);
    });
   }
   if(!updates.length)throw Error("ไม่พบข้อมูลกะที่นำเข้าได้");
-  draft={cycle,dates,updates,unmatched,unknown,sheetName:result.sheetName};
+  draft={cycle,dates,updates,unmatched,unknown,sheetName:result.sheetName,remoteReadOk,remoteReadError};
   renderPreview();
  }catch(e){modal('<p style="color:#b91c1c">อ่านข้อมูลไม่ได้: '+html(e.message||e)+'</p><div class="editor-actions"><button class="ghost-btn" onclick="openSheetScheduleImport()">กลับไปเลือกรอบ</button></div>')}
  finally{busy=false}
@@ -99,6 +112,8 @@ function renderPreview(){
    }).join("");
    return '<tr><th class="oh-cal-name">'+html(emp.nick)+'<small>'+html(emp.id)+'</small></th>'+cells+'</tr>';
  }).join("");
+ const previewWarning=(!draft.remoteReadOk?'<p class="oh-cal-warning">⚠ อ่านตารางเดิมจาก Firebase ไม่สำเร็จ ('+html(draft.remoteReadError)+') จึงแสดงกะจากชีตได้ แต่ยังเปรียบเทียบข้อมูลเดิมไม่ได้และปิดการบันทึกไว้</p>':'')+
+  (PREVIEW_ONLY?'<p class="oh-cal-warning">โหมดตรวจสอบอย่างเดียว: ยังไม่เปิดให้บันทึกลง Firebase</p>':'');
  const warn=draft.unmatched.length?'<p class="oh-cal-warning">⚠ พนักงานที่จับคู่รหัสไม่ได้: '+html(draft.unmatched.join(", "))+' (ยังยืนยันไม่ได้)</p>':"";
  const style='<style>'+
  '#oh-sheet-schedule-overlay .schedule-modal{width:min(98vw,1320px)!important;max-width:1320px!important;padding:16px;max-height:96vh;overflow:auto}'+
@@ -131,7 +146,7 @@ function renderPreview(){
  const legend='<div class="oh-cal-legend"><span>6/7/8/11/13 = กะทำงาน</span><span>F = หยุด</span><span>นข = นักขัตฤกษ์</span><span>พร = พักร้อน</span><span>ลา = ลางาน</span><span>ออก = ออกจากงาน</span><span>แถบสีน้ำเงินใต้ช่อง = เปลี่ยนจากเดิม</span></div>';
  const el=modal(style+'<p><b>ตารางปฏิทิน · '+html(draft.cycle)+' ถึง '+html(draft.dates.at(-1))+'</b> · ชีต '+html(draft.sheetName)+'</p>'+summary+warn+legend+
  '<p style="color:#95600a;font-size:12px">เลื่อนตารางซ้าย–ขวาเพื่อดูทุกวัน · แตะกะในช่องเพื่อแก้ · ช่องว่างจะไม่ลบกะเดิม</p>'+
- '<div class="oh-cal-wrap" tabindex="0" aria-label="ตารางกะพนักงานแบบปฏิทิน"><table class="oh-cal-grid"><thead><tr><th class="oh-cal-name">พนักงาน</th>'+head+'</tr></thead><tbody>'+rows+'</tbody></table></div>'+
+ previewWarning+'<div class="oh-cal-wrap" tabindex="0" aria-label="ตารางกะพนักงานแบบปฏิทิน"><table class="oh-cal-grid"><thead><tr><th class="oh-cal-name">พนักงาน</th>'+head+'</tr></thead><tbody>'+rows+'</tbody></table></div>'+
  '<label style="display:flex;gap:9px;align-items:flex-start;margin:14px 0;font-size:13px"><input id="oh-sheet-cycle-confirm" type="checkbox" style="margin-top:3px"> ฉันตรวจแล้วว่าชีตนี้เป็นรอบวันที่ 21–20 ของเดือนที่เลือกจริง</label>'+
  '<div class="editor-actions"><button class="ghost-btn" id="oh-sheet-back">เลือกรอบใหม่</button><button class="save-schedule" id="oh-sheet-publish">ยืนยันบันทึกเฉพาะช่องที่เปลี่ยน</button></div>');
  function refreshSummary(){
@@ -139,7 +154,7 @@ function renderPreview(){
   const reviews=draft.updates.filter(x=>x.review).length;
   el.querySelector("#oh-cal-changed").textContent=changes;
   el.querySelector("#oh-cal-review").textContent=reviews;
-  el.querySelector("#oh-sheet-publish").disabled=Boolean(reviews||draft.unmatched.length);
+  el.querySelector("#oh-sheet-publish").disabled=Boolean(PREVIEW_ONLY||!draft.remoteReadOk||reviews||draft.unmatched.length);
  }
  el.querySelector("#oh-sheet-back").onclick=()=>openSheetScheduleImport();
  el.querySelectorAll("[data-oh-shift]").forEach(select=>select.onchange=()=>{
@@ -156,6 +171,7 @@ function renderPreview(){
 }
 async function publish(checked){
  if(busy||!draft)return;
+ if(PREVIEW_ONLY||!draft.remoteReadOk){alert('ขณะนี้เปิดให้ตรวจ Preview เท่านั้น ยังไม่อนุญาตให้เขียนข้อมูล Firebase');return}
  if(!checked){alert("กรุณายืนยันว่ารอบ 21–20 ถูกต้อง");return}
  if(draft.updates.some(u=>u.review)||draft.unmatched.length){alert("ยังมีรหัสกะหรือพนักงานที่ต้องตรวจแก้ก่อนบันทึก");return}
  if(!confirm("ยืนยันนำเข้าตารางงานรอบ "+draft.cycle+"? จะปรับเฉพาะช่องที่ตรวจแล้ว และสำรองตารางเดิมก่อน"))return;
