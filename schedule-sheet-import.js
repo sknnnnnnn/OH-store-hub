@@ -46,6 +46,13 @@ async function load(cycle){
   let result;
   try{const response=await fetch(url,{cache:"no-store",signal:controller.signal});if(!response.ok)throw Error("HTTP "+response.status);result=await response.json()}finally{clearTimeout(timer)}
   if(result.status!=="success"||result.mode!=="scheduleSheetPreview"||result.cycle!==cycle||!Array.isArray(result.dates)||JSON.stringify(result.dates)!==JSON.stringify(dates)||!Array.isArray(result.employees))throw Error("Apps Script ยังไม่รองรับการอ่านตาราง หรือวันที่ในชีตไม่ตรงกับรอบที่เลือก");
+  // Read existing roster directly from Firebase before comparing, never trust stale local data.
+  const remoteMonths={};
+  for(const m of [...new Set(dates.map(d=>d.slice(0,7)))]){
+    const r=await fetch(CONFIG.firebaseDatabaseUrl+"/work_schedules/"+m+".json",{cache:"no-store"});
+    if(!r.ok)throw Error("อ่านตารางกลาง Firebase ไม่สำเร็จ: HTTP "+r.status);
+    remoteMonths[m]=await r.json()||{};
+  }
   const map=codeMap(),updates=[],unmatched=[],unknown=[];
   for(const row of result.employees){
    const id=map[String(row.code||"").trim()];
@@ -53,7 +60,7 @@ async function load(cycle){
    if(!Array.isArray(row.shifts)||row.shifts.length!==dates.length)throw Error("จำนวนช่องตารางงานไม่ตรงกับรอบ");
    row.shifts.forEach((v,i)=>{
      if(v==null||String(v).trim()==="")return; // blanks never clear an existing shift
-     const parsed=normalize(v),old=scheduleMonths[monthKey(new Date(dates[i]+"T00:00:00"))]?.[id]?.[dates[i]]||"NONE";
+     const parsed=normalize(v),old=remoteMonths[dates[i].slice(0,7)]?.[id]?.[dates[i]]||"NONE";
      const employee=employees.find(e=>e.id===id);
      const cell={id,name:employee?.nick||row.nickname||row.name||id,date:dates[i],raw:String(v),value:parsed||"NONE",old,review:!parsed};
      updates.push(cell);if(cell.review)unknown.push(cell);
@@ -177,8 +184,19 @@ async function publish(checked){
   }
   const key="oh_schedule_sheet_backup_"+draft.cycle+"_"+Date.now();
   localStorage.setItem(key,JSON.stringify({createdAt:new Date().toISOString(),cycle:draft.cycle,previous:old,changes:patch})); // fail-closed
-  const response=await fetch(CONFIG.firebaseDatabaseUrl+"/.json",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(patch)});
-  if(!response.ok)throw Error("Firebase HTTP "+response.status);
+  // Write through existing per-month schedule nodes (same scope as current schedule editor).
+  // Do not PATCH the database root; Firebase rules may reject root-level writes.
+  const monthly={};
+  for(const cell of changedCells){
+    const m=cell.date.slice(0,7);
+    (monthly[m]??={})[cell.id+"/"+cell.date]=cell.value;
+  }
+  for(const [m,changes] of Object.entries(monthly)){
+    const response=await fetch(CONFIG.firebaseDatabaseUrl+"/work_schedules/"+m+".json",{
+      method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(changes)
+    });
+    if(!response.ok)throw Error("Firebase "+m+" HTTP "+response.status+" — อาจมีบางเดือนบันทึกแล้ว โปรดตรวจข้อมูลกลางก่อนส่งซ้ำ");
+  }
   // Confirm central values after the write before reporting success.
   const readBack={};
   for(const cell of changedCells){
