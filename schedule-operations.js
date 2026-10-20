@@ -118,8 +118,49 @@ window.openScheduleOperations=function(){
      count++;
     }
    }
-   status.textContent="ตรวจไฟล์กู้คืนผ่าน "+count+" ช่อง แต่ยังไม่เปลี่ยนข้อมูลจริง";
-   alert("ไฟล์สำรองถูกต้อง: "+count+" ช่อง\nขั้นตอนนี้ยังเป็นการตรวจความถูกต้องเท่านั้น ยังไม่เขียนทับ Firebase\nเก็บไฟล์นี้ไว้สำหรับกู้คืนเมื่อจำเป็น");
+   status.textContent="ตรวจไฟล์สำรองผ่าน "+count+" ช่อง · สามารถตรวจตารางกลางและกู้คืนเฉพาะรอบนี้ได้";
+   const previous=el.querySelector("#oh-ops-apply-restore");previous?.remove();
+   const restore=document.createElement("button");restore.id="oh-ops-apply-restore";restore.className="save-schedule";
+   restore.textContent="กู้คืนเฉพาะช่องจากไฟล์ที่ตรวจแล้ว (ต้องยืนยันอีกครั้ง)";
+   el.querySelector("#oh-ops-status").after(restore);
+   const restoreCycle=cycle,restoreRows=input.rows;
+   restore.onclick=async()=>{
+     if(el.querySelector("#oh-ops-cycle").value!==restoreCycle){status.textContent="รอบที่เลือกเปลี่ยนไปแล้ว โปรดตรวจไฟล์ใหม่";restore.remove();return}
+     if(!confirm("จะตรวจตารางกลางและสำรองข้อมูลปัจจุบันก่อนกู้คืนรอบ "+restoreCycle+" เท่านั้น ยืนยันตรวจข้อมูลต่อหรือไม่?"))return;
+     restore.disabled=true;setBusy(true);
+     try{
+       const {ds,out}=await fetchCycle(restoreCycle),allow=new Set(ds);
+       const patch={},changes=[];
+       for(const [emp,entries] of Object.entries(restoreRows))for(const [date,value] of Object.entries(entries)){
+         if(!allow.has(date))throw Error("พบวันที่นอกรอบ หยุดกู้คืน");
+         const month=date.slice(0,7),current=out[month]?.[emp]?.[date]??"NONE";
+         if(current===value)continue;
+         ((patch[month]??={})[emp+"/"+date]=value);
+         changes.push({emp,date,current,value});
+       }
+       if(!changes.length){status.textContent="ตารางกลางตรงกับไฟล์แล้ว ไม่จำเป็นต้องกู้คืน";return}
+       const summary=changes.length+" ช่อง จาก "+Object.keys(patch).length+" เดือน";
+       const typed=prompt("พบข้อมูลที่จะเปลี่ยน "+summary+"\nพิมพ์คำว่า RESTORE เพื่อยืนยัน หลังดาวน์โหลดสำเนาตารางกลางปัจจุบัน");
+       if(typed!=="RESTORE"){status.textContent="ยกเลิกการกู้คืน ไม่มีการเขียนข้อมูล";return}
+       // Always download the complete selected-cycle remote snapshot before any mutation.
+       download("OH-before-restore-"+restoreCycle+"-"+Date.now()+".json",{format:"oh-store-hub-schedule-cycle-v1",cycle:restoreCycle,dates:ds,rows:rowsFor(ds,out),exportedAt:new Date().toISOString()});
+       status.textContent="สำรองข้อมูลกลางปัจจุบันแล้ว กำลังกู้คืน "+summary;
+       for(const [month,entries] of Object.entries(patch)){
+         const r=await fetch(endpoint()+"/"+month+".json",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(entries)});
+         if(!r.ok)throw Error("Firebase "+month+" HTTP "+r.status+" — โปรดตรวจตารางกลางก่อนทำซ้ำ");
+       }
+       const verified=await fetchCycle(restoreCycle);
+       for(const c of changes){
+         if(verified.out[c.date.slice(0,7)]?.[c.emp]?.[c.date]!==c.value)throw Error("อ่านกลับไม่ตรงที่ "+c.date+" / "+c.emp);
+       }
+       for(const [month,data] of Object.entries(verified.out))scheduleMonths[month]=data;
+       localStorage.setItem("oh_schedule_months",JSON.stringify(scheduleMonths));
+       if(["schedule","day","person","home"].includes(state.view))render();
+       status.textContent="กู้คืนสำเร็จและตรวจข้อมูลกลางแล้ว "+summary;
+       alert("กู้คืนสำเร็จ "+summary+" · เก็บไฟล์สำรองก่อนกู้คืนไว้ด้วย");
+     }catch(e){status.textContent="ยังยืนยันผลกู้คืนไม่ได้: "+String(e.message||e)+" · ห้ามกดซ้ำจนกว่าจะตรวจ Firebase"}
+     finally{restore.disabled=false;setBusy(false)}
+   };
   }catch(e){status.textContent="ไฟล์กู้คืนไม่ผ่าน: "+String(e.message||e)}
   finally{event.target.value=""}
  };
