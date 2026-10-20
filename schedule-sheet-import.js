@@ -4,7 +4,7 @@
 const VALID=new Set(["6","7","8","11","13","OFF","LEAVE","HOLIDAY","VACATION","EXIT"]);
 const codeMap=()=>oj16EmployeeCodeMap();
 let draft=null, busy=false;
-const PREVIEW_ONLY=true; // Incident recovery: review only; never write Firebase.
+const PREVIEW_ONLY=false; // Publishing requires a successful fresh Firebase verification + explicit confirmation.
 // The selected cycle (21st through following 20th) is the ONLY allowed write window.
 function assertSelectedCycle(cycle,dates,updates){
  const expected=cycleDates(cycle);
@@ -76,7 +76,7 @@ async function load(cycle){
   // A failed remote read is visible and never treated as permission to write.
   const remoteMonths={};
   let remoteReadOk=true,remoteReadError="";
-  for(const m of (PREVIEW_ONLY?[]:[...new Set(dates.map(d=>d.slice(0,7)))])){
+  for(const m of []){ // Do not block preview on Firebase; comparison is user-initiated.
     try {
       const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),9000);
       try {
@@ -91,7 +91,7 @@ async function load(cycle){
       break;
     }
   }
-  if(PREVIEW_ONLY){remoteReadOk=false;remoteReadError="โหมดแสดงตารางจาก Google Sheets โดยไม่อ่านข้อมูล Firebase";}
+  remoteReadOk=false;remoteReadError="กรุณากดตรวจตารางเดิมจาก Firebase เพื่อเปิดบันทึก";
   const map=codeMap(),updates=[],unmatched=[],unknown=[];
   for(const row of result.employees){
    const id=map[String(row.code||"").trim()];
@@ -176,7 +176,8 @@ function renderPreview(){
  '<p style="color:#95600a;font-size:12px">เลื่อนตารางซ้าย–ขวาเพื่อดูทุกวัน · แตะกะในช่องเพื่อแก้ · ช่องว่างจะไม่ลบกะเดิม</p>'+
  previewWarning+'<div class="oh-cal-wrap" tabindex="0" aria-label="ตารางกะพนักงานแบบปฏิทิน"><table class="oh-cal-grid"><thead><tr><th class="oh-cal-name">พนักงาน</th>'+head+'</tr></thead><tbody>'+rows+'</tbody></table></div>'+
  '<label style="display:flex;gap:9px;align-items:flex-start;margin:14px 0;font-size:13px"><input id="oh-sheet-cycle-confirm" type="checkbox" style="margin-top:3px"> ฉันตรวจแล้วว่าชีตนี้เป็นรอบวันที่ 21–20 ของเดือนที่เลือกจริง</label>'+
- '<div class="editor-actions"><button class="ghost-btn" id="oh-sheet-back">เลือกรอบใหม่</button><button class="save-schedule" id="oh-sheet-publish">ยืนยันบันทึกเฉพาะช่องที่เปลี่ยน</button></div>');
+ '<p id="oh-sheet-verify-status" role="status" style="font-size:13px;color:#a15c10">ยังไม่ได้ตรวจข้อมูลกลาง จึงยังบันทึกไม่ได้</p>'+
+ '<div class="editor-actions"><button class="ghost-btn" id="oh-sheet-back">เลือกรอบใหม่</button><button class="ghost-btn" id="oh-sheet-verify">ตรวจตารางเดิมจาก Firebase</button><button class="save-schedule" id="oh-sheet-publish">ยืนยันบันทึกเฉพาะช่องที่เปลี่ยน</button></div>');
  function refreshSummary(){
   const changes=draft.remoteReadOk?draft.updates.filter(x=>x.old!==x.value).length:null;
   const reviews=draft.updates.filter(x=>x.review).length;
@@ -185,6 +186,37 @@ function renderPreview(){
   el.querySelector("#oh-sheet-publish").disabled=Boolean(PREVIEW_ONLY||!draft.remoteReadOk||reviews||draft.unmatched.length);
  }
  el.querySelector("#oh-sheet-back").onclick=()=>openSheetScheduleImport();
+ el.querySelector("#oh-sheet-verify").onclick=async()=>{
+   if(busy)return;
+   busy=true;
+   const button=el.querySelector("#oh-sheet-verify"),status=el.querySelector("#oh-sheet-verify-status");
+   button.disabled=true;button.textContent="กำลังตรวจ Firebase…";
+   status.textContent="กำลังอ่านข้อมูลตารางเดิม ไม่ได้แก้ไขข้อมูล";
+   try{
+     const months=[...new Set(draft.dates.map(x=>x.slice(0,7)))];
+     const verified={};
+     // Fetch at most two months in parallel, not one date or an entire database.
+     await Promise.all(months.map(async m=>{
+       const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),18000);
+       try{
+         const r=await fetch(CONFIG.firebaseDatabaseUrl+"/work_schedules/"+m+".json",{cache:"no-store",signal:controller.signal});
+         if(!r.ok)throw Error("Firebase "+m+" HTTP "+r.status);
+         const v=await r.json();
+         if(v!==null&&(typeof v!=="object"||Array.isArray(v)))throw Error("Firebase "+m+" ส่งข้อมูลผิดรูปแบบ");
+         verified[m]=v||{};
+       }finally{clearTimeout(timer)}
+     }));
+     for(const u of draft.updates)u.old=verified[u.date.slice(0,7)]?.[u.id]?.[u.date]||"NONE";
+     draft.remoteReadOk=true;draft.remoteReadError="";
+     renderPreview();
+   }catch(e){
+     draft.remoteReadOk=false;
+     draft.remoteReadError=String(e.message||e);
+     status.textContent="อ่านข้อมูลกลางไม่ได้: "+draft.remoteReadError+" — ยังไม่อนุญาตให้บันทึก";
+     button.disabled=false;button.textContent="ลองตรวจ Firebase อีกครั้ง";
+     refreshSummary();
+   }finally{busy=false}
+ };
  el.querySelectorAll("[data-oh-shift]").forEach(select=>select.onchange=()=>{
    const u=draft.updates[Number(select.dataset.ohShift)];
    u.value=select.value;u.review=false;
@@ -201,7 +233,7 @@ async function publish(checked){
  if(busy||!draft)return;
  // Fail closed: reject any date outside the cycle, even if a UI or parser bug leaks one in.
  try{assertSelectedCycle(draft.cycle,draft.dates,draft.updates)}catch(e){alert(e.message||e);return}
- if(PREVIEW_ONLY||!draft.remoteReadOk){alert('ขณะนี้เปิดให้ตรวจ Preview เท่านั้น ยังไม่อนุญาตให้เขียนข้อมูล Firebase');return}
+ if(PREVIEW_ONLY||!draft.remoteReadOk){alert("ต้องตรวจตารางเดิมจาก Firebase ให้สำเร็จก่อนบันทึก");return}
  if(!checked){alert("กรุณายืนยันว่ารอบ 21–20 ถูกต้อง");return}
  if(draft.updates.some(u=>u.review)||draft.unmatched.length){alert("ยังมีรหัสกะหรือพนักงานที่ต้องตรวจแก้ก่อนบันทึก");return}
  if(!confirm("ยืนยันนำเข้าตารางงานรอบ "+draft.cycle+"? จะปรับเฉพาะช่องที่ตรวจแล้ว และสำรองตารางเดิมก่อน"))return;
