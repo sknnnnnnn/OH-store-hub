@@ -1,0 +1,127 @@
+/* Schedule operations: independent of inventory, opt-in backup/restore, sync and daily staff dashboard. */
+(function(){
+"use strict";
+const endpoint=()=>CONFIG.firebaseDatabaseUrl+"/work_schedules";
+const escTools=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const iso=d=>dateKey(d);
+const cycleDates=start=>{
+ const [y,m,d]=start.split("-").map(Number);
+ if(d!==21||!Number.isInteger(y)||m<1||m>12)throw Error("เลือกวันเริ่มรอบเป็นวันที่ 21");
+ const x=new Date(y,m-1,21),end=new Date(y,m,20),a=[];
+ while(x<=end){a.push(iso(x));x.setDate(x.getDate()+1)}
+ return a;
+};
+const currCycle=()=>{const d=new Date();return iso(new Date(d.getFullYear(),d.getMonth()-(d.getDate()<21?1:0),21))};
+const overlay=(content)=>{
+ document.getElementById("oh-ops-layer")?.remove();
+ const el=document.createElement("div");el.id="oh-ops-layer";el.className="modal-backdrop";
+ el.innerHTML='<section class="modal schedule-modal" style="max-width:1020px;max-height:94vh;overflow:auto;padding:18px"><div class="editor-head"><h2>ความปลอดภัยและภาพรวมตารางงาน</h2><button id="oh-ops-close" class="icon-btn">×</button></div>'+content+'</section>';
+ document.body.appendChild(el);el.querySelector("#oh-ops-close").onclick=()=>el.remove();return el;
+};
+const jsonRead=async(url,ms=16000)=>{
+ const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
+ try{const r=await fetch(url,{cache:"no-store",signal:c.signal});if(!r.ok)throw Error("Firebase HTTP "+r.status);return await r.json()}
+ finally{clearTimeout(t)}
+};
+const localText=()=>({months:scheduleMonths,employees:employees.map(e=>({id:e.id,nick:e.nick}))});
+function download(filename,data){
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
+}
+async function fetchCycle(cycle){
+ const ds=cycleDates(cycle),months=[...new Set(ds.map(x=>x.slice(0,7)))],out={};
+ await Promise.all(months.map(async m=>{
+   const response=await jsonRead(endpoint()+"/"+m+".json");
+   if(response!==null&&(typeof response!=="object"||Array.isArray(response)))throw Error("รูปแบบข้อมูลเดือน "+m+" ผิด");
+   out[m]=response||{};
+ }));
+ return {ds,out};
+}
+function rowsFor(ds,out){
+ const rows={};
+ for(const emp of employees)for(const d of ds){
+   const v=out[d.slice(0,7)]?.[emp.id]?.[d];
+   if(v!==undefined&&v!==null) ((rows[emp.id]??={})[d]=String(v));
+ }
+ return rows;
+}
+function stats(date){
+ const codes={morning:0,afternoon:0,off:0,leave:0,unassigned:0,total:employees.length};
+ for(const e of employees){
+  const c=getShift(e,date);
+  if(c==="NONE")codes.unassigned++;
+  else if(["OFF","HOLIDAY"].includes(c))codes.off++;
+  else if(["LEAVE","VACATION","EXIT"].includes(c))codes.leave++;
+  else if(["6","7","8"].includes(c))codes.morning++;
+  else codes.afternoon++;
+ }
+ return codes;
+}
+function dashboardMarkup(){
+ const d=state.selectedDate||new Date(),today=stats(d),days=[0,1,2,3,4,5,6].map(i=>{
+  const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+i),s=stats(x);
+  return '<tr><td>'+escTools(iso(x))+'</td><td>'+s.morning+'</td><td>'+s.afternoon+'</td><td>'+s.off+'</td><td>'+s.leave+'</td><td>'+s.unassigned+'</td></tr>';
+ }).join("");
+ return '<section style="margin:12px 0"><h3>ภาพรวมกำลังคน (จากตารางที่แสดงในเครื่อง)</h3>'+
+ '<p>วันที่ '+escTools(iso(d))+' · กะเช้า '+today.morning+' · กะบ่าย '+today.afternoon+' · หยุด '+today.off+' · ลา/ออก '+today.leave+' · ยังไม่ระบุ '+today.unassigned+'</p>'+
+ '<div style="overflow:auto"><table class="schedule-matrix" style="width:100%"><thead><tr><th>วันที่</th><th>เช้า</th><th>บ่าย</th><th>หยุด</th><th>ลา/ออก</th><th>ยังไม่ระบุ</th></tr></thead><tbody>'+days+'</tbody></table></div>'+
+ '<p style="font-size:12px;color:#64748b">ข้อมูลนี้ใช้ช่วยจัดกำลังคน ไม่ใช่การตัดสินว่าเวรเพียงพอโดยอัตโนมัติ</p></section>';
+}
+window.openScheduleOperations=function(){
+ const current=currCycle(),opts=[-1,0,1,2].map(offset=>{
+  const [y,m]=current.split("-").map(Number),value=iso(new Date(y,m-1+offset,21));
+  return '<option value="'+value+'" '+(value===current?'selected':'')+'>'+value+' ถึง '+cycleDates(value).at(-1)+'</option>';
+ }).join("");
+ const el=overlay('<p style="color:#64748b">สำรอง/ตรวจข้อมูลตารางงานเฉพาะรอบที่เลือก โดยไม่กระทบยอดสต็อก</p>'+
+ '<div class="field"><label>รอบตาราง 21–20</label><select id="oh-ops-cycle">'+opts+'</select></div>'+
+ '<div class="editor-actions" style="margin:12px 0"><button class="ghost-btn" id="oh-ops-sync">ซิงก์ตารางกลาง</button><button class="ghost-btn" id="oh-ops-backup">ดาวน์โหลดข้อมูลสำรอง</button><button class="ghost-btn" id="oh-ops-restore">ตรวจไฟล์กู้คืน</button></div>'+
+ '<input type="file" id="oh-ops-file" accept=".json,application/json" style="display:none">'+
+ '<p id="oh-ops-status" role="status" style="font-size:13px;color:#64748b">ยังไม่มีการเขียนข้อมูล</p><div id="oh-ops-dashboard">'+dashboardMarkup()+'</div>');
+ const status=el.querySelector("#oh-ops-status"),buttons=[...el.querySelectorAll(".editor-actions button")];
+ const setBusy=flag=>buttons.forEach(b=>b.disabled=flag);
+ el.querySelector("#oh-ops-sync").onclick=async()=>{
+  setBusy(true);status.textContent="กำลังอ่าน Firebase...";
+  try{
+   const {out}=await fetchCycle(el.querySelector("#oh-ops-cycle").value);
+   // Update only the months actually fetched. No write to Firebase.
+   for(const [month,data] of Object.entries(out))scheduleMonths[month]=data;
+   localStorage.setItem("oh_schedule_months",JSON.stringify(scheduleMonths));
+   if(["schedule","day","person","home"].includes(state.view))render();
+   status.textContent="อ่านตารางกลางสำเร็จแล้ว (ไม่ได้เขียน Firebase)";
+   el.querySelector("#oh-ops-dashboard").innerHTML=dashboardMarkup();
+  }catch(e){status.textContent="ซิงก์ไม่สำเร็จ: "+String(e.message||e)}
+  finally{setBusy(false)}
+ };
+ el.querySelector("#oh-ops-backup").onclick=async()=>{
+  setBusy(true);status.textContent="กำลังสร้างสำเนาจาก Firebase...";
+  try{
+   const cycle=el.querySelector("#oh-ops-cycle").value,{ds,out}=await fetchCycle(cycle);
+   const payload={format:"oh-store-hub-schedule-cycle-v1",exportedAt:new Date().toISOString(),cycle,dates:ds,rows:rowsFor(ds,out),employeeLabels:employees.map(e=>({id:e.id,nick:e.nick}))};
+   download("OH-schedule-backup-"+cycle+".json",payload);
+   status.textContent="ดาวน์โหลดสำรองรอบ "+cycle+" แล้ว · ไม่เปลี่ยนตารางจริง";
+  }catch(e){status.textContent="สำรองไม่สำเร็จ: "+String(e.message||e)+" · ไม่มีการสร้างสำเนาจากข้อมูลที่ไม่ครบ"}
+  finally{setBusy(false)}
+ };
+ el.querySelector("#oh-ops-restore").onclick=()=>el.querySelector("#oh-ops-file").click();
+ el.querySelector("#oh-ops-file").onchange=async event=>{
+  const file=event.target.files?.[0];if(!file)return;
+  try{
+   if(file.size>2_000_000)throw Error("ไฟล์มีขนาดเกิน 2 MB");
+   const input=JSON.parse(await file.text()),cycle=el.querySelector("#oh-ops-cycle").value,days=cycleDates(cycle),allowed=new Set(days);
+   if(input.format!=="oh-store-hub-schedule-cycle-v1"||input.cycle!==cycle||JSON.stringify(input.dates)!==JSON.stringify(days))throw Error("ไฟล์สำรองไม่ตรงกับรอบที่เลือก");
+   if(!input.rows||typeof input.rows!=="object"||Array.isArray(input.rows))throw Error("ไฟล์ไม่ถูกต้อง");
+   const known=new Set(employees.map(e=>e.id));let count=0;
+   for(const [id,entries] of Object.entries(input.rows)){
+    if(!known.has(id)||!entries||typeof entries!=="object"||Array.isArray(entries))throw Error("รหัสพนักงานไม่ถูกต้อง");
+    for(const [date,code] of Object.entries(entries)){
+     if(!allowed.has(date)||!["6","7","8","11","13","OFF","LEAVE","HOLIDAY","VACATION","EXIT","NONE"].includes(code))throw Error("วันหรือรหัสกะอยู่นอกช่วงที่เลือก");
+     count++;
+    }
+   }
+   status.textContent="ตรวจไฟล์กู้คืนผ่าน "+count+" ช่อง แต่ยังไม่เปลี่ยนข้อมูลจริง";
+   alert("ไฟล์สำรองถูกต้อง: "+count+" ช่อง\nขั้นตอนนี้ยังเป็นการตรวจความถูกต้องเท่านั้น ยังไม่เขียนทับ Firebase\nเก็บไฟล์นี้ไว้สำหรับกู้คืนเมื่อจำเป็น");
+  }catch(e){status.textContent="ไฟล์กู้คืนไม่ผ่าน: "+String(e.message||e)}
+  finally{event.target.value=""}
+ };
+};
+})();
