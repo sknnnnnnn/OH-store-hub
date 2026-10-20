@@ -1043,31 +1043,34 @@ function renderWho(){return `<main class="who-screen"><div class="who-box"><div 
 
 function homeAlertState(){const pendingExpiry=(state.expiryLots||[]).filter(x=>!x.acknowledged),worst=pendingExpiry.map(expiryRisk).sort((a,b)=>a.rank-b.rank)[0],pendingLeave=(state.leaveRequests||[]).filter(x=>!x.acknowledged);return {expiryCount:pendingExpiry.length,expiryClass:worst?(worst.rank<=1?"alert-high":worst.rank<=3?"alert-watch":""):"",leaveCount:pendingLeave.length,leaveClass:pendingLeave.length?"alert-watch":""}}
 function renderHome(){
- const user=employees.find(e=>e.id===state.currentUser)||employees[0],now=new Date(),sum=daySummary(now),shift=shiftInfo[getShift(user,now)]||shiftInfo.NONE,alerts=homeAlertState(),low=storeSummary().low;
- const current=shift.group==="ยังไม่จัดกะ"?"ยังไม่ระบุกะ":shift.group==="ไม่เข้างาน"?shift.label:"เข้ากะ "+shift.label;
- return `<main class="v2-home"><div class="v2-main-container">
- <div class="v2-eyebrow"><span class="v2-pulse"></span> OH STORE HUB <span class="v2-eyebrow-sep">/</span> OVERVIEW</div>
- <div class="v2-intro-row"><div><p class="v2-hello">สวัสดี, ${esc(user.nick)} 👋</p><h1>วันนี้จัดการอะไรดี?</h1><p class="v2-subtitle">ทุกอย่างที่ใช้ทำงาน อยู่ในที่เดียว</p></div><button class="v2-date-chip" onclick="go('schedule',{selectedDate:startOfDay(new Date())})"><span class="v2-date-icon">▦</span><span>${fmtDate(now)}</span><span>↗</span></button></div>
- <section class="v2-highlight" aria-label="งานหลักวันนี้"><div class="v2-highlight-copy"><div class="v2-highlight-label"><span class="v2-spark">✦</span> เริ่มงานอย่างรวดเร็ว</div><h2>นับสต็อก<br>ให้เรียบร้อยวันนี้</h2><p>บันทึกยอดสินค้าประจำวันผ่านระบบนับของที่ใช้งานอยู่</p><button class="v2-action-button" onclick="openCounting()">เริ่มนับสต็อก <span>↗</span></button></div><div class="v2-highlight-visual" aria-hidden="true"><div class="v2-illus-orbit"><div class="v2-illus-clipboard"><span>✓</span><i></i><i></i><i></i></div></div><span class="v2-illus-star one">✦</span><span class="v2-illus-star two">✳</span></div></section>
- <div class="v2-section-title"><div><span class="v2-overline">TODAY AT A GLANCE</span><h2>ภาพรวมวันนี้</h2></div><button onclick="go('schedule',{selectedDate:startOfDay(new Date())})">ดูตารางทั้งหมด →</button></div>
- <div class="v2-stats-grid">
- <button class="v2-stat-card" onclick="state.selectedEmployee='${user.id}';state.personMode='week';go('person')"><span class="v2-stat-icon mint">◷</span><span class="v2-stat-label">กะของฉัน</span><strong class="v2-stat-text">${esc(current)}</strong><small>ดูตาราง 7 วันข้างหน้า ↗</small></button>
- <button class="v2-stat-card" onclick="go('schedule',{selectedDate:startOfDay(new Date())})"><span class="v2-stat-icon blue">♙</span><span class="v2-stat-label">พนักงานเข้างาน</span><strong>${sum.working} <em>คน</em></strong><small>ดูรายชื่อและช่วงเวร ↗</small></button>
- <button class="v2-stat-card" onclick="go('store')"><span class="v2-stat-icon peach">▤</span><span class="v2-stat-label">สินค้าใกล้หมด</span><strong>${low} <em>รายการ</em></strong><small>ตรวจสอบในสโตร์ ↗</small></button></div>
- <div class="v2-section-title v2-title-space"><div><span class="v2-overline">WORKSPACE</span><h2>พื้นที่ทำงาน</h2></div><span class="v2-section-hint">เลือกสิ่งที่ต้องการทำ</span></div>
- <div class="v2-work-grid">
- <button class="v2-work-tile" onclick="go('schedule',{selectedDate:startOfDay(new Date())})"><span class="v2-work-icon aqua">▦</span><span class="v2-work-copy"><b>ตารางงาน</b><small>ดูเวรและตารางพนักงาน</small></span><span class="v2-work-arrow">↗</span></button>
- <button class="v2-work-tile" onclick="go('incoming')"><span class="v2-work-icon amber">↧</span><span class="v2-work-copy"><b>รับสินค้าเข้า</b><small>ตรวจรับและเช็กสินค้า</small></span><span class="v2-work-arrow">↗</span></button>
- <button class="v2-work-tile" onclick="go('usage')"><span class="v2-work-icon lilac">⌁</span><span class="v2-work-copy"><b>การใช้สินค้า</b><small>ยอดใช้ประจำวัน</small></span><span class="v2-work-arrow">↗</span></button>
- <button class="v2-work-tile" onclick="go('memo')"><span class="v2-work-icon pink">☷</span><span class="v2-work-copy"><b>ประกาศ & โปรโมชั่น</b><small>Memo และข่าวภายใน</small></span><span class="v2-work-arrow">↗</span></button></div>
- <div class="v2-section-title v2-title-space"><div><span class="v2-overline">TOOLS & SHORTCUTS</span><h2>เครื่องมือเพิ่มเติม</h2></div></div>
- <div class="v2-tools-grid"><button onclick="go('expiry')"><span class="v2-small-icon">◴</span> อายุสินค้า ${alerts.expiryCount?'('+alerts.expiryCount+')':''}<span>›</span></button><button onclick="go('openmemo')"><span class="v2-small-icon">◷</span> อายุใช้งาน<span>›</span></button><button onclick="go('leave')"><span class="v2-small-icon">✎</span> ลา / แจ้งเรื่อง ${alerts.leaveCount?'('+alerts.leaveCount+')':''}<span>›</span></button><button onclick="go('qr')"><span class="v2-small-icon">▧</span> QR ด่วน<span>›</span></button><button onclick="go('scanner')"><span class="v2-small-icon">▣</span> สแกนเป็น PDF<span>›</span></button><button onclick="openPostitComposer()"><span class="v2-small-icon">✳</span> Post-it<span>＋</span></button></div>
- <div class="v2-external"><div class="v2-external-head"><b>ลิงก์ที่ใช้บ่อย</b><small>เปิดระบบภายนอกในแท็บใหม่</small></div><div class="v2-external-links">
- <a href="https://docs.google.com/spreadsheets/d/1OyoRne2_qryU0K9k3fXo8sUufWS_wQmpGBSwPhUjlB0/edit" target="_blank" rel="noopener">▥ 16-Oh-stock <span>↗</span></a>
- <a href="https://inventory.ohkajhu.com/login" target="_blank" rel="noopener">◫ OH Inventory <span>↗</span></a>
- <a href="https://myhr.ohkajhu.com/#/login" target="_blank" rel="noopener">♙ MyHR <span>↗</span></a>
- <a href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=KxlWgj4h0ku1WYRX2gP-V6gXwvd25vZCo_58lKPZI4xURDk4NFUzVklZWUJaRzBPVk9KUkVFVDNFMC4u&origin=QRCode" target="_blank" rel="noopener">♧ บันทึกอุณหภูมิ <span>↗</span></a>
- </div></div><p class="v2-endnote">OH STORE HUB · WORKSPACE</p></div></main>`;
+ const user=employees.find(e=>e.id===state.currentUser)||employees[0];
+ const now=new Date(),sum=daySummary(now);
+ const shift=shiftInfo[getShift(user,now)]||shiftInfo.NONE;
+ const current=shift.group==="ยังไม่จัดกะ"?"ยังไม่ระบุกะ":shift.group==="ไม่เข้างาน"?shift.label:shift.label;
+ const low=storeSummary().low;
+ return `<main class="v2-home v2-simple-home"><div class="v2-main-container">
+  <header class="v2-simple-header"><div><div class="v2-eyebrow"><span class="v2-pulse"></span> OH STORE HUB</div><h1>สวัสดี, ${esc(user.nick)} 👋</h1><p>${fmtDate(now)} · วันนี้${esc(current)}</p></div><button class="v2-simple-user" onclick="switchUser()" aria-label="เปลี่ยนผู้ใช้งาน">เปลี่ยนผู้ใช้ <span>›</span></button></header>
+  <section class="v2-simple-focus" aria-label="งานสำคัญ"><div><span class="v2-simple-kicker">งานหลักประจำวัน</span><h2>พร้อมเริ่มนับสต็อก</h2><p>เปิดรายการสินค้าและบันทึกยอดนับได้ทันที</p></div><button onclick="openCounting()" class="v2-simple-cta">เริ่มนับของ <span>↗</span></button></section>
+  <section class="v2-simple-status" aria-label="สรุปวันนี้">
+    <div><span>พนักงานเข้างาน</span><strong>${sum.working} <small>คน</small></strong></div>
+    <div><span>หยุด / ลา</span><strong>${sum.off} <small>คน</small></strong></div>
+    <div><span>สินค้าใกล้หมด</span><strong>${low} <small>รายการ</small></strong></div>
+  </section>
+  <details class="v2-simple-more"><summary>เครื่องมืออื่น ๆ <span>⌄</span></summary>
+    <div class="v2-simple-tools">
+      <button onclick="go('incoming')">ตรวจรับของเข้า <span>↗</span></button>
+      <button onclick="go('usage')">การใช้สินค้า <span>↗</span></button>
+      <button onclick="go('memo')">ประกาศและโปรโมชั่น <span>↗</span></button>
+      <button onclick="go('expiry')">ติดตามอายุสินค้า <span>↗</span></button>
+      <button onclick="go('openmemo')">อายุใช้งานสินค้า <span>↗</span></button>
+      <button onclick="go('leave')">ลา / แจ้งเรื่อง <span>↗</span></button>
+      <button onclick="go('qr')">QR ด่วน <span>↗</span></button>
+      <button onclick="go('scanner')">สแกนเป็น PDF <span>↗</span></button>
+      <button onclick="openPostitComposer()">Post-it <span>＋</span></button>
+    </div>
+    <div class="v2-simple-external"><span>ระบบภายนอก</span><a href="https://docs.google.com/spreadsheets/d/1OyoRne2_qryU0K9k3fXo8sUufWS_wQmpGBSwPhUjlB0/edit" target="_blank" rel="noopener">Google Sheet ↗</a><a href="https://inventory.ohkajhu.com/login" target="_blank" rel="noopener">OH Inventory ↗</a><a href="https://myhr.ohkajhu.com/#/login" target="_blank" rel="noopener">MyHR ↗</a><a href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=KxlWgj4h0ku1WYRX2gP-V6gXwvd25vZCo_58lKPZI4xURDk4NFUzVklZWUJaRzBPVk9KUkVFVDNFMC4u&origin=QRCode" target="_blank" rel="noopener">บันทึกอุณหภูมิ ↗</a></div>
+  </details>
+ </div></main>`;
 }
 
 function inventoryDocKey(id){return String(id||"").replace(/[^a-zA-Z0-9_-]/g,"_")}
