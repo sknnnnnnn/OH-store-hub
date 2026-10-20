@@ -1,8 +1,8 @@
 /* Read-only schedule endpoint for the EXISTING shared Apps Script.
  * Integrate one line in existing doGet(e) BEFORE its default catalog route:
  *   if (String(e.parameter.mode||'') === 'scheduleSheetPreview')
- *      return jsonResponse_(scheduleSheetPreview_(e.parameter.cycle)); 
- * Replace jsonResponse_ with the project's existing JSON ContentService response helper.
+ *      return jsonOutput_(scheduleSheetPreview_(e.parameter.cycle)); 
+ * The existing shared project helper is jsonOutput_().
  * DO NOT replace doGet/doPost or change Store/inventory routes.
  */
 function scheduleSheetPreview_(cycle) {
