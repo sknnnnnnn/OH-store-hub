@@ -1743,33 +1743,73 @@ async function importScheduleImage(input){
   }
 }
 async function saveScheduleEditor(){
-  const ed=state.scheduleEditor;if(!ed)return;
+  const ed=state.scheduleEditor;
+  if(!ed)return;
   if(ed.source==="image"){
     const left=Object.values(ed.imageReview||{}).reduce((n,row)=>n+Object.keys(row||{}).length,0);
-    if(left>0&&!confirm(`ยังมี ${left} ช่องที่ระบบไม่มั่นใจ\n\nช่องเหล่านี้คงข้อมูลเดิมไว้และจะไม่ถูกลบ\nต้องการ Publish ต่อหรือไม่?`))return;
-    scheduleSnapshot(ed)
+    if(left>0&&!confirm("ยังมี "+left+" ช่องจากภาพที่ไม่มั่นใจ ช่องเหล่านี้จะไม่ถูกบันทึก ต้องการดำเนินการต่อหรือไม่?"))return;
   }
-  if(ed.protectedNextCycle&&dateKey(ed.start)!==dateKey(getNextScheduleCycleStart())){toast("มีตารางรอบใหม่ถูกบันทึกแล้ว กรุณาปิดและอัปโหลดอีกครั้ง");return}
-  const touched=new Set();
-
+  if(ed.protectedNextCycle&&dateKey(ed.start)!==dateKey(getNextScheduleCycleStart())){
+    toast("มีตารางรอบใหม่ถูกบันทึกแล้ว กรุณาปิดและอัปโหลดอีกครั้ง");return;
+  }
+  const allowed=new Set((ed.dates||[]).map(d=>dateKey(d)));
+  if(!allowed.size){toast("ไม่พบวันที่ที่อนุญาตให้แก้");return}
+  const wanted=new Map();
+  // Replace mode only clears explicitly selected dates, never entire months.
   if((ed.source==="excel"||ed.source==="pdf")&&ed.importMode==="replace"){
-    // Clear only the detected Excel date range, not unrelated months/dates.
-    employees.forEach(emp=>ed.dates.forEach(d=>{
-      const mk=monthKey(d),dk=dateKey(d);
-      scheduleMonths[mk]??={};scheduleMonths[mk][emp.id]??={};
-      scheduleMonths[mk][emp.id][dk]="NONE";touched.add(mk);
-    }));
+    employees.forEach(emp=>allowed.forEach(d=>wanted.set(emp.id+"|"+d,{id:emp.id,date:d,value:"NONE"})));
   }
-
-  Object.entries(ed.data).forEach(([empId,days])=>Object.entries(days).forEach(([dk,shift])=>{if(ed.source==="image"&&!ed.imageTouched?.[empId]?.[dk])return;const d=new Date(dk+"T00:00:00"),mk=monthKey(d);scheduleMonths[mk]??={};scheduleMonths[mk][empId]??={};scheduleMonths[mk][empId][dk]=shift;touched.add(mk)}));
-
-  if(ed.source!=="excel"&&ed.source!=="pdf")localStorage.setItem("oh_last_schedule_cycle",dateKey(ed.start));
-  saveData();state.selectedDate=new Date(ed.start);state.scheduleEditor=null;consumeOverlay();render();
-  const action=ed.source==="image"?"Publish ":((ed.source==="excel"||ed.source==="pdf")?(ed.importMode==="replace"?"แทนที่ช่วง":"อัปเดต"):"บันทึก");
-  toast(`${action}ตาราง ${fmtDate(ed.start,false)} – ${fmtDate(ed.end,false)} แล้ว`);
+  for(const [empId,days] of Object.entries(ed.data||{})){
+    if(!employees.some(e=>e.id===empId)) {toast("รหัสพนักงานไม่ตรงกับระบบ ยกเลิกการบันทึก");return}
+    for(const [date,value] of Object.entries(days||{})){
+      if(ed.source==="image"&&!ed.imageTouched?.[empId]?.[date])continue;
+      if(!allowed.has(date)||!["6","7","8","11","13","OFF","LEAVE","HOLIDAY","VACATION","EXIT","NONE"].includes(value)){
+        toast("พบวันที่หรือกะนอกช่วงที่เลือก ยกเลิกการบันทึก");return;
+      }
+      wanted.set(empId+"|"+date,{id:empId,date,value});
+    }
+  }
+  if(!wanted.size){toast("ไม่มีข้อมูลที่จะบันทึก");return}
+  const months=[...new Set([...wanted.values()].map(c=>c.date.slice(0,7)))],remote={};
   try{
-    await Promise.all([...touched].map(mk=>fetch(`${CONFIG.firebaseDatabaseUrl}/work_schedules/${mk}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(scheduleMonths[mk])})))
-  }catch(e){toast("บันทึกในเครื่องแล้ว แต่ยังส่งตารางขึ้นระบบกลางไม่สำเร็จ")}
+    await Promise.all(months.map(async month=>{
+      const resp=await fetch(CONFIG.firebaseDatabaseUrl+"/work_schedules/"+month+".json",{cache:"no-store"});
+      if(!resp.ok)throw Error("Firebase "+month+" HTTP "+resp.status);
+      const val=await resp.json();
+      if(val!==null&&(typeof val!=="object"||Array.isArray(val)))throw Error("ข้อมูลเดือน "+month+" ผิดรูปแบบ");
+      remote[month]=val||{};
+    }));
+    const patches={},changes=[];
+    for(const cell of wanted.values()){
+      const month=cell.date.slice(0,7);
+      const old=remote[month]?.[cell.id]?.[cell.date]??"NONE";
+      if(old===cell.value)continue;
+      (patches[month]??={})[cell.id+"/"+cell.date]=cell.value;
+      changes.push({...cell,old});
+    }
+    if(!changes.length){toast("ตารางเดิมตรงกับข้อมูลที่เลือกแล้ว");state.scheduleEditor=null;consumeOverlay();render();return}
+    if(!confirm("ตรวจ Firebase แล้ว พบ "+changes.length+" ช่องที่จะเปลี่ยนในช่วงวันที่เลือก\nจะบันทึกเฉพาะช่องเหล่านี้ ไม่เขียนทับทั้งเดือน ใช่หรือไม่?"))return;
+    localStorage.setItem("oh_schedule_editor_backup_"+Date.now(),JSON.stringify({createdAt:new Date().toISOString(),previous:changes}));
+    for(const month of Object.keys(patches)){
+      const r=await fetch(CONFIG.firebaseDatabaseUrl+"/work_schedules/"+month+".json",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(patches[month])});
+      if(!r.ok)throw Error("บันทึกเดือน "+month+" ไม่ได้รับการยืนยัน: HTTP "+r.status);
+    }
+    const confirmed={};
+    for(const month of months){
+      const r=await fetch(CONFIG.firebaseDatabaseUrl+"/work_schedules/"+month+".json",{cache:"no-store"});
+      if(!r.ok)throw Error("ตรวจผลเดือน "+month+" ไม่ได้");
+      confirmed[month]=await r.json()||{};
+    }
+    for(const cell of changes)if(confirmed[cell.date.slice(0,7)]?.[cell.id]?.[cell.date]!==cell.value)throw Error("อ่านผลบันทึกกลับมาไม่ตรง");
+    for(const month of months)scheduleMonths[month]=confirmed[month];
+    try{saveData()}catch(e){console.warn("Local save after confirmed schedule update failed",e)}
+    if(ed.source!=="excel"&&ed.source!=="pdf")localStorage.setItem("oh_last_schedule_cycle",dateKey(ed.start));
+    state.selectedDate=new Date(ed.start);state.scheduleEditor=null;consumeOverlay();render();
+    toast("บันทึกและตรวจสอบตารางกลางแล้ว "+changes.length+" ช่อง");
+  }catch(e){
+    console.error("Schedule editor write/verify error",e);
+    alert("ยังยืนยันผลการบันทึกไม่ได้: "+(e.message||e)+"\nอย่ากดบันทึกซ้ำ ให้ตรวจข้อมูลกลางก่อน");
+  }
 }
 function scheduleRangeRealCount(start,days=30){
   let n=0;
@@ -1777,23 +1817,8 @@ function scheduleRangeRealCount(start,days=30){
   return n
 }
 async function recoverEmbeddedScheduleIfEmpty(){
-  const start=new Date(2026,8,21);
-  if(scheduleRangeRealCount(start,30)>0)return false;
-  let restored=0;const touched=new Set();
-  Object.entries(sourceScheduleRows||{}).forEach(([empId,shifts])=>{
-    shifts.forEach((shift,i)=>{
-      if(!shift||shift==="NONE")return;
-      const d=addDays(start,i),mk=monthKey(d),dk=dateKey(d);
-      scheduleMonths[mk]??={};scheduleMonths[mk][empId]??={};
-      scheduleMonths[mk][empId][dk]=shift;touched.add(mk);restored++;
-    })
-  });
-  if(!restored)return false;
-  saveData();
-  try{await Promise.all([...touched].map(mk=>fetch(`${CONFIG.firebaseDatabaseUrl}/work_schedules/${mk}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(scheduleMonths[mk])})))}catch(e){}
-  if(state.view==="schedule"||state.view==="day"||state.view==="person"||state.view==="home")render();
-  toast(`กู้ตารางเดิมกลับมาแล้ว ${restored} ช่อง`);
-  return true
+  // Safety R1: legacy embedded roster MUST NOT auto-write or seed production data.
+  return false;
 }
 async function loadRemoteSchedules(){
   try{
