@@ -85,7 +85,9 @@ async function publish(checked){
  busy=true;
  try{
   const patch={},old={};
-  for(const cell of draft.updates){
+  const changedCells=draft.updates.filter(cell=>cell.value!==cell.old);
+  if(!changedCells.length){document.getElementById("oh-sheet-schedule-overlay")?.remove();draft=null;toast("ตารางตรงกับข้อมูลเดิมแล้ว ไม่มีรายการที่ต้องบันทึก");return}
+  for(const cell of changedCells){
    const m=cell.date.slice(0,7);
    const path="work_schedules/"+m+"/"+cell.id+"/"+cell.date;
    if(Object.hasOwn(patch,path))throw Error("ข้อมูลพนักงาน/วันที่ซ้ำ");
@@ -93,7 +95,7 @@ async function publish(checked){
   }
   // Read central state before commit; stop if someone edited any target cell meanwhile.
   const monthCache={};
-  for(const cell of draft.updates){
+  for(const cell of changedCells){
     const m=cell.date.slice(0,7);
     if(!(m in monthCache)){
       const r=await fetch(CONFIG.firebaseDatabaseUrl+"/work_schedules/"+m+".json",{cache:"no-store"});
@@ -107,7 +109,18 @@ async function publish(checked){
   localStorage.setItem(key,JSON.stringify({createdAt:new Date().toISOString(),cycle:draft.cycle,previous:old,changes:patch})); // fail-closed
   const response=await fetch(CONFIG.firebaseDatabaseUrl+"/.json",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(patch)});
   if(!response.ok)throw Error("Firebase HTTP "+response.status);
-  for(const cell of draft.updates){const m=cell.date.slice(0,7);scheduleMonths[m]??={};scheduleMonths[m][cell.id]??={};scheduleMonths[m][cell.id][cell.date]=cell.value}
+  // Confirm central values after the write before reporting success.
+  const readBack={};
+  for(const cell of changedCells){
+    const m=cell.date.slice(0,7);
+    if(!(m in readBack)){
+      const r=await fetch(CONFIG.firebaseDatabaseUrl+"/work_schedules/"+m+".json",{cache:"no-store"});
+      if(!r.ok)throw Error("อ่านผลยืนยันหลังบันทึกไม่ได้: HTTP "+r.status);
+      readBack[m]=await r.json()||{};
+    }
+    if(readBack[m]?.[cell.id]?.[cell.date]!==cell.value)throw Error("ข้อมูล Firebase หลังบันทึกไม่ตรงกับตารางที่ยืนยัน");
+  }
+  for(const cell of changedCells){const m=cell.date.slice(0,7);scheduleMonths[m]??={};scheduleMonths[m][cell.id]??={};scheduleMonths[m][cell.id][cell.date]=cell.value}
   saveData();draft=null;document.getElementById("oh-sheet-schedule-overlay")?.remove();render();toast("บันทึกตารางจาก Sheets แล้ว (เก็บสำเนาก่อนเปลี่ยน)");
  }catch(e){alert("ยังไม่ยืนยันว่าบันทึกสำเร็จ: "+(e.message||e)+"\nอย่ากดนำเข้าซ้ำจนกว่าจะตรวจข้อมูลกลาง");}
  finally{busy=false}
