@@ -20,11 +20,11 @@ function scheduleSheetPreview_(cycle) {
   if(header<0)throw Error('Sheet header dates do not match selected 21–20 cycle');
   var employees=[],seen={};
   for(var i=header+1;i<matrix.length;i++){
-    var row=matrix[i],code=String(row[1]||'').trim(),name=String(row[2]||'').trim();
+    var row=matrix[i],code=String(row[1]||'').trim();
     if(!/^\d{5,8}$/.test(code))continue; // excludes time-description rows
     if(seen[code])throw Error('Duplicate employee code '+code);
     seen[code]=true;
-    employees.push({code:code,name:name,nickname:String(row[3]||'').trim(),role:String(row[4]||'').trim(),
+    employees.push({code:code,
       shifts:row.slice(firstCol,firstCol+dates.length).map(function(v){return String(v||'').trim()})});
   }
   if(!employees.length)throw Error('No employee rows found');
