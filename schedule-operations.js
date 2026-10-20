@@ -165,4 +165,27 @@ window.openScheduleOperations=function(){
   finally{event.target.value=""}
  };
 };
+// Background read-only refresh for devices viewing the roster; never push schedules automatically.
+let lastAutoSync=0,autoSyncBusy=false;
+document.addEventListener("visibilitychange",()=>{
+ if(!document.hidden)lastAutoSync=0;
+});
+setInterval(async()=>{
+ if(autoSyncBusy||document.hidden||!["schedule","day","person"].includes(state.view))return;
+ if(state.scheduleEditor||document.getElementById("oh-sheet-schedule-overlay")||document.getElementById("oh-ops-layer"))return;
+ if(Date.now()-lastAutoSync<90000)return;
+ autoSyncBusy=true;lastAutoSync=Date.now();
+ try{
+  const d=state.selectedDate||new Date(),cycle=iso(new Date(d.getFullYear(),d.getMonth()-(d.getDate()<21?1:0),21));
+  const {out}=await fetchCycle(cycle);
+  let changed=false;
+  for(const [month,data] of Object.entries(out)){
+   if(JSON.stringify(scheduleMonths[month]||{})!==JSON.stringify(data)){
+    scheduleMonths[month]=data;changed=true;
+   }
+  }
+  if(changed){localStorage.setItem("oh_schedule_months",JSON.stringify(scheduleMonths));render()}
+ }catch(e){console.warn("OH schedule read-only sync unavailable",e)}
+ finally{autoSyncBusy=false}
+},30000);
 })();
