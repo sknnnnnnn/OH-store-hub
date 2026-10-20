@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="th">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OH Store Hub — ตัวอย่างตารางงาน (อ่านอย่างเดียว)</title>
+<style>
+:root{font-family:system-ui,"Noto Sans Thai",sans-serif;color:#152536;background:#f3f6fa}
+*{box-sizing:border-box}body{margin:0}main{max-width:1100px;margin:auto;padding:24px 14px 50px}
+h1{margin:0 0 4px;font-size:27px}.hint{color:#64748b;font-size:14px;line-height:1.65}
+.card{background:white;border:1px solid #dfe6ef;border-radius:18px;padding:18px;margin-top:16px;box-shadow:0 3px 16px #16233907}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+label{font-weight:650;font-size:14px}select,button{padding:12px;border-radius:10px;font:inherit;border:1px solid #cbd5e1}
+button{background:#155ca9;color:white;border-color:#155ca9;cursor:pointer;font-weight:650}
+button:disabled{opacity:.5;cursor:wait}select{background:white;min-width:240px;max-width:100%}
+.stat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.stat div{padding:12px;background:#f4f8fc;border-radius:12px}
+.stat b{display:block;font-size:21px}.stat small{font-size:12px;color:#64748b}
+#status{margin-top:12px;min-height:26px;color:#566477}#status.error{color:#ba1b1b}
+.scroller{overflow:auto;max-height:68vh;border:1px solid #dbe3ec;border-radius:10px}
+table{border-collapse:separate;border-spacing:0;min-width:max-content;width:100%;font-size:13px}
+th,td{text-align:center;border-right:1px solid #ebeff4;border-bottom:1px solid #ebeff4;padding:10px 8px;white-space:nowrap}
+th{position:sticky;top:0;background:#ecf2fa;z-index:3}th:first-child,td:first-child{position:sticky;left:0;z-index:2;background:white;text-align:left}
+th:first-child{z-index:4;background:#e8eef7}td:first-child{font-weight:700}
+.shift{border-radius:7px;padding:5px 8px;display:inline-block;min-width:37px;background:#e7f1ff;color:#175291}
+.off{background:#f1f3f6;color:#697586}.holiday{background:#fef0d6;color:#925d0b}.leave{background:#f9dce5;color:#982a53}.exit{background:#efe2fb;color:#684091}.unknown{background:#ffe1e1;color:#a52a2a}
+.legend{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;margin-bottom:12px}.legend span{padding:6px 10px;background:#f5f7fa;border-radius:10px}
+.note{background:#fff7e8;color:#7b570d;padding:12px;border-radius:10px;font-size:13px;margin-top:12px}
+@media(max-width:550px){h1{font-size:22px}main{padding:18px 10px}.stat{grid-template-columns:repeat(3,1fr)}select,button{width:100%}}
+</style></head>
+<body><main>
+<div class="row"><h1>ตารางงานจาก Google Sheets</h1><span style="background:#e0f7ed;color:#06744c;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:800">ทดลองอ่านอย่างเดียว</span></div>
+<p class="hint">OH Store Hub — ตรวจรายการพนักงานและกะก่อนนำเข้าระบบจริง หน้านี้ไม่มีการบันทึก Firebase หรือแก้ไข Google Sheets</p>
+<section class="card"><div class="row"><label for="cycle">เลือกรอบตาราง (21 ถึง 20)</label><select id="cycle"></select><button id="load">อ่านตารางงาน</button></div>
+<div class="note">ชีตมีเลขวันที่ 21–20 แต่ไม่มีเดือนและปีให้ตรวจยืนยันโดยอัตโนมัติ กรุณาเลือกให้ตรงกับต้นฉบับ</div>
+<div id="status" role="status">เลือกรอบแล้วกด “อ่านตารางงาน”</div></section>
+<section class="card" id="result" hidden>
+<div class="stat"><div><b id="people">–</b><small>พนักงาน</small></div><div><b id="days">–</b><small>วันในรอบ</small></div><div><b id="unknown">–</b><small>ช่องที่ต้องตรวจ</small></div></div>
+<p class="hint" id="range"></p>
+<div class="legend"><span>6 = 06–15</span><span>7 = 07–16</span><span>8 = 08–17</span><span>11 = 11–20</span><span>13 = 13–22</span><span>F = หยุด</span><span>นข = วันหยุดนักขัตฤกษ์</span><span>พร = พักร้อน</span><span>ลา = ลางาน</span><span>ออก = ออกจากงาน</span></div>
+<div class="scroller"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+<p class="hint">ข้อมูลนี้เป็นเพียงตัวอย่างที่อ่านจากชีตจริง ไม่ได้เปลี่ยนตารางงานใน Store Hub</p>
+</section></main>
+<script>
+"use strict";
+const ENDPOINT="https://script.google.com/macros/s/AKfycbwe-h24CMCM1c92oIrlh_mOaMr6NJFQ8iaMhAJ_Rr958QAe4qJjoEjj-5ERufIIQr6g/exec";
+const $=id=>document.getElementById(id);
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function dates(cycle){const [y,m]=cycle.split("-").map(Number),a=new Date(y,m-1,21),b=new Date(y,m,20),out=[];for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1))out.push(iso(d));return out}
+function label(code){const x=String(code??"").trim().toUpperCase();const map={"6":["06–15","shift"],"7":["07–16","shift"],"8":["08–17","shift"],"11":["11–20","shift"],"13":["13–22","shift"],"F":["หยุด","off"],"OFF":["หยุด","off"],"นข":["นักขัต","holiday"],"พร":["พักร้อน","leave"],"ลา":["ลา","leave"],"LEAVE":["ลา","leave"],"ออก":["ออก","exit"]};return map[x]||[x||"—",x?"unknown":"off"]}
+const now=new Date(),curr=new Date(now.getFullYear(),now.getMonth()+(now.getDate()>=21?0:-1),21);
+for(let n=-4;n<=3;n++){const d=new Date(curr.getFullYear(),curr.getMonth()+n,21),e=new Date(d.getFullYear(),d.getMonth()+1,20),opt=document.createElement("option");opt.value=iso(d);opt.textContent=d.toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"})+" – "+e.toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"});if(n===0)opt.selected=true;$("cycle").appendChild(opt)}
+$("load").onclick=async function(){
+const cycle=$("cycle").value,expected=dates(cycle);this.disabled=true;$("result").hidden=true;$("status").className="";$("status").textContent="กำลังอ่านชีต...";
+const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),25000);
+try{
+ const res=await fetch(ENDPOINT+"?mode=scheduleSheetPreview&cycle="+encodeURIComponent(cycle)+"&t="+Date.now(),{cache:"no-store",signal:controller.signal});
+ if(!res.ok)throw Error("HTTP "+res.status);
+ const data=await res.json();
+ if(data?.status!=="success"||data?.mode!=="scheduleSheetPreview"||data?.cycle!==cycle||data?.sheetName!=="ตารางงาน"||JSON.stringify(data.dates)!==JSON.stringify(expected)||!Array.isArray(data.employees))throw Error("ข้อมูลตอบกลับไม่ตรงกับรอบที่เลือก");
+ const ids=new Set(),all=[];
+ for(const e of data.employees){const id=String(e.code||"");if(!/^\d{5,8}$/.test(id)||ids.has(id))throw Error("รหัสพนักงานว่างหรือซ้ำ");ids.add(id);if(!Array.isArray(e.shifts)||e.shifts.length!==expected.length)throw Error("จำนวนวันไม่ครบของพนักงาน "+id);all.push(e)}
+ $("people").textContent=all.length;$("days").textContent=expected.length;
+ let unknown=0;
+ $("thead").innerHTML="<tr><th>รหัสพนักงาน</th>"+expected.map(x=>"<th>"+esc(x.slice(8))+"<small style='display:block'>"+esc(x.slice(5,7))+"</small></th>").join("")+"</tr>";
+ $("tbody").innerHTML=all.map(e=>"<tr><td>"+esc(e.code)+"</td>"+e.shifts.map(v=>{const [text,kind]=label(v);if(kind==="unknown")unknown++;return '<td><span class="shift '+kind+'" title="'+esc(v)+'">'+esc(text)+"</span></td>"}).join("")+"</tr>").join("");
+ $("unknown").textContent=unknown;
+ $("range").textContent="อ่านจากแท็บ “ตารางงาน” — "+expected[0]+" ถึง "+expected.at(-1);
+ $("status").textContent="อ่านสำเร็จ — ไม่มีการบันทึกข้อมูล";$("result").hidden=false;
+}catch(e){$("status").className="error";$("status").textContent="อ่านไม่สำเร็จ: "+(e.message||e)}
+finally{clearTimeout(timer);this.disabled=false}
+};
+</script>
+</body></html>
