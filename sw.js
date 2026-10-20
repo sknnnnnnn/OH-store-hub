@@ -1,4 +1,4 @@
-const CACHE_NAME = "oh-store-hub-v17";
+const CACHE_NAME = "oh-store-hub-v18";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", event => {
@@ -19,6 +19,14 @@ self.addEventListener("fetch", event => {
       caches.open(CACHE_NAME).then(cache => cache.put("./index.html", copy));
       return response;
     }).catch(() => caches.match("./index.html")));
+    return;
+  }
+  // Import JS must not stay frozen on an old cached version after a release.
+  if (url.pathname.endsWith("/schedule-sheet-import.js")) {
+    event.respondWith(fetch(request).then(response => {
+      if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request,response.clone()));
+      return response;
+    }).catch(() => caches.match(request)));
     return;
   }
   event.respondWith(caches.match(request).then(cached => cached || fetch(request).then(response => {
