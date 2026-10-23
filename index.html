@@ -1147,12 +1147,12 @@ function stockAlertRows(){
 
 const STOCK_COUNT_SHEET_ID=CONFIG.storeSpreadsheetId;
 let stockSheetView={loading:false,loaded:false,error:"",daily:[],weekly:[],cutoff:1};
-async function readColumnF(sheet){
- const query=new URLSearchParams({sheet:sheet,range:"B2:F",tq:"select B,C,F",tqx:"out:json",cacheBust:String(Date.now())});
+async function readColumnH(sheet){
+ const query=new URLSearchParams({sheet:sheet,range:"B2:H",tq:"select B,C,H",tqx:"out:json",cacheBust:String(Date.now())});
  const url="https://docs.google.com/spreadsheets/d/"+STOCK_COUNT_SHEET_ID+"/gviz/tq?"+query.toString();
  const r=await fetch(url,{cache:"no-store"});if(!r.ok)throw Error("อ่านชีต "+sheet+" ไม่ได้ HTTP "+r.status);
  const raw=await r.text(),mark="google.visualization.Query.setResponse(",p=raw.indexOf(mark),end=raw.lastIndexOf(");");
- if(p<0||end<0)throw Error("อ่านคอลัมน์ F ไม่ได้: ตรวจสิทธิ์เข้าถึงชีต");
+ if(p<0||end<0)throw Error("อ่านคอลัมน์ H ไม่ได้: ตรวจสิทธิ์เข้าถึงชีต");
  const data=JSON.parse(raw.slice(p+mark.length,end));
  if(data.status==="error")throw Error("ชีต "+sheet+" ไม่อนุญาตให้อ่านข้อมูล");
  return (data.table?.rows||[]).map(function(row){
@@ -1163,11 +1163,11 @@ async function readColumnF(sheet){
 async function loadStockSheetView(){
  if(stockSheetView.loading)return;
  stockSheetView.loading=true;stockSheetView.error="";if(state.view==="stockalerts")render();
- try{const d=await Promise.all([readColumnF("Stock_count_DD"),readColumnF("Stock_count_WW")]);stockSheetView={...stockSheetView,loading:false,loaded:true,error:"",daily:d[0],weekly:d[1]}}
+ try{const d=await Promise.all([readColumnH("Stock_count_DD"),readColumnH("Stock_count_WW")]);stockSheetView={...stockSheetView,loading:false,loaded:true,error:"",daily:d[0],weekly:d[1]}}
  catch(e){stockSheetView={...stockSheetView,loading:false,loaded:false,error:String(e.message||e)}}
  if(state.view==="stockalerts")render();
 }
-function setStockFThreshold(v){const n=Number(v);if(Number.isFinite(n)&&n>=0){stockSheetView.cutoff=n;render()}}
+function setStockHThreshold(v){const n=Number(v);if(Number.isFinite(n)&&n>=0){stockSheetView.cutoff=n;render()}}
 function renderStockAlerts(){
  if(!stockSheetView.loaded&&!stockSheetView.loading&&!stockSheetView.error)setTimeout(loadStockSheetView,0);
  const fmt=n=>Number(n).toLocaleString("th-TH",{maximumFractionDigits:3});
@@ -1179,7 +1179,7 @@ function renderStockAlerts(){
  if(stockSheetView.loading)main='<div class="panel empty">กำลังโหลดข้อมูล…</div>';
  else if(stockSheetView.error)main='<div class="panel empty">โหลดข้อมูลไม่สำเร็จ กรุณาลองอีกครั้ง</div>';
  else if(stockSheetView.loaded)main=low.length?'<div class="stock-alert-list">'+cards+'</div>':'<div class="panel empty">ไม่มีสินค้าที่ต้องแจ้งเตือน</div>';
- return header(true,"ของหมด / ใกล้หมด")+'<main class="shell shortage-clean"><div class="shortage-title-row"><div><h1 class="page-title">ของหมด / ใกล้หมด</h1><p class="page-sub">'+(stockSheetView.loaded?low.length+" รายการ":"รายการที่ต้องตรวจสอบ")+'</p></div><button class="ghost-btn" onclick="loadStockSheetView()" aria-label="รีเฟรช">↻ รีเฟรช</button></div><div class="shortage-filter"><label for="stock-cutoff">แสดงยอดไม่เกิน</label><select id="stock-cutoff" onchange="setStockFThreshold(this.value)">'+options+'</select></div>'+main+'</main>';
+ return header(true,"ของหมด / ใกล้หมด")+'<main class="shell shortage-clean"><div class="shortage-title-row"><div><h1 class="page-title">ของหมด / ใกล้หมด</h1><p class="page-sub">คาดการณ์สำหรับวันพรุ่งนี้</p><p class="page-sub">'+(stockSheetView.loaded?low.length+" รายการ":"รายการที่ต้องตรวจสอบ")+'</p></div><button class="ghost-btn" onclick="loadStockSheetView()" aria-label="รีเฟรช">↻ รีเฟรช</button></div><div class="shortage-filter"><label for="stock-cutoff">แสดงยอดไม่เกิน</label><select id="stock-cutoff" onchange="setStockHThreshold(this.value)">'+options+'</select></div>'+main+'</main>';
 }
 function renderCounting(){const user=activeEmployee(),params=new URLSearchParams({hub:"1",user:user?.id||"",name:user?.nick||""});return `<main class="count-shell"><iframe class="count-frame" src="${CONFIG.countingAppUrl}?${params}" title="ระบบนับของ" allow="clipboard-write; fullscreen"></iframe></main>`}
 function desktopSidebar(){
