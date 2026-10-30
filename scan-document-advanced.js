@@ -1,7 +1,7 @@
 /* OH scanner: auto-detect plus editable four-corner perspective correction. */
 (function(){
  window.scanAdvancedReady=true;
- let cvPromise=null,editor=null;
+ let cvPromise=null,editor=null,detectRun=0;
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  const image=src=>new Promise((ok,no)=>{const x=new Image();x.onload=()=>ok(x);x.onerror=no;x.src=src});
  function cvReady(){
@@ -9,7 +9,7 @@
   if(cvPromise)return cvPromise;
   cvPromise=new Promise((resolve,reject)=>{
    const script=document.createElement("script");script.src="https://docs.opencv.org/4.x/opencv.js";script.async=true;
-   const timeout=setTimeout(()=>reject(Error("โหลดเครื่องมือตรวจขอบไม่สำเร็จ")),14000);
+   const timeout=setTimeout(()=>{cvPromise=null;reject(Error("โหลดเครื่องมือตรวจขอบไม่สำเร็จ"))},4500);
    script.onload=()=>{
     const poll=()=>{if(window.cv&&typeof cv.Mat==="function"){clearTimeout(timeout);resolve(cv)}else setTimeout(poll,100)};
     poll();
@@ -49,7 +49,7 @@
   const page=state.scanPages.find(x=>x.id===id);if(!page)return;
   const pts=page.quad||defaultPoints();editor={id,points:pts.map(p=>p.slice()),drag:-1};
   document.body.style.overflow="hidden";
-  const ui=document.createElement("div");ui.id="scanAutoEditor";ui.innerHTML='<div class="sa-head"><b>ปรับขอบเอกสาร</b><button onclick="scanCloseCrop()">✕</button></div><div class="sa-stage"><div class="sa-surface" id="saSurface"><img id="saImage"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><polygon id="scanQuad" fill="rgba(21,171,119,.13)" stroke="#40f6b2" stroke-width=".6"/>'+[0,1,2,3].map(i=>'<circle id="scanCorner'+i+'" data-corner="'+i+'" r="2.5" fill="#fff" stroke="#16875b" stroke-width="1"/>').join("")+'</svg></div></div><p class="sa-hint" id="saHint">ลากจุดทั้ง 4 มุมให้ตรงขอบกระดาษ</p><div class="sa-controls"><button onclick="scanAutoDetect()">✨ จับขอบใหม่</button><button onclick="scanResetCrop()">เต็มภาพ</button><button class="sa-save" onclick="scanSaveCrop()">ใช้กรอบนี้</button></div>';
+  const ui=document.createElement("div");ui.id="scanAutoEditor";ui.innerHTML='<div class="sa-head"><div><b>ปรับขอบเอกสาร</b><small>SCANNER V2 · AUTO CROP</small></div><button onclick="scanCloseCrop()">✕</button></div><div class="sa-progress">① ถ่ายภาพ <span>›</span> <strong>② ปรับขอบ</strong> <span>›</span> ③ สร้าง PDF</div><div class="sa-stage"><div class="sa-surface" id="saSurface"><img id="saImage"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><polygon id="scanQuad" fill="rgba(21,171,119,.13)" stroke="#40f6b2" stroke-width=".6"/>'+[0,1,2,3].map(i=>'<circle id="scanCorner'+i+'" data-corner="'+i+'" r="2.5" fill="#fff" stroke="#16875b" stroke-width="1"/>').join("")+'</svg></div></div><p class="sa-hint" id="saHint">ลากจุดทั้ง 4 มุมให้ตรงขอบกระดาษ</p><div class="sa-controls"><button onclick="scanAutoDetect()">✨ ตรวจใหม่</button><button onclick="scanResetCrop()">ใช้ทั้งภาพ</button><button class="sa-save" onclick="scanSaveCrop()">✓ ยืนยันกรอบนี้</button></div>';
   document.body.appendChild(ui);document.getElementById("saImage").src=page.data;
   const surface=document.getElementById("saSurface");
   const point=e=>{const r=surface.getBoundingClientRect();return [clamp((e.clientX-r.left)/r.width,0,1),clamp((e.clientY-r.top)/r.height,0,1)]};
@@ -61,16 +61,25 @@
   if(!page.quad)scanAutoDetect();
  };
  window.scanAutoDetect=async function(){
-  if(!editor)return;const id=editor.id;document.getElementById("saHint").textContent="กำลังตรวจหาขอบเอกสาร…";
-  try{const page=state.scanPages.find(p=>p.id===id),pts=await detect(page.data);
-   if(editor?.id!==id)return;
-   if(pts){editor.points=pts;draw();document.getElementById("saHint").textContent="ตรวจพบเอกสารแล้ว · ลากมุมแก้ได้";}
-   else document.getElementById("saHint").textContent="ไม่พบขอบที่มั่นใจ · กรุณาลากมุมเอง";
-  }catch(e){if(editor?.id===id)document.getElementById("saHint").textContent="ตรวจอัตโนมัติไม่พร้อม · ลากมุมเองได้";}
+  if(!editor)return;
+  const id=editor.id,run=++detectRun,hint=document.getElementById("saHint");
+  if(hint)hint.textContent="กำลังตรวจขอบ… สามารถลากมุมเองได้เลย";
+  const limit=new Promise((_,reject)=>setTimeout(()=>reject(Error("timeout")),3500));
+  try{
+   const page=state.scanPages.find(p=>p.id===id);
+   if(!page)return;
+   const pts=await Promise.race([detect(page.data),limit]);
+   if(editor?.id!==id||run!==detectRun)return;
+   const label=document.getElementById("saHint");
+   if(pts){editor.points=pts;draw();if(label)label.textContent="✓ ตรวจพบเอกสาร · ลากแก้ 4 มุมได้";}
+   else if(label)label.textContent="ยังจับขอบไม่ได้ · ลากมุมเองแล้วกดยืนยัน";
+  }catch(e){
+   if(editor?.id===id&&run===detectRun){const label=document.getElementById("saHint");if(label)label.textContent="ใช้การปรับด้วยมือได้เลย · ลาก 4 มุมแล้วกดยืนยัน";}
+  }
  };
  window.scanResetCrop=()=>{if(editor){editor.points=defaultPoints();draw()}};
  window.scanSaveCrop=()=>{if(!editor)return;const p=state.scanPages.find(x=>x.id===editor.id);if(p){p.quad=editor.points.map(x=>x.slice());delete p.crop}scanCloseCrop();render()};
- window.scanCloseCrop=()=>{editor=null;document.getElementById("scanAutoEditor")?.remove();document.body.style.overflow=""};
+ window.scanCloseCrop=()=>{detectRun++;editor=null;document.getElementById("scanAutoEditor")?.remove();document.body.style.overflow=""};
  const oldProcessed=window.scanProcessedPage;
  window.scanProcessedPage=async function(page){
   if(!page.quad)return oldProcessed(page);
@@ -95,5 +104,5 @@
    }finally{[src,transformed,srcPts,dstPts,M].forEach(x=>x&&x.delete())}
   }catch(e){console.error("Perspective correction failed",e);throw new Error("ปรับมุมเอกสารไม่สำเร็จ กรุณาลองอีกครั้งหรือเลือกเต็มภาพ")}
  };
- const css=document.createElement("style");css.textContent='#scanAutoEditor{position:fixed;inset:0;z-index:999;background:#111827;color:#fff;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom)}.sa-head{display:flex;justify-content:space-between;align-items:center;padding:14px}.sa-head button,.sa-controls button{border:0;border-radius:12px;padding:12px;background:#e5e7eb;color:#111827}.sa-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}.sa-surface{position:relative;display:inline-block;max-width:100%;max-height:100%;touch-action:none}.sa-surface img{display:block;max-width:100%;max-height:calc(100dvh - 210px);object-fit:contain}.sa-surface svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;touch-action:none}.sa-surface circle{cursor:grab;pointer-events:all}.sa-hint{text-align:center;font-size:12px;color:#d1d5db;margin:9px}.sa-controls{display:flex;gap:7px;margin-bottom:10px}.sa-controls button{flex:1;font-size:12px}.sa-controls .sa-save{background:#16a36f;color:white}';document.head.appendChild(css);
+ const css=document.createElement("style");css.textContent='#scanAutoEditor{position:fixed;inset:0;z-index:999;background:#111827;color:#fff;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom)}.sa-head{display:flex;justify-content:space-between;align-items:center;padding:14px}.sa-head button,.sa-controls button{border:0;border-radius:12px;padding:12px;background:#e5e7eb;color:#111827}.sa-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}.sa-surface{position:relative;display:inline-block;max-width:100%;max-height:100%;touch-action:none}.sa-surface img{display:block;max-width:100%;max-height:calc(100dvh - 210px);object-fit:contain}.sa-surface svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;touch-action:none}.sa-surface circle{cursor:grab;pointer-events:all}.sa-hint{text-align:center;font-size:12px;color:#d1d5db;margin:9px}.sa-controls{display:flex;gap:7px;margin-bottom:10px}.sa-controls button{flex:1;font-size:12px}.sa-controls .sa-save{background:#16a36f;color:white}';css.textContent += '.sa-head small{display:block;color:#91f0ca;font-size:10px;letter-spacing:.08em;margin-top:4px}.sa-progress{display:flex;justify-content:center;align-items:center;gap:9px;padding:11px 3px;color:#b9c7d3;font-size:12px;white-space:nowrap}.sa-progress strong{color:#44f5b1}.sa-hint{min-height:36px}.sa-controls .sa-save{font-weight:800}';document.head.appendChild(css);
 })();
