@@ -1,5 +1,6 @@
 /* OH scanner: auto-detect plus editable four-corner perspective correction. */
 (function(){
+ document.addEventListener("DOMContentLoaded",()=>{const el=document.getElementById("scanAdvancedStatus");if(el)el.textContent="✓ สแกนอัตโนมัติ · ปรับมุม 4 จุด พร้อมใช้งาน";});
  let cvPromise=null,editor=null;
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  const image=src=>new Promise((ok,no)=>{const x=new Image();x.onload=()=>ok(x);x.onerror=no;x.src=src});
