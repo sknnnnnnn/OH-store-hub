@@ -92,7 +92,7 @@
      for(let i=0;i<a.length;i+=4){let g=.299*a[i]+.587*a[i+1]+.114*a[i+2];g=clamp((g-128)*1.6+128,0,255);g=g<80?g*.5:g>190?255:g;a[i]=a[i+1]=a[i+2]=g}ctx.putImageData(d,0,0)
     }return c;
    }finally{[src,transformed,srcPts,dstPts,M].forEach(x=>x&&x.delete())}
-  }catch(e){console.warn("Perspective correction unavailable",e);return oldProcessed(page)}
+  }catch(e){console.error("Perspective correction failed",e);throw new Error("ปรับมุมเอกสารไม่สำเร็จ กรุณาลองอีกครั้งหรือเลือกเต็มภาพ")}
  };
  const css=document.createElement("style");css.textContent='#scanAutoEditor{position:fixed;inset:0;z-index:999;background:#111827;color:#fff;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom)}.sa-head{display:flex;justify-content:space-between;align-items:center;padding:14px}.sa-head button,.sa-controls button{border:0;border-radius:12px;padding:12px;background:#e5e7eb;color:#111827}.sa-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}.sa-surface{position:relative;display:inline-block;max-width:100%;max-height:100%;touch-action:none}.sa-surface img{display:block;max-width:100%;max-height:calc(100dvh - 210px);object-fit:contain}.sa-surface svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;touch-action:none}.sa-surface circle{cursor:grab;pointer-events:all}.sa-hint{text-align:center;font-size:12px;color:#d1d5db;margin:9px}.sa-controls{display:flex;gap:7px;margin-bottom:10px}.sa-controls button{flex:1;font-size:12px}.sa-controls .sa-save{background:#16a36f;color:white}';document.head.appendChild(css);
 })();
