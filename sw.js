@@ -1,4 +1,4 @@
-const CACHE_NAME = "oh-store-hub-v22-inline-scanner";
+const CACHE_NAME = "oh-store-hub-v23-crop-entry-fix";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", event => {
