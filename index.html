@@ -2702,7 +2702,7 @@ async function scanAddFiles(input){const files=Array.from(input?.files||[]);if(!
 function scanCompressImage(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onerror=reject;r.onload=()=>{const img=new Image();img.onerror=reject;img.onload=()=>{const max=4096,scale=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight)),w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale)),c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d",{alpha:false});x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(img,0,0,w,h);resolve(c.toDataURL("image/jpeg",.96))};img.src=r.result};r.readAsDataURL(file)})}
 
 let scanCropSession=null;
-function scanOpenCrop(id){
+function legacyScanOpenCrop(id){
  const page=state.scanPages.find(p=>p.id===id);if(!page)return;
  const r=page.crop||{x:0,y:0,w:1,h:1};
  scanCropSession={id,rect:{...r},drag:null};
@@ -2830,7 +2830,7 @@ async function captureScanCamera(){
   closeScanCamera();
   render();
   toast(`เพิ่มหน้า ${state.scanPages.length} แล้ว`);
-  setTimeout(()=>scanOpenCrop(state.scanPages[state.scanPages.length-1].id),80);
+  setTimeout(()=>window.scanOpenCrop(state.scanPages[state.scanPages.length-1].id),80);
 }
 
 function renderScanner(){const pages=state.scanPages;return `${header(true,"สแกนเป็น PDF")}<main class="shell"><div class="scanner-shell"><section class="scan-hero"><div class="eyebrow" style="color:#a9cfbf">DOCUMENT SCANNER</div><h1>ถ่ายเอกสาร → PDF</h1><p id="scanAdvancedStatus" class="scan-advanced-status">${window.scanAdvancedReady?"✓ สแกนอัตโนมัติ · ปรับมุม 4 จุด":"ระบบสแกนใหม่ยังไม่โหลด · กรุณารีเฟรช"}</p><p>ถ่ายแล้วตรวจจับขอบเอกสารอัตโนมัติ ปรับมุมเองได้ แล้วรวมเป็น PDF ขาวดำคมชัด</p></section><div class="scan-toolbar"><button type="button" class="scan-pick primary" onclick="openScanCamera()">📷 เปิดกล้องถ่ายเอกสาร</button><label class="scan-pick secondary">＋ เพิ่มจากรูป<input type="file" accept="image/*" multiple onchange="scanAddFiles(this)"></label><input id="scanCameraFallback" type="file" accept="image/*" capture="environment" hidden onchange="scanAddFiles(this)"></div><div class="scan-options"><b>${pages.length} หน้า</b><div class="scan-mode"><button class="${state.scanMode==='document'?'active':''}" onclick="scanSetMode('document')">เอกสารชัด</button><button class="${state.scanMode==='color'?'active':''}" onclick="scanSetMode('color')">สีเดิม</button></div>${pages.length?`<button class="scan-mini danger" onclick="scanClearAll()">ล้างทั้งหมด</button>`:""}</div><section class="scan-list">${pages.map((p,i)=>`<article class="scan-page"><div class="scan-thumb"><img src="${p.data}" style="transform:rotate(${Number(p.rotation||0)}deg);filter:${state.scanMode==='document'?'grayscale(1) contrast(1.15)':'none'}"></div><div class="scan-info"><b>หน้า ${i+1}</b><small>${esc(p.name||'ภาพเอกสาร')}</small><div class="scan-actions"><button class="scan-mini" onclick="scanOpenCrop('${p.id}')">✂ ครอป</button><button class="scan-mini" onclick="scanRotate('${p.id}')">↻ หมุน</button><button class="scan-mini" onclick="scanMove('${p.id}',-1)" ${i===0?'disabled':''}>↑ ขึ้น</button><button class="scan-mini" onclick="scanMove('${p.id}',1)" ${i===pages.length-1?'disabled':''}>↓ ลง</button><button class="scan-mini danger" onclick="scanDelete('${p.id}')">ลบ</button></div></div></article>`).join("")||`<div class="scan-empty"><b>ยังไม่มีหน้าเอกสาร</b>กด “ถ่ายเอกสาร” แล้วถ่ายทีละหน้าได้เลย</div>`}</section><div class="scan-bottom"><div class="scan-create"><input id="scanFileName" value="เอกสาร_${dateKey(new Date())}" placeholder="ชื่อไฟล์ PDF"><button class="primary-btn" onclick="shareScanPdf()" ${pages.length?'':'disabled'}>สร้าง PDF และแชร์</button></div><div class="scan-note">บนมือถือ เมื่อกดแชร์ให้เลือก LINE จากเมนูแชร์ได้เลย · ถ้าเบราว์เซอร์ไม่รองรับแชร์ไฟล์ ระบบจะดาวน์โหลด PDF ให้แทน</div></div></div></main>`}
@@ -3009,7 +3009,7 @@ if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.ser
   surface.addEventListener("pointerup",()=>{if(editor)editor.drag=-1});
   surface.addEventListener("pointercancel",()=>{if(editor)editor.drag=-1});
   draw();
-  if(!page.quad)scanAutoDetect();
+  // Manual editor opens instantly. Auto detection runs only when user presses ตรวจใหม่.
  };
  window.scanAutoDetect=async function(){
   if(!editor)return;
@@ -3058,5 +3058,6 @@ if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.ser
  const css=document.createElement("style");css.textContent='#scanAutoEditor{position:fixed;inset:0;z-index:999;background:#111827;color:#fff;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom)}.sa-head{display:flex;justify-content:space-between;align-items:center;padding:14px}.sa-head button,.sa-controls button{border:0;border-radius:12px;padding:12px;background:#e5e7eb;color:#111827}.sa-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}.sa-surface{position:relative;display:inline-block;max-width:100%;max-height:100%;touch-action:none}.sa-surface img{display:block;max-width:100%;max-height:calc(100dvh - 210px);object-fit:contain}.sa-surface svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;touch-action:none}.sa-surface circle{cursor:grab;pointer-events:all}.sa-hint{text-align:center;font-size:12px;color:#d1d5db;margin:9px}.sa-controls{display:flex;gap:7px;margin-bottom:10px}.sa-controls button{flex:1;font-size:12px}.sa-controls .sa-save{background:#16a36f;color:white}';css.textContent += '.sa-head small{display:block;color:#91f0ca;font-size:10px;letter-spacing:.08em;margin-top:4px}.sa-progress{display:flex;justify-content:center;align-items:center;gap:9px;padding:11px 3px;color:#b9c7d3;font-size:12px;white-space:nowrap}.sa-progress strong{color:#44f5b1}.sa-hint{min-height:36px}.sa-controls .sa-save{font-weight:800}';document.head.appendChild(css);
 })();
 </script>
+<script>window.scanAdvancedEntry="manual-first-v3";</script>
 </body>
 </html>
